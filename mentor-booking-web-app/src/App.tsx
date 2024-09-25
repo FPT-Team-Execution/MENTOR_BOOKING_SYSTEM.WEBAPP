@@ -1,11 +1,17 @@
+import React from "react";
 import "./App.css";
-import { DatePicker } from "antd";
+import Login from "./components/Auth/Login";
+import Logout from "./components/Auth/Logout";
+import { AuthProvider } from "./auth/AuthContext";
 
 function App() {
   return (
     <>
-      <h1 className="text-3xl font-bold ">Mentor Booking App V1</h1>
-      <DatePicker />
+      <AuthProvider>
+        <div>
+          <Login />
+        </div>
+      </AuthProvider>
     </>
   );
 }
