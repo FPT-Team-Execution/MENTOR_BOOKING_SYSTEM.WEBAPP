@@ -1,9 +1,14 @@
 import axiosInstance from "../utils/axios/axiosInstance";
-import { LOGIN_URL, LOGOUT_URL, MENTOR_REGISTER, STUDENT_REGISTER } from "../utils/apiUrl/baseUrl";
+import { CONFIRM_EMAIL, LOGIN_URL, LOGOUT_URL, MENTOR_REGISTER, STUDENT_REGISTER } from "../utils/apiUrl/baseUrl";
 
 interface LoginData {
   username: string;
   password: string;
+}
+
+interface Token {
+  email: string;
+  token: string;
 }
 
 interface StudentData {
@@ -48,6 +53,15 @@ export const mentorRegister = async (mentorData: MentorData) => {
   try{
     const res = await axiosInstance.post(MENTOR_REGISTER, mentorData)
     return { res: res, err: null }
+  } catch (error) {
+    return { res: null, err: error }
+  }
+}
+
+export const confirmEmail = async (token: Token) => {
+  try{
+    const res = await axiosInstance.put(CONFIRM_EMAIL, token)
+    return { res: res, error: null }
   } catch (error) {
     return { res: null, err: error }
   }
