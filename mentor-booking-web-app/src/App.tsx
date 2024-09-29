@@ -1,7 +1,6 @@
 import React from "react";
 import "./App.css";
-import Login from "./components/Auth/Login";
-import Logout from "./components/Auth/Logout";
+import AppRoutes from "./routes";
 import { AuthProvider } from "./auth/AuthContext";
 
 function App() {
@@ -9,7 +8,7 @@ function App() {
     <>
       <AuthProvider>
         <div>
-          <Login />
+          <AppRoutes />
         </div>
       </AuthProvider>
     </>
