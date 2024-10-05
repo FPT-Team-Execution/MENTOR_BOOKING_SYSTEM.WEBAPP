@@ -16,6 +16,14 @@ const Login = () => {
     }
   };
 
+  const loginWithGoogle = async () => {
+    try {
+      await loginWithGoogle();
+    } catch (error) {
+      alert("Login failed");
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-sm">
@@ -41,7 +49,10 @@ const Login = () => {
         </p>
 
         {/* Social Login Button */}
-        <button className="w-full border border-1 flex items-center justify-center bg-white hover:bg-gray-100 text-gray-800 py-2 rounded-lg  mb-4">
+        <button
+          className="w-full border border-1 flex items-center justify-center bg-white hover:bg-gray-100 text-gray-800 py-2 rounded-lg  mb-4"
+          onClick={loginWithGoogle}
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             x="0px"

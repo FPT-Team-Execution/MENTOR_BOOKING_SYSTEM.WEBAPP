@@ -1,5 +1,12 @@
 import axiosInstance from "../utils/axios/axiosInstance";
-import { CONFIRM_EMAIL, LOGIN_URL, LOGOUT_URL, MENTOR_REGISTER, STUDENT_REGISTER } from "../utils/apiUrl/baseUrl";
+import {
+  CONFIRM_EMAIL,
+  GOOGLE_SIGNIN,
+  LOGIN_URL,
+  LOGOUT_URL,
+  MENTOR_REGISTER,
+  STUDENT_REGISTER,
+} from "../utils/apiUrl/baseUrl";
 
 interface LoginData {
   username: string;
@@ -41,28 +48,37 @@ export const logout = async () => {
 };
 
 export const studentRegister = async (studentData: StudentData) => {
-  try{
-    const res = await axiosInstance.post(STUDENT_REGISTER, studentData)
-    return {res: res, err: null}
+  try {
+    const res = await axiosInstance.post(STUDENT_REGISTER, studentData);
+    return { res: res, err: null };
   } catch (error) {
-    return {res: null, err: error}
+    return { res: null, err: error };
   }
-}
+};
 
 export const mentorRegister = async (mentorData: MentorData) => {
-  try{
-    const res = await axiosInstance.post(MENTOR_REGISTER, mentorData)
-    return { res: res, err: null }
+  try {
+    const res = await axiosInstance.post(MENTOR_REGISTER, mentorData);
+    return { res: res, err: null };
   } catch (error) {
-    return { res: null, err: error }
+    return { res: null, err: error };
   }
-}
+};
 
 export const confirmEmail = async (token: Token) => {
-  try{
-    const res = await axiosInstance.put(CONFIRM_EMAIL, token)
-    return { res: res, error: null }
+  try {
+    const res = await axiosInstance.put(CONFIRM_EMAIL, token);
+    return { res: res, error: null };
   } catch (error) {
-    return { res: null, err: error }
+    return { res: null, err: error };
   }
-}
+};
+
+export const loginWithGoogle = async () => {
+  try {
+    const response = await axiosInstance.get(GOOGLE_SIGNIN);
+    return { res: response, error: null };
+  } catch (error) {
+    return { res: null, error: error };
+  }
+};
