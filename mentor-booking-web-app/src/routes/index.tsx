@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  BrowserRouter as Router,
   Routes,
   Route,
   Navigate,
@@ -11,19 +10,21 @@ import paths from "./path";
 import HomePage from "../pages/home/HomePage";
 
 import LoginPage from "../components/Auth/Login";
+import Register from "../components/Auth/Register"
 
 const AppRoutes: React.FC = () => {
   return (
-    <Router>
+    <div className="w-full">
       <Routes>
         {/* default root path */}
         <Route path="/" element={<Navigate to={paths.home} replace />} />
         <Route path={paths.home} element={<HomePage />} />
         <Route path={paths.login} element={<LoginPage />} />
-
+        <Route path={paths.register} element={<Register />} />
         {/* Add more routes here */}
       </Routes>
-    </Router>
+    </div>
+      
   );
 };
 
