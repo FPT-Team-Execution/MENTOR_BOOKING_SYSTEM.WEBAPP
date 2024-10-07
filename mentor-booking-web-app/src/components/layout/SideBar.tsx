@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  CommentOutlined,
   DashboardOutlined,
   HomeOutlined,
   ProjectOutlined,
@@ -15,6 +16,7 @@ const items: MenuItem[] = [
   { label: "Dashboard", icon: <DashboardOutlined />, key: '/dashboard' },
   { label: "Project", icon: <ProjectOutlined />, key: '/project' },
   { label: "Group", icon: <TeamOutlined />, key: '/group' },
+  { label: "Feedback", icon: <CommentOutlined/>, key: '/feedback' }
 ];
 
 const SideBar: React.FC = () => {
