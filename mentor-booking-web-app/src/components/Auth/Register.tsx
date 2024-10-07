@@ -3,6 +3,7 @@ import type { FormProps } from 'antd';
 import { Button, Form, Input, Select, Spin } from 'antd';
 import { studentRegister, confirmEmail } from '../../services/authService';
 import useNotification from 'antd/es/notification/useNotification';
+import { useNavigate } from 'react-router-dom';
 
 type FieldType = {
   email: string;
@@ -43,6 +44,7 @@ const App: React.FC = () => {
   const [api, contextHolder] = useNotification();
   const [isConfirmToken, setIsConfirmToken] = useState(false);
   const [isLoading, setIsLoading] = useState(false); 
+  const navigate = useNavigate()
 
   const onFinish: FormProps<FieldType>['onFinish'] = async (values: FieldType) => {
     setIsLoading(true); // Start loading
@@ -90,6 +92,7 @@ const App: React.FC = () => {
         description: res?.data.message,
         duration: 5,
       })
+      navigate('/login')
     }
     if (err) {
       api.open({
