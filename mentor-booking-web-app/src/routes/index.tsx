@@ -12,6 +12,7 @@ import HomePage from "../pages/home/HomePage";
 import LoginPage from "../components/Auth/Login";
 import Register from "../components/Auth/Register"
 import { FeedbackPage } from "../pages/meeting/FeedbackPage";
+import { StudentPage } from "../pages/user/student/StudentPage";
 
 const AppRoutes: React.FC = () => {
   return (
@@ -23,6 +24,7 @@ const AppRoutes: React.FC = () => {
         <Route path={paths.login} element={<LoginPage />} />
         <Route path={paths.register} element={<Register />} />
         <Route path={paths.feedback} element={<FeedbackPage />} />
+        <Route path={paths.stduent} element={<StudentPage />} />
 
         {/* Add more routes here */}
       </Routes>

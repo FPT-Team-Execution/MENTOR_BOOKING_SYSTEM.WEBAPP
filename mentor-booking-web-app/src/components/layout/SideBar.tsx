@@ -5,9 +5,11 @@ import {
   HomeOutlined,
   ProjectOutlined,
   TeamOutlined,
+  UserOutlined,
 } from '@ant-design/icons';
 import { Menu, MenuProps } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import paths from '../../routes/path';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -16,7 +18,8 @@ const items: MenuItem[] = [
   { label: "Dashboard", icon: <DashboardOutlined />, key: '/dashboard' },
   { label: "Project", icon: <ProjectOutlined />, key: '/project' },
   { label: "Group", icon: <TeamOutlined />, key: '/group' },
-  { label: "Feedback", icon: <CommentOutlined/>, key: '/feedback' }
+  { label: "Feedback", icon: <CommentOutlined/>, key: '/feedback' },
+  { label: "Student", icon: <UserOutlined/>, key: paths.stduent }
 ];
 
 const SideBar: React.FC = () => {

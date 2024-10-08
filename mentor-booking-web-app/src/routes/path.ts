@@ -21,7 +21,9 @@ const paths = {
   booking: "/booking",
   bookingDetail: "/booking/:id",
 
-  feedback: "/feedback"
+  feedback: "/feedback",
+
+  stduent: "/students"
 };
 
 export default paths;
