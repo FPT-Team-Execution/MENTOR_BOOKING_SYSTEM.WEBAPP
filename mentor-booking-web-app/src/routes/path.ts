@@ -20,6 +20,8 @@ const paths = {
   //Booking pages
   booking: "/booking",
   bookingDetail: "/booking/:id",
+
+  feedback: "/feedback"
 };
 
 export default paths;
