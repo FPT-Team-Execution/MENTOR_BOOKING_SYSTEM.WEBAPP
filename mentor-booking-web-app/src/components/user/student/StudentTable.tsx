@@ -1,58 +1,39 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Table, Button, Dropdown, Menu, message, Popconfirm } from 'antd';
 import { MoreOutlined } from '@ant-design/icons';
+import { studentService } from '../../../services/studentService';
+import { StudentType } from '../../../types/user.types';
 
-interface Student {
-  fullname: string;
-  email: string;
-  university: string;
-  major: string;
-  walletPoint: number;
-}
 
-const studentData: Student[] = [
-  {
-    fullname: 'Alice Johnson',
-    email: 'alice.johnson@example.com',
-    university: 'FPT University',
-    major: 'Computer Science',
-    walletPoint: 100,
-  },
-  {
-    fullname: 'Bob Smith',
-    email: 'bob.smith@example.com',
-    university: 'Hanoi University',
-    major: 'Information Technology',
-    walletPoint: 80,
-  },
-  {
-    fullname: 'Charlie Brown',
-    email: 'charlie.brown@example.com',
-    university: 'HCM University',
-    major: 'Software Engineering',
-    walletPoint: 120,
-  },
-  {
-    fullname: 'David Wilson',
-    email: 'david.wilson@example.com',
-    university: 'Danang University',
-    major: 'Cybersecurity',
-    walletPoint: 90,
-  },
-  {
-    fullname: 'Eve Adams',
-    email: 'eve.adams@example.com',
-    university: 'FPT University',
-    major: 'Data Science',
-    walletPoint: 150,
-  },
-];
 
 const StudentTable: React.FC = () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [data, setData] = useState<Student[]>(studentData);
+  const [data, setData] = useState<StudentType[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [pageSize] = useState<number>(2); // Display 2 students per page
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [pageSize, setPageSize] = useState<number>(10); 
+  const [totalItems,setTotalItems] = useState<number>(0)
+
+  useEffect(() => {
+
+    const handleFetch = async () => {
+      try {
+        const res = await studentService.getAllStudent(currentPage.toString(), pageSize.toString())
+        if (res) {
+          console.log(res)
+          setData(res.items)
+          setTotalItems(res.totalPages)
+        } else {
+          console.log('Fail to fetch api')
+        }
+      } catch (err) {
+        console.log("Fail to load students: " + err)
+      }
+    }
+
+    handleFetch();
+
+  }, [currentPage])
 
   // Functions for showing confirmation messages
   const handleEdit = (fullname: string) => {
@@ -95,14 +76,13 @@ const StudentTable: React.FC = () => {
   };
 
   // Paginate the student data
-  const paginatedData = data.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
   // Define columns for the table
   const columns = [
     {
       title: 'Fullname',
-      dataIndex: 'fullname',
-      key: 'fullname',
+      dataIndex: 'fullName',
+      key: 'fullName',
     },
     {
       title: 'Email',
@@ -115,11 +95,6 @@ const StudentTable: React.FC = () => {
       key: 'university',
     },
     {
-      title: 'Major',
-      dataIndex: 'major',
-      key: 'major',
-    },
-    {
       title: 'Wallet Point',
       dataIndex: 'walletPoint',
       key: 'walletPoint',
@@ -127,8 +102,8 @@ const StudentTable: React.FC = () => {
     {
       title: 'Actions',
       key: 'actions',
-      render: (record: { fullname: string }) => (
-        <Dropdown overlay={menu(record.fullname)} trigger={['hover']}>
+      render: (record: { fullName: string }) => (
+        <Dropdown overlay={menu(record.fullName)} trigger={['hover']}>
           <Button type="text" icon={<MoreOutlined />} />
         </Dropdown>
       ),
@@ -138,13 +113,13 @@ const StudentTable: React.FC = () => {
   return (
     <div className="p-4">
       <Table
-        dataSource={paginatedData}
+        dataSource={data}
         columns={columns}
         rowKey="fullname"
         pagination={{
           current: currentPage,
           pageSize: pageSize,
-          total: data.length,
+          total: totalItems,
           onChange: handleChangePage,
           showSizeChanger: false, // Disable changing page size
         }}
