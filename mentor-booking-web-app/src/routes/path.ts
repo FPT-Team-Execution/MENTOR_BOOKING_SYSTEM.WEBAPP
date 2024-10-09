@@ -23,7 +23,10 @@ const paths = {
 
   feedback: "/feedback",
 
-  stduent: "/students"
+  student: "/students",
+
+  // dashboard page
+  dashboard: "/dashboard",
 };
 
 export default paths;

@@ -1,43 +1,55 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, ReactNode, useContext, useState } from "react";
 import { login, logout } from "../services/authService";
+import axiosInstance from "../utils/axios/axiosInstance";
+import { useNavigate } from "react-router-dom";
+import paths from "../routes/path";
 
 interface AuthContextType {
   isAuthenticated: boolean;
-  handleLogin: (username: string, password: string) => Promise<void>;
-  handleLogout: () => Promise<void>;
+  jwtToken: string | null;
+  handleLogin: (email: string, password: string) => Promise<void>;
+  handleLogout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(
-    !!localStorage.getItem("token")
-  );
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const [jwtToken, setJwtToken] = useState<string | null>(null);
+  const navigate = useNavigate();
 
-  const handleLogin = async (username: string, password: string) => {
+  const handleLogin = async (email: string, password: string) => {
     try {
-      await login({ username, password });
-      setIsAuthenticated(true);
+      const response = await axiosInstance.post("/auth/sign-in", {
+        email,
+        password,
+      });
+
+      const { jwtToken } = response.data.responseModel;
+
+      //TODO: handle to zustand instead of local storage.
+      setJwtToken(jwtToken.accessToken); // Save the access token
+      localStorage.setItem("accessToken", jwtToken.accessToken);
+      localStorage.setItem("refreshToken", jwtToken.refreshToken);
+
+      navigate(paths.dashboard); // Navigate to the dashboard or other protected route
     } catch (error) {
-      console.error("Login failed", error);
-      setIsAuthenticated(false);
+      console.error("Login error:", error);
+      throw error;
     }
   };
 
-  const handleLogout = async () => {
-    try {
-      await logout();
-      setIsAuthenticated(false);
-    } catch (error) {
-      console.error("Logout failed", error);
-    }
+  const handleLogout = () => {
+    setJwtToken(null);
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    navigate("/login");
   };
+
+  const isAuthenticated = Boolean(jwtToken);
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, handleLogin, handleLogout }}
+      value={{ isAuthenticated, jwtToken, handleLogin, handleLogout }}
     >
       {children}
     </AuthContext.Provider>

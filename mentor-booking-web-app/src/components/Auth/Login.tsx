@@ -10,7 +10,6 @@ const Login = () => {
     e.preventDefault();
     try {
       await handleLogin(username, password);
-      alert("Login successful");
     } catch (error) {
       alert("Login failed");
     }
