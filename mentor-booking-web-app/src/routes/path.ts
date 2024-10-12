@@ -14,9 +14,9 @@ const paths = {
   studentDetail: "/students/:id",
 
   //Calender pages
-  calender: "/calender",
+  calender: "/calendar",
   calenderDetail: "/calender/:id",
-
+  mentorCalender: (mentorId: string) => `/calendar/${mentorId}`,
   //Booking pages
   booking: "/booking",
   bookingDetail: "/booking/:id",

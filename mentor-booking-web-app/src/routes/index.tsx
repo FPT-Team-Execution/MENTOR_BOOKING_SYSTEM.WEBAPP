@@ -10,6 +10,7 @@ import Register from "../components/Auth/Register";
 import { FeedbackPage } from "../pages/meeting/FeedbackPage";
 import { StudentPage } from "../pages/user/student/StudentPage";
 import Dashboard from "../pages/admin/DashBoard";
+import CalendarEventPage from "../pages/calendar/CalendarEventPage";
 
 const AppRoutes: React.FC = () => {
   return (
@@ -24,6 +25,7 @@ const AppRoutes: React.FC = () => {
         <Route path={paths.student} element={<StudentPage />} />
         <Route path={paths.student} element={<StudentPage />} />
         <Route path={paths.dashboard} element={<Dashboard />} />
+        <Route path="/mentor/calendar/:mentorId" element={<CalendarEventPage />} />
         {/* Add more routes here */}
       </Routes>
     </div>
