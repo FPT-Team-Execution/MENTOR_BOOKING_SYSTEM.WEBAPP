@@ -8,3 +8,4 @@ export const STUDENT_REGISTER = `${BASE_URL}/auth/sign-up`;
 export const CONFIRM_EMAIL = `${BASE_URL}/auth/confirm-email`;
 export const MENTOR_REGISTER = `${BASE_URL}/auth/mentor/sign-up`;
 export const GOOGLE_SIGNIN = `${BASE_URL}/auth/google/sign-in`;
+export const CREATE_PROJECT = `${BASE_URL}/project`;

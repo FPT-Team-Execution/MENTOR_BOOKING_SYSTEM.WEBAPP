@@ -26,7 +26,9 @@ const paths = {
   student: "/students",
 
   // dashboard page
-  dashboard: "/dashboard",
+  dashboard: "admin/dashboard",
+  //student
+  project: "students/project",
 };
 
 export default paths;
