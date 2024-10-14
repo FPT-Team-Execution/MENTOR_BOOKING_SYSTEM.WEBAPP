@@ -19,7 +19,7 @@ const items: MenuItem[] = [
   { label: "Project", icon: <ProjectOutlined />, key: '/project' },
   { label: "Group", icon: <TeamOutlined />, key: '/group' },
   { label: "Feedback", icon: <CommentOutlined/>, key: '/feedback' },
-  { label: "Student", icon: <UserOutlined/>, key: paths.stduent }
+  { label: "Student", icon: <UserOutlined/>, key: paths.student }
 ];
 
 const SideBar: React.FC = () => {
