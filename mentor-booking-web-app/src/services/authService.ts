@@ -5,8 +5,10 @@ import {
   LOGIN_URL,
   LOGOUT_URL,
   MENTOR_REGISTER,
+  REFRESH_TOKEN,
   STUDENT_REGISTER,
 } from "../utils/apiUrl/baseUrl";
+import { RefreshTokenData, ResponseModel } from "../types/common.types";
 
 interface LoginData {
   username: string;
@@ -35,6 +37,7 @@ interface MentorData {
   gender: string;
   industry?: string;
 }
+
 
 export const login = async (loginData: LoginData) => {
   const response = await axiosInstance.post(LOGIN_URL, loginData);
@@ -82,3 +85,12 @@ export const loginWithGoogle = async () => {
     return { res: null, error: error };
   }
 };
+
+export const refreshToken = async (refreshToken: string) => {
+  try {
+    const res = await axiosInstance.post<ResponseModel<RefreshTokenData>>( REFRESH_TOKEN, {refreshToken});
+    return res
+  } catch (error) {
+    console.log(error)
+  }
+}

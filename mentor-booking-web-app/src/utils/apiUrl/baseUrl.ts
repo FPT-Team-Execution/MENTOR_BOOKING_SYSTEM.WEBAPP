@@ -11,6 +11,8 @@ export const GOOGLE_SIGNIN = `${BASE_URL}/auth/google/sign-in`;
 
 export const GET_ALL_STUDENTS = '/students?page={page}&size={size}'
 
+export const REFRESH_TOKEN = '/auth/refresh'
+
 // Calendar Events URLs
 export const GET_EVENTS_BY_MENTOR_URL = (mentorId: string, page: number, size: number) =>
     `${BASE_URL}/calendar-event/mentor/${mentorId}?page=${page}&size=${size}`;
