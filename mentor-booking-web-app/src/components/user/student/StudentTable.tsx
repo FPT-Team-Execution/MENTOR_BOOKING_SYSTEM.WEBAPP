@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Dropdown, Menu, message, Popconfirm } from 'antd';
+import { Table, Button, Dropdown, Menu, message, Popconfirm, Modal } from 'antd';
 import { MoreOutlined } from '@ant-design/icons';
 import { studentService } from '../../../services/studentService';
 import { StudentType } from '../../../types/user.types';
-
 
 
 const StudentTable: React.FC = () => {
@@ -37,16 +36,32 @@ const StudentTable: React.FC = () => {
 
   // Functions for showing confirmation messages
   const handleEdit = (fullname: string) => {
-    message.info(`Edit student: ${fullname}`);
+    message.success(`Edit student: ${fullname}`);
   };
 
   const handleDelete = (fullname: string) => {
     message.success(`Deleted student: ${fullname}`);
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleUpdatePoint = (fullname: string) => {
     message.info(`Updated points for: ${fullname}`);
   };
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
 
   // Menu for the ellipsis dropdown
   const menu = (fullname: string) => (
@@ -64,7 +79,7 @@ const StudentTable: React.FC = () => {
           Delete
         </Popconfirm>
       </Menu.Item>
-      <Menu.Item key="3" onClick={() => handleUpdatePoint(fullname)}>
+      <Menu.Item key="3" onClick={showModal}>
         Update Point
       </Menu.Item>
     </Menu>
@@ -125,6 +140,13 @@ const StudentTable: React.FC = () => {
         }}
         bordered
       />
+      <Modal title="Update Point" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+        <div>
+          Student name: Banana
+        </div>
+
+      </Modal>
+
     </div>
   );
 };

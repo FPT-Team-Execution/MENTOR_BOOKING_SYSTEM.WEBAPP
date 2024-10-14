@@ -1,5 +1,5 @@
-import { createContext, ReactNode, useContext, useState } from "react";
-import { login, logout } from "../services/authService";
+import { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import { login, logout, refreshToken } from "../services/authService";
 import axiosInstance from "../utils/axios/axiosInstance";
 import { useNavigate } from "react-router-dom";
 import paths from "../routes/path";
@@ -11,11 +11,41 @@ interface AuthContextType {
   handleLogout: () => void;
 }
 
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [jwtToken, setJwtToken] = useState<string | null>(null);
+  const [isAuthenticated,setIsAuthenticated] = useState(false)
   const navigate = useNavigate();
+
+  useEffect(() => {
+    try {
+      const token = localStorage.getItem('refreshToken')
+      if (token) {
+        handleRefreshToken(token);
+      } else {
+        navigate('/login')
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  }, [])
+
+  const handleRefreshToken = async (token: string) => {
+    const res = await refreshToken(token)
+    if (res) {
+      if (res.data.isSuccess) {
+        setJwtToken(res.data.responseModel.newJwtToken.accessToken);
+        localStorage.setItem("refreshToken", res.data.responseModel.newJwtToken.refreshToken);
+        setIsAuthenticated(true);
+      } else {
+        navigate('/login')
+      }
+    } else {
+      navigate('/login')
+    } 
+  }
 
   const handleLogin = async (email: string, password: string) => {
     try {
@@ -30,7 +60,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setJwtToken(jwtToken.accessToken); // Save the access token
       localStorage.setItem("accessToken", jwtToken.accessToken);
       localStorage.setItem("refreshToken", jwtToken.refreshToken);
-
+      setIsAuthenticated(true)
       navigate(paths.dashboard); // Navigate to the dashboard or other protected route
     } catch (error) {
       console.error("Login error:", error);
@@ -42,10 +72,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setJwtToken(null);
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
+    setIsAuthenticated(false)
     navigate("/login");
   };
-
-  const isAuthenticated = Boolean(jwtToken);
 
   return (
     <AuthContext.Provider
