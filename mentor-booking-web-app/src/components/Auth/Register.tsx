@@ -22,15 +22,15 @@ type ConfirmToken = {
 };
 
 const majors = [{
-  marjorId: 'C7DDCF7F-4A55-431B-8BC7-136C6E3844F3',
+  marjorId: '903B6085-4CC3-47F3-BBDD-0F8319E5AABB',
   label: 'SE'
 }, 
 {
-  marjorId: 2,
+  marjorId: '71577EAF-EBF1-4B23-A48D-CF8561B1C7DB',
   label: 'SS'
 }, 
 {
-  marjorId: 3,
+  marjorId: 'DFDB83A4-18E0-447E-9EC8-7C8B39EE6F3A',
   label: 'SA'
 }];
 
