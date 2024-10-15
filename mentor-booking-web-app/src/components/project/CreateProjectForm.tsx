@@ -78,7 +78,7 @@ const CreateProjectForm: React.FC<CreateProjectProps> = ({
           <Option value="Spring 2025">Spring 2025</Option>
         </Select>
       </Form.Item>
-      // TODO: Add mentor dropdown // By getMentors API or hardcode.
+      {/* // TODO: Add mentor dropdown // By getMentors API or hardcode. */}
       <Form.Item
         label="Mentor ID"
         name="mentorId"
