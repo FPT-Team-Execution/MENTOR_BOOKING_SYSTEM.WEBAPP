@@ -48,7 +48,6 @@ const CreateProjectForm: React.FC<CreateProjectProps> = ({
       >
         <Input placeholder="Enter project title" />
       </Form.Item>
-
       <Form.Item
         label="Description"
         name="description"
@@ -58,7 +57,6 @@ const CreateProjectForm: React.FC<CreateProjectProps> = ({
       >
         <TextArea placeholder="Enter project description" rows={4} />
       </Form.Item>
-
       <Form.Item
         label="Due Date"
         name="dueDate"
@@ -70,7 +68,6 @@ const CreateProjectForm: React.FC<CreateProjectProps> = ({
           disabledDate={(current) => current && current < dayjs().endOf("day")}
         />
       </Form.Item>
-
       <Form.Item
         label="Semester"
         name="semester"
@@ -81,7 +78,7 @@ const CreateProjectForm: React.FC<CreateProjectProps> = ({
           <Option value="Spring 2025">Spring 2025</Option>
         </Select>
       </Form.Item>
-
+      // TODO: Add mentor dropdown // By getMentors API or hardcode.
       <Form.Item
         label="Mentor ID"
         name="mentorId"
@@ -89,7 +86,6 @@ const CreateProjectForm: React.FC<CreateProjectProps> = ({
       >
         <Input placeholder="Enter mentor ID" />
       </Form.Item>
-
       <Form.Item>
         <Button type="primary" htmlType="submit" loading={loading}>
           Create Project

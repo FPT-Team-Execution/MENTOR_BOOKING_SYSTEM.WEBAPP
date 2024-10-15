@@ -15,7 +15,8 @@ const ProjectPage: React.FC = () => {
   const fetchProjects = async () => {
     setLoading(true);
     try {
-      const { data } = await axios.get("/api/projects");
+      // Get projects by student ID API
+      const { data } = await axios.get("/api/projects/students/{studentId}");
       setProjects(data);
     } catch (error) {
       message.error("Failed to load projects");
