@@ -14,12 +14,60 @@ const Login = () => {
       alert("Login failed");
     }
   };
-
   const loginWithGoogle = async () => {
     try {
-      await loginWithGoogle();
+      // Open a new window for Google login
+      const googleLoginWindow = window.open(
+        "https://localhost:7554/api/auth/google/signin",
+        "_blank",
+        "width=500,height=600"
+      );
+
+      // Poll to check if the window is closed and the login is done
+      const pollTimer = window.setInterval(async () => {
+        if (googleLoginWindow && googleLoginWindow.closed) {
+          window.clearInterval(pollTimer);
+
+          try {
+            // Call your backend API to retrieve the tokens
+            const response = await fetch(
+              "https://localhost:7554/api/auth/google/signin",
+              {
+                method: "GET", // Change method based on API requirements
+                credentials: "include", // Include cookies if needed
+              }
+            );
+
+            const result = await response.json();
+
+            if (result.isSuccess) {
+              const { accessToken, refreshToken } =
+                result.responseRequestModel.jwtModel;
+              const { access_token, refresh_token } =
+                result.responseRequestModel.googleToken;
+
+              // Store JWT tokens
+              localStorage.setItem("accessToken", accessToken);
+              localStorage.setItem("refreshToken", refreshToken);
+
+              // Store Google tokens
+              localStorage.setItem("googleAccessToken", access_token);
+              localStorage.setItem("googleRefreshToken", refresh_token);
+
+              // Redirect to the dashboard
+              window.location.href = "/dashboard";
+            } else {
+              alert("Google login failed");
+            }
+          } catch (error) {
+            console.error("Error during Google login: ", error);
+            alert("Google login failed");
+          }
+        }
+      }, 500); // Poll every 500ms
     } catch (error) {
-      alert("Login failed");
+      console.error("Error during Google login: ", error);
+      alert("Google login failed");
     }
   };
 
