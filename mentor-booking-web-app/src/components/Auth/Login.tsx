@@ -1,6 +1,14 @@
 import React, { useState } from "react";
 import { useAuth } from "../../auth/AuthContext";
 
+// Client side setup
+const googleAuthUrl = "https://accounts.google.com/o/oauth2/v2/auth";
+const clientId =
+  "1096581745243-bj51g3cd4rq13codonsoftbk8h7tq4mi.apps.googleusercontent.com";
+const redirectUri = "https://localhost:7554/api/auth/signin-google";
+const scope = "openid profile email";
+const responseType = "code";
+const accessType = "offline"; // To get refresh token
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -14,13 +22,10 @@ const Login = () => {
       alert("Login failed");
     }
   };
-
   const loginWithGoogle = async () => {
-    try {
-      await loginWithGoogle();
-    } catch (error) {
-      alert("Login failed");
-    }
+    //TODO: login with google here
+    const authUrl = `${googleAuthUrl}?response_type=${responseType}&client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&access_type=${accessType}`;
+    window.location.href = authUrl;
   };
 
   return (
