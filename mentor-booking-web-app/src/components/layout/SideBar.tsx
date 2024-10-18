@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   CommentOutlined,
   DashboardOutlined,
@@ -6,12 +6,12 @@ import {
   ProjectOutlined,
   TeamOutlined,
   UserOutlined,
-} from '@ant-design/icons';
-import { Menu, MenuProps } from 'antd';
-import { useNavigate } from 'react-router-dom';
-import paths from '../../routes/path';
+} from "@ant-design/icons";
+import { Menu, MenuProps } from "antd";
+import { useNavigate } from "react-router-dom";
+import paths from "../../routes/path";
 
-type MenuItem = Required<MenuProps>['items'][number];
+type MenuItem = Required<MenuProps>["items"][number];
 
 const items: MenuItem[] = [
   { label: "Home", icon: <HomeOutlined />, key: '/' },
@@ -23,20 +23,17 @@ const items: MenuItem[] = [
 ];
 
 const SideBar: React.FC = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   return (
     <Menu
-      className='w-48'
+      className="w-48"
       items={items}
-      onClick={({key}) => {
-        navigate(key)
+      onClick={({ key }) => {
+        navigate(key);
       }}
-      mode='inline'
-    >
-    </Menu>
-
-
+      mode="inline"
+    ></Menu>
   );
 };
 

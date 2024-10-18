@@ -15,11 +15,6 @@ const DashBoardTable = () => {
       render: (text) => <a>{text}</a>,
     },
     {
-      title: "Age",
-      dataIndex: "age",
-      key: "age",
-    },
-    {
       title: "Address",
       dataIndex: "address",
       key: "address",

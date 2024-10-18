@@ -7,7 +7,8 @@ export const LOGOUT_URL = `${BASE_URL}/auth/logout`;
 export const STUDENT_REGISTER = `${BASE_URL}/auth/sign-up`;
 export const CONFIRM_EMAIL = `${BASE_URL}/auth/confirm-email`;
 export const MENTOR_REGISTER = `${BASE_URL}/auth/mentor/sign-up`;
-export const GOOGLE_SIGNIN = `${BASE_URL}/auth/google/sign-in`;
+export const GOOGLE_SIGNIN = `${BASE_URL}/auth/google/signin`;
+export const CREATE_PROJECT = `${BASE_URL}/projects`;
 
 export const GET_ALL_STUDENTS = '/students?page={page}&size={size}'
 
