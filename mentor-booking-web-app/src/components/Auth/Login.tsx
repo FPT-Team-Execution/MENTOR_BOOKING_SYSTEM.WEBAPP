@@ -34,7 +34,7 @@ const Login = () => {
               "https://localhost:7554/api/auth/google/signin",
               {
                 method: "GET", // Change method based on API requirements
-                credentials: "include", // Include cookies if needed
+                mode: "no-cors", // Include cookies if needed
               }
             );
 
