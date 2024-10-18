@@ -1,6 +1,14 @@
 import React, { useState } from "react";
 import { useAuth } from "../../auth/AuthContext";
 
+// Client side setup
+const googleAuthUrl = "https://accounts.google.com/o/oauth2/v2/auth";
+const clientId =
+  "1096581745243-bj51g3cd4rq13codonsoftbk8h7tq4mi.apps.googleusercontent.com";
+const redirectUri = "https://localhost:7554/api/auth/signin-google";
+const scope = "openid profile email";
+const responseType = "code";
+const accessType = "offline"; // To get refresh token
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -15,60 +23,9 @@ const Login = () => {
     }
   };
   const loginWithGoogle = async () => {
-    try {
-      // Open a new window for Google login
-      const googleLoginWindow = window.open(
-        "https://localhost:7554/api/auth/google/signin",
-        "_blank",
-        "width=500,height=600"
-      );
-
-      // Poll to check if the window is closed and the login is done
-      const pollTimer = window.setInterval(async () => {
-        if (googleLoginWindow && googleLoginWindow.closed) {
-          window.clearInterval(pollTimer);
-
-          try {
-            // Call your backend API to retrieve the tokens
-            const response = await fetch(
-              "https://localhost:7554/api/auth/google/signin",
-              {
-                method: "GET", // Change method based on API requirements
-                mode: "no-cors", // Include cookies if needed
-              }
-            );
-
-            const result = await response.json();
-
-            if (result.isSuccess) {
-              const { accessToken, refreshToken } =
-                result.responseRequestModel.jwtModel;
-              const { access_token, refresh_token } =
-                result.responseRequestModel.googleToken;
-
-              // Store JWT tokens
-              localStorage.setItem("accessToken", accessToken);
-              localStorage.setItem("refreshToken", refreshToken);
-
-              // Store Google tokens
-              localStorage.setItem("googleAccessToken", access_token);
-              localStorage.setItem("googleRefreshToken", refresh_token);
-
-              // Redirect to the dashboard
-              window.location.href = "/dashboard";
-            } else {
-              alert("Google login failed");
-            }
-          } catch (error) {
-            console.error("Error during Google login: ", error);
-            alert("Google login failed");
-          }
-        }
-      }, 500); // Poll every 500ms
-    } catch (error) {
-      console.error("Error during Google login: ", error);
-      alert("Google login failed");
-    }
+    //TODO: login with google here
+    const authUrl = `${googleAuthUrl}?response_type=${responseType}&client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&access_type=${accessType}`;
+    window.location.href = authUrl;
   };
 
   return (

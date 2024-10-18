@@ -1,21 +1,26 @@
-import { Button } from "antd";
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import paths from "../../routes/path";
+import React, { useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 
-export const HomePage: React.FC = () => {
+const HomePage: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const handleOnLoginClick = () => {
-    navigate(paths.login);
-  };
+  useEffect(() => {
+    // Extract tokens from query params
+    const searchParams = new URLSearchParams(location.search);
+    const accessToken = searchParams.get("accessToken");
+    const refreshToken = searchParams.get("refreshToken");
 
-  const handleOnReginsterClick = () => {
-    navigate(paths.register);
-  };
-  return (
-    <>Home</>
-  );
+    if (accessToken && refreshToken) {
+      // Store tokens in localStorage
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("refreshToken", refreshToken);
+    } else {
+      // If no tokens found, redirect to login
+      navigate("/login");
+    }
+  }, [location.search, navigate]);
+  return <>Welcome to the Home Page! Tho!</>;
 };
 
 export default HomePage;

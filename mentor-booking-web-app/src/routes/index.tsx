@@ -11,6 +11,8 @@ import { FeedbackPage } from "../pages/meeting/FeedbackPage";
 import { StudentPage } from "../pages/user/student/StudentPage";
 import Dashboard from "../pages/admin/DashBoard";
 import CalendarEventPage from "../pages/calendar/CalendarEventPage";
+import GoogleAuthCallback from "../components/Auth/GoogleAuthCallback";
+import WelcomeMentorPage from "../pages/mentor/WelcomMentorPage";
 
 const AppRoutes: React.FC = () => {
   return (
@@ -25,7 +27,11 @@ const AppRoutes: React.FC = () => {
         <Route path={paths.student} element={<StudentPage />} />
         <Route path={paths.student} element={<StudentPage />} />
         <Route path={paths.dashboard} element={<Dashboard />} />
-        <Route path="/mentor/calendar/:mentorId" element={<CalendarEventPage />} />
+        <Route
+          path="/mentor/calendar/:mentorId"
+          element={<CalendarEventPage />}
+        />
+        <Route path="/auth/google/callback" element={<GoogleAuthCallback />} />
         {/* Add more routes here */}
       </Routes>
     </div>
