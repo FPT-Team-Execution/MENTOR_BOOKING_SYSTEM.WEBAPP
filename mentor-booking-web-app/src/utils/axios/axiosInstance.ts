@@ -6,6 +6,19 @@ const axiosInstance = axios.create({
     baseURL: BASE_URL
 })
 
+axiosInstance.interceptors.request.use(
+    (config) => {
+      const accessToken = localStorage.getItem('accessToken');
+      if (accessToken) {
+        config.headers['Authorization'] = `Bearer ${accessToken}`;
+      }
+      return config;
+    },
+    (error) => {
+      return Promise.reject(error);
+    }
+);
+
 // Adding a response interceptor to the Axios instance
 axiosInstance.interceptors.response.use(
     (response) => response,
