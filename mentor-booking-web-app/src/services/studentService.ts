@@ -1,6 +1,6 @@
 import { PaginationModel, ResponseRequestModel } from "../types/common.types";
 import { StudentType } from "../types/user.types";
-import { GET_ALL_STUDENTS } from "../utils/apiUrl/baseUrl";
+import { GET_ALL_STUDENTS, SEARCH_STUDENT } from "../utils/apiUrl/baseUrl";
 import axiosInstance from "../utils/axios/axiosInstance"
 
 
@@ -12,7 +12,7 @@ const getAllStudent = async (page: string, size: string) => {
 }
 
 const searchStudent = async (search: string) => {
-    const url = '' + search
+    const url = SEARCH_STUDENT.replace('{searchItem}',search)
     const result = await axiosInstance.get(url)
     return result.data.responseRequestModel
 }

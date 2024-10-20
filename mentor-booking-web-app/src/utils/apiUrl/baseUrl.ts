@@ -29,3 +29,7 @@ export const DELETE_EVENT_URL = (calendarEventId: string) =>
     `${BASE_URL}/calendar-event/${calendarEventId}`;
 
 export const GET_PROJECT_BY_ID = '/groups/students/{id}'
+
+export const GROUP = '/groups'
+
+export const SEARCH_STUDENT = '/groups/students/search/{searchItem}'

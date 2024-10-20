@@ -1,4 +1,4 @@
-import { GET_PROJECT_BY_ID } from "../utils/apiUrl/baseUrl"
+import { GET_PROJECT_BY_ID, GROUP } from "../utils/apiUrl/baseUrl"
 import axiosInstance from "../utils/axios/axiosInstance"
 
 const getProjectById = async (id: string) => {
@@ -7,8 +7,8 @@ const getProjectById = async (id: string) => {
     return result.data
 }
 
-const addStudentToProject = async () => {
-    const result = await axiosInstance.post('')
+const addStudentToProject = async (data: unknown) => {
+    const result = await axiosInstance.post(GROUP, data)
     return result.data
 }
 

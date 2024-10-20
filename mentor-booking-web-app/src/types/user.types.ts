@@ -1,4 +1,5 @@
 export type StudentType = {
+    studentId: string;
     id: string,
     university: string,
     walletPoint: number,
