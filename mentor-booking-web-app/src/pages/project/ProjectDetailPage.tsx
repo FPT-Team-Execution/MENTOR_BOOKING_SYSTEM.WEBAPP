@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { ProjectType } from '../../types/project.type';
 import ProjectCard from '../../components/project/ProjectCard';
 import StudentProjectList from '../../components/user/student/StudentProjectList';
-import { Button, Modal, Select } from 'antd';
+import { Button, message, Modal, Select } from 'antd';
 import { projectService } from '../../services/projectService';
 import { StudentType } from '../../types/user.types';
 import { debounce } from 'lodash'
@@ -37,11 +37,19 @@ export const ProjectDetailPage = () => {
         setIsModalOpen(true);
     };
 
-    const handleOk = () => {
+    const handleOk = async () => {
         console.log('Adding student:', selectedStudent, 'to project ID:', project?.id);
-        // Thực hiện API thêm sinh viên vào dự án ở đây
-
-        // Đóng modal sau khi thực hiện
+        const result = await projectService.addStudentToProject({
+            projectId: project?.id,
+            studentId: selectedStudent,
+            positionId: 'D90A1DBA-CC6C-466C-96E5-8EAF98809D8D'
+        })
+        if (result.isSuccess) {
+            message.success(result.message)
+            handleGetProject();
+        } else {
+            message.error('Error: somethings went wrong')
+        }
         setIsModalOpen(false);
     };
 
@@ -53,7 +61,7 @@ export const ProjectDetailPage = () => {
     const fetchStudents = async (searchValue: string) => {
         try {
             const response = await studentService.searchStudent(searchValue);
-            setSearchStudent(response.students);
+            setSearchStudent(response);
         } catch (error) {
             console.error("Failed to search students:", error);
         }
@@ -100,7 +108,7 @@ export const ProjectDetailPage = () => {
                             filterOption={false} // Disable the default filtering behavior
                         >
                             {searchStudent.map(student => (
-                                <Select.Option key={student.id} value={student.id}>
+                                <Select.Option key={student.id} value={student.studentId}>
                                     {`${student.fullName} (${student.email})`}
                                 </Select.Option>
                             ))}
