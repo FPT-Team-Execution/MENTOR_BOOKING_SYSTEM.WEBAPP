@@ -21,7 +21,7 @@ export default function NavBar() {
         <div className="flex items-center gap-4">
           <Link to='/'
           >
-            <img className="w-20" src="src\assets\image\Logo.png" alt="" />
+            <img className="w-20" src="..\src\assets\image\Logo.png" alt="" />
           </Link>
         </div>
         {
@@ -42,7 +42,7 @@ export default function NavBar() {
           ) : (
             <Dropdown menu={{items}}>
               <div className="h-9 w-9 rounded-[50%]">
-                <img className="w-full h-full " src="src\assets\image\UserLogo.png" alt="" />
+                <img className="w-full h-full " src="..\src\assets\image\UserLogo.png" alt="" />
               </div>
             </Dropdown>
           )

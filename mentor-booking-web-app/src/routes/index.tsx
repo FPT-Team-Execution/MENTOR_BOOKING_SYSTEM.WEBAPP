@@ -74,7 +74,7 @@ const AppRoutes: React.FC = () => {
         <Route
           path="/mentor/calendar/:mentorId"
           element={
-            <ProtectedRoute allowedRoles={['Mentor']}>
+            <ProtectedRoute allowedRoles={['Admin','Mentor']}>
               <CalendarEventPage />
             </ProtectedRoute>
           }

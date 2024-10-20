@@ -24,8 +24,6 @@ const ProjectCard: React.FC<{ project?: ProjectType }> = ({ project }) => {
     <Card className="border rounded-lg shadow-lg p-3 mb-4 max-w-xs text-left">
       {/* Project Title */}
       <h2 className="text-lg font-semibold text-gray-800">{project.title}</h2>
-      
-      {/* Status tag */}
 
       {/* Project Description */}
       <p className="text-gray-600 my-2 text-sm">
@@ -53,6 +51,11 @@ const ProjectCard: React.FC<{ project?: ProjectType }> = ({ project }) => {
           <span>Mentor ID: {project.mentorId}</span>
         </div>
       </div>
+
+      {/* Status tag */}
+      <Tag color={statusColors[project.status]} className="mt-1">
+        {project.status}
+      </Tag>
     </Card>
   );
 };
