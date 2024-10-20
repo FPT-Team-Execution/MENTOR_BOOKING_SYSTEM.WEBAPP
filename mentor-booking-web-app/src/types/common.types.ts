@@ -11,7 +11,7 @@ export type ResponseModel<T> = {
     statusCode: number,
     responseModel: T
 }
-  
+
 export type PaginationModel<T> = {
     pageIndex: number,
     pageSize: number,
@@ -24,4 +24,16 @@ export type RefreshTokenData = {
         accessToken: string,
         refreshToken: string
     }
-  }
+}
+
+
+export type TokenData = {
+    aud: string;
+    exp: number;
+    role: string;
+    name: string;
+    nameidentifier: string;
+    iss: string;
+    nbf: number;
+    [key: string]: any; // For any other fields
+};
