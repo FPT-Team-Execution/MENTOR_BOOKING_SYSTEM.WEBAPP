@@ -15,9 +15,6 @@ const HomePage: React.FC = () => {
       // Store tokens in localStorage
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
-    } else {
-      // If no tokens found, redirect to login
-      navigate("/login");
     }
   }, [location.search, navigate]);
   return <>Welcome to the Home Page! Tho!</>;

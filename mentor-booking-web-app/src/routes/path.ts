@@ -29,8 +29,10 @@ const paths = {
   dashboard: "/dashboard",
   //student
   project: "/project",
+  projectDetail: "/project/:id",
 
   request: "/requests"
+
 };
 
 export default paths;
