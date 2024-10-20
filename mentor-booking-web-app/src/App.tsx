@@ -1,25 +1,26 @@
 import React from "react";
 import "./App.css";
 import AppRoutes from "./routes";
-import { AuthProvider } from "./auth/AuthContext";
+import { useAuth } from "./auth/AuthContext";
 import SideBar from "./components/layout/SideBar";
 import NavBar from "./components/layout/NavBar";
+import { LoadingPage } from "./components/layout/LoadingPage";
 
 function App() {
+  const { isLoading } = useAuth()
   return (
     <>
-      <AuthProvider>
-        <div className="max-h-screen">
+      {isLoading ?
+        (<LoadingPage />)
+        : (<div className="max-h-screen">
           <div>
-            <NavBar/>
+            <NavBar />
           </div>
           <div className="flex">
-            <SideBar/>
-            <AppRoutes/>
+            <SideBar />
+            <AppRoutes />
           </div>
-        </div>
-        
-      </AuthProvider>
+        </div>)}
     </>
   );
 }

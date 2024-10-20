@@ -13,6 +13,7 @@ import CalendarEventPage from "../pages/calendar/CalendarEventPage";
 import GoogleAuthCallback from "../components/Auth/GoogleAuthCallback";
 import ProjectPage from "../pages/user/student/ProjectPage";
 import ProtectedRoute from "./ProtectRoute";
+import { ProjectDetailPage } from "../pages/project/ProjectDetailPage";
 
 const AppRoutes: React.FC = () => {
   return (
@@ -60,12 +61,20 @@ const AppRoutes: React.FC = () => {
             </ProtectedRoute>
           }
         />
+        <Route
+          path={paths.projectDetail}
+          element={
+            <ProtectedRoute allowedRoles={['Admin','Mentor','Student']}>
+              <ProjectDetailPage />
+            </ProtectedRoute>
+          }
+        />
         
         {/* Mentor routes */}
         <Route
           path="/mentor/calendar/:mentorId"
           element={
-            <ProtectedRoute allowedRoles={['Mentor']}>
+            <ProtectedRoute allowedRoles={['Admin','Mentor']}>
               <CalendarEventPage />
             </ProtectedRoute>
           }

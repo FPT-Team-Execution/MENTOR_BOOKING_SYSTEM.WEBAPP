@@ -114,15 +114,6 @@ const StudentTable: React.FC = () => {
       dataIndex: 'walletPoint',
       key: 'walletPoint',
     },
-    {
-      title: 'Actions',
-      key: 'actions',
-      render: (record: { fullName: string }) => (
-        <Dropdown overlay={menu(record.fullName)} trigger={['hover']}>
-          <Button type="text" icon={<MoreOutlined />} />
-        </Dropdown>
-      ),
-    },
   ];
 
   return (

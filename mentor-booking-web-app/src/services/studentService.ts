@@ -11,6 +11,14 @@ const getAllStudent = async (page: string, size: string) => {
     return result.data.responseRequestModel
 }
 
-export const studentService = {
-    getAllStudent
+const searchStudent = async (search: string) => {
+    const url = '' + search
+    const result = await axiosInstance.get(url)
+    return result.data.responseRequestModel
 }
+
+export const studentService = {
+    getAllStudent,
+    searchStudent
+}
+

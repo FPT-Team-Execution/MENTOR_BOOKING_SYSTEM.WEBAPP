@@ -10,6 +10,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   jwtToken: string | null;
   userInfo: TokenData | undefined;
+  isLoading: boolean;
   handleLogin: (email: string, password: string) => Promise<void>;
   handleLogout: () => void;
 }
@@ -21,6 +22,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [jwtToken, setJwtToken] = useState<string | null>(null);
   const [isAuthenticated,setIsAuthenticated] = useState(false)
   const [userInfo, setUserInfo] = useState<TokenData>();
+  const [isLoading, setIsLoading] = useState(true); 
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -29,6 +31,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (token) {
         handleRefreshToken(token);
       } else {
+        setIsLoading(false);
         navigate('/login')
       }
     } catch (err) {
@@ -37,20 +40,24 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, [])
 
   const handleRefreshToken = async (token: string) => {
-    const res = await refreshToken(token)
-    if (res) {
-      if (res.data.isSuccess) {
-        setJwtToken(res.data.responseModel.newJwtToken.accessToken);
-        localStorage.setItem("refreshToken", res.data.responseModel.newJwtToken.refreshToken);
-        setUserInfo(decode(res.data.responseModel.newJwtToken.accessToken))
+    try {
+      const res = await refreshToken(token);
+      if (res?.data.isSuccess) {
+        const newJwtToken = res.data.responseModel.newJwtToken;
+        setJwtToken(newJwtToken.accessToken);
+        localStorage.setItem("refreshToken", newJwtToken.refreshToken);
+        setUserInfo(decode(newJwtToken.accessToken));
         setIsAuthenticated(true);
       } else {
-        navigate('/login')
+        navigate("/login");
       }
-    } else {
-      navigate('/login')
-    } 
-  }
+    } catch (error) {
+      console.error("Refresh token error:", error);
+      navigate("/login");
+    } finally {
+      setIsLoading(false); // Kết thúc loading sau khi xử lý token
+    }
+  };
 
 
   const handleLogin = async (email: string, password: string) => {
@@ -66,12 +73,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setJwtToken(jwtToken.accessToken); // Save the access token
       localStorage.setItem("accessToken", jwtToken.accessToken);
       localStorage.setItem("refreshToken", jwtToken.refreshToken);
-      setUserInfo(decode(jwtToken.accessToken))
+      await setUserInfo(decode(jwtToken.accessToken))
       setIsAuthenticated(true)
       navigate(paths.dashboard); // Navigate to the dashboard or other protected route
     } catch (error) {
       console.error("Login error:", error);
       throw error;
+    } finally {
+      setIsLoading(false)
     }
   };
 
@@ -85,7 +94,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, jwtToken, userInfo, handleLogin, handleLogout }}
+      value={{ isAuthenticated, jwtToken, userInfo, isLoading, handleLogin, handleLogout }}
     >
       {children}
     </AuthContext.Provider>
