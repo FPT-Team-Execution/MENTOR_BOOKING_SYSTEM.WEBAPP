@@ -4,6 +4,7 @@ import axios from "axios";
 import ProjectList from "../../../components/project/ProjectList";
 import CreateProjectForm from "../../../components/project/CreateProjectForm";
 import ProjectDetails from "../../../components/project/ProjectDetails";
+import { Link } from "react-router-dom";
 
 const ProjectPage: React.FC = () => {
   const [projects, setProjects] = useState([]);
@@ -78,6 +79,8 @@ const ProjectPage: React.FC = () => {
           onClose={() => setSelectedProject(null)}
         />
       )}
+      <Link to='/project/123'>Project Detail</Link>
+      <Link to='/mentor/calendar/5f10c206-033a-4930-95a5-ac66570ba58'>Calendar</Link>
     </div>
   );
 };

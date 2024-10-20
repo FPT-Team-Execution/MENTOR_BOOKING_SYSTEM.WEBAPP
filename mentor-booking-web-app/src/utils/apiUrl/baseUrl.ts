@@ -27,3 +27,5 @@ export const UPDATE_EVENT_URL = (calendarEventId: string) =>
 
 export const DELETE_EVENT_URL = (calendarEventId: string) =>
     `${BASE_URL}/calendar-event/${calendarEventId}`;
+
+export const GET_PROJECT_BY_ID = '/groups/students/{id}'

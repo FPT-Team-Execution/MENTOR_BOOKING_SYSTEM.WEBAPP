@@ -31,7 +31,7 @@ const ProjectCard: React.FC<{ project?: ProjectType }> = ({ project }) => {
       </p>
 
       {/* Due date and semester */}
-      <div className="flex items-center justify-between mt-2 text-xs">
+      <div className="mt-2 text-xs">
         <div className="flex items-center text-gray-500">
           <CalendarOutlined className="mr-1" />
           <span>Due: {moment(project.dueDate).format("DD MMM YYYY")}</span>
@@ -42,7 +42,7 @@ const ProjectCard: React.FC<{ project?: ProjectType }> = ({ project }) => {
       </div>
 
       {/* Created by and Mentor */}
-      <div className="flex items-center justify-between mt-2 text-xs">
+      <div className="mt-2 text-xs">
         <div className="flex items-center text-gray-500">
           <UserOutlined className="mr-1" />
           <span>Created by: {project.createdBy}</span>
