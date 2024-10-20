@@ -4,7 +4,6 @@ import paths from "./path";
 
 // Import your components/pages here
 import HomePage from "../pages/home/HomePage";
-
 import LoginPage from "../components/Auth/Login";
 import Register from "../components/Auth/Register";
 import { FeedbackPage } from "../pages/meeting/FeedbackPage";
@@ -12,26 +11,66 @@ import { StudentPage } from "../pages/user/student/StudentPage";
 import Dashboard from "../pages/admin/DashBoard";
 import CalendarEventPage from "../pages/calendar/CalendarEventPage";
 import GoogleAuthCallback from "../components/Auth/GoogleAuthCallback";
-import WelcomeMentorPage from "../pages/mentor/WelcomMentorPage";
-
 import ProjectPage from "../pages/user/student/ProjectPage";
+import ProtectedRoute from "./ProtectRoute";
+
 const AppRoutes: React.FC = () => {
   return (
     <div className="w-full">
       <Routes>
-        {/* default root path */}
-        <Route path="/" element={<Navigate to={paths.home} replace />} />
-        <Route path={paths.home} element={<HomePage />} />
+        {/* No auth routes */}
         <Route path={paths.login} element={<LoginPage />} />
         <Route path={paths.register} element={<Register />} />
-        <Route path={paths.feedback} element={<FeedbackPage />} />
-        <Route path={paths.student} element={<StudentPage />} />
-        <Route path={paths.student} element={<StudentPage />} />
-        <Route path={paths.dashboard} element={<Dashboard />} />
-        <Route path={paths.project} element={<ProjectPage />} />
         <Route path="/auth/google/callback" element={<GoogleAuthCallback />} />
-        <Route path="/mentor/calendar/:mentorId" element={<CalendarEventPage />} />
-        {/* Add more routes here */}
+        
+        {/* General routes */}
+        <Route path="/" element={<Navigate to={paths.home} replace />} />
+        <Route path={paths.home} element={<HomePage />} />
+
+        {/* Admin routes */}
+        <Route
+          path={paths.feedback}
+          element={
+            <ProtectedRoute allowedRoles={['Admin']}>
+              <FeedbackPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={paths.dashboard}
+          element={
+            <ProtectedRoute allowedRoles={['Admin']}>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={paths.student}
+          element={
+            <ProtectedRoute allowedRoles={['Admin']}>
+              <StudentPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={paths.project}
+          element={
+            <ProtectedRoute allowedRoles={['Admin']}>
+              <ProjectPage />
+            </ProtectedRoute>
+          }
+        />
+        
+        {/* Mentor routes */}
+        <Route
+          path="/mentor/calendar/:mentorId"
+          element={
+            <ProtectedRoute allowedRoles={['Mentor']}>
+              <CalendarEventPage />
+            </ProtectedRoute>
+          }
+        />
+        {/* Student routes */}
       </Routes>
     </div>
   );

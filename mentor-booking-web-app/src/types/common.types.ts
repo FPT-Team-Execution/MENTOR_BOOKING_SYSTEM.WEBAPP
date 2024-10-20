@@ -30,9 +30,9 @@ export type RefreshTokenData = {
 export type TokenData = {
     aud: string;
     exp: number;
-    role?: string;
-    name?: string;
-    nameidentifier?: string;
+    role: string;
+    name: string;
+    nameidentifier: string;
     iss: string;
     nbf: number;
     [key: string]: any; // For any other fields
