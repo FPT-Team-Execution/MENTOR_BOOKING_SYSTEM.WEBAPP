@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { ProjectType } from '../../types/project.type';
 import ProjectCard from '../../components/project/ProjectCard';
 import StudentProjectList from '../../components/user/student/StudentProjectList';
@@ -8,6 +8,7 @@ import { projectService } from '../../services/projectService';
 import { StudentType } from '../../types/user.types';
 import { debounce } from 'lodash'
 import { studentService } from '../../services/studentService';
+import paths from '../../routes/path';
 
 export const ProjectDetailPage = () => {
     const { id } = useParams();
@@ -87,6 +88,7 @@ export const ProjectDetailPage = () => {
                         <ProjectCard project={project} />
                         <div>
                             <Button type="primary" onClick={showModal}>Add Member</Button>
+                            <Link to={paths.booking}><Button type="primary">Booking</Button></Link>
                         </div>
                     </div>
                     <StudentProjectList students={students} />
