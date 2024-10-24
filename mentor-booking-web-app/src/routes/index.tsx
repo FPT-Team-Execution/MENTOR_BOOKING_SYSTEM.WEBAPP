@@ -14,6 +14,7 @@ import GoogleAuthCallback from "../components/Auth/GoogleAuthCallback";
 import ProjectPage from "../pages/user/student/ProjectPage";
 import ProtectedRoute from "./ProtectRoute";
 import { ProjectDetailPage } from "../pages/project/ProjectDetailPage";
+import { BookingPage } from "../pages/user/student/BookingPage";
 
 const AppRoutes: React.FC = () => {
   return (
@@ -80,6 +81,14 @@ const AppRoutes: React.FC = () => {
           }
         />
         {/* Student routes */}
+        <Route
+          path={paths.booking}
+          element={
+            <ProtectedRoute allowedRoles={['Student']}>
+              <BookingPage />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </div>
   );

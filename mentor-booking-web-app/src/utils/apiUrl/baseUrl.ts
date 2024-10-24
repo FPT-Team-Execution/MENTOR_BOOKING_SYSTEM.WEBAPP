@@ -33,3 +33,8 @@ export const GET_PROJECT_BY_ID = '/groups/students/{id}'
 export const GROUP = '/groups'
 
 export const SEARCH_STUDENT = '/groups/students/search/{searchItem}'
+
+export const SEARCH_MENTOR = '/mentors/search/{searchItem}'
+export const GET_MENTOR = '/mentors/{id}'
+
+export const REQUEST = '/requests'
