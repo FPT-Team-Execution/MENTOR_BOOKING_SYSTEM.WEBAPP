@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Tag, Typography, DatePicker } from 'antd';
 import moment from 'moment';
-import { getRequests, getProjectsByStudentId } from "../services/requestService"; // Import hàm service
-
+import { getProjectsByStudentId, getRequests } from "../services/requestService.ts";
 const { Title } = Typography;
 const { RangePicker } = DatePicker;
 
@@ -36,7 +35,7 @@ const RequestTable: React.FC = () => {
         fetchRequests();
     }, []);
 
-    const onDateChange = (dates) => {
+    const onDateChange = (dates: any) => {
         setSelectedDates(dates);
         if (dates && dates.length === 2) {
             const [startDate, endDate] = dates;
@@ -70,13 +69,13 @@ const RequestTable: React.FC = () => {
             title: 'Start Date',
             dataIndex: 'start',
             key: 'start',
-            render: (date) => moment(date).format('YYYY-MM-DD HH:mm'),
+            render: (date: string) => moment(date).format('YYYY-MM-DD HH:mm'),
         },
         {
             title: 'End Date',
             dataIndex: 'end',
             key: 'end',
-            render: (date) => moment(date).format('YYYY-MM-DD HH:mm'),
+            render: (date: string) => moment(date).format('YYYY-MM-DD HH:mm'),
         },
         {
             title: 'Status',

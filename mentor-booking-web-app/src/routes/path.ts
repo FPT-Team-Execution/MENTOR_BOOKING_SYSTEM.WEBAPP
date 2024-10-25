@@ -12,7 +12,7 @@ const paths = {
   //Student pages
   students: "/students",
   studentDetail: "/students/:id",
-
+  studentRequests: "/students/requests",
   //Calender pages
   calender: "/calendar",
   calenderDetail: "/calender/:id",
@@ -31,8 +31,9 @@ const paths = {
   project: "/project",
   projectDetail: "/project/:id",
 
-  request: "/requests"
-
+  request: "/requests",
+  requestDetail: "/requests/:id",
+  studentRequestDetail: (studentId: string) => `/students/${studentId}/requests`,
 };
 
 export default paths;
