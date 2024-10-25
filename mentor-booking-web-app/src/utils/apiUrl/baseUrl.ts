@@ -38,3 +38,5 @@ export const SEARCH_MENTOR = '/mentors/search/{searchItem}'
 export const GET_MENTOR = '/mentors/{id}'
 
 export const REQUEST = '/requests'
+
+export const GET_BUSY_TIMES = '/calendar-events/busy-event?MentorId={mentorId}&Day={day}'

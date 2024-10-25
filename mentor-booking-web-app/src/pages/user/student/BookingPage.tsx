@@ -21,11 +21,6 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 
 
-const busyTimes = [
-    { start: "10:00", end: "11:00" },
-    { start: "13:00", end: "14:00" }
-];
-
 export const BookingPage = () => {
     const { userInfo } = useAuth();
     const [project, setProject] = useState<ProjectType>();
@@ -34,6 +29,7 @@ export const BookingPage = () => {
     const [date, setDate] = useState<Dayjs>();
     const [start, setStart] = useState<Dayjs>()
     const [end, setEnd] = useState<Dayjs>()
+    const [busyTimes, setBusyTimes] = useState([])
     const [booking, setBooking] = useState({
         title: '',
         mentorId: '',
@@ -42,10 +38,15 @@ export const BookingPage = () => {
         projectId: '',
         createrId: ''
     });
+    const [isSuccess,setIsSuccess] = useState(false)
 
     useEffect(() => {
         handleGetProject();
     }, []);
+
+    useEffect(() => {
+        handleGetBusyTimes()
+    }, [date])
 
     dayjs.extend(utc)
     dayjs.extend(timezone)
@@ -57,6 +58,18 @@ export const BookingPage = () => {
             console.error(err);
         }
     };
+
+    const handleGetBusyTimes = async () => {
+        try {
+            if (!date) {
+                return
+            }
+            const res = await mentorService.getBusyTimes(selectedMentor, date.format('YYYY-MM-DD'))
+            setBusyTimes(res.responseModel.events)
+        } catch (err) {
+            console.log(err)
+        }
+    }
 
     const handleSearch = useCallback(
         debounce((value: string) => {
@@ -98,16 +111,14 @@ export const BookingPage = () => {
 
         const startDateTime = dayjs(`${date.format('YYYY-MM-DD')} ${start.format('HH:mm')}`, 'YYYY-MM-DD HH:mm');
         const endDateTime = dayjs(`${date.format('YYYY-MM-DD')} ${end.format('HH:mm')}`, 'YYYY-MM-DD HH:mm');
-        console.log(startDateTime, endDateTime)
-        if (isTimeConflict(startDateTime, endDateTime)) {
-            message.error('Time conflict');
-        } else {
-            message.success('Success');
-        }
+        return !isTimeConflict(startDateTime, endDateTime)
     };
 
     const handleBooking = async () => {
-        handleCheck()
+        if (!handleCheck()) {
+            message.error('Time conflict')
+            return
+        } 
         const request = {
             ...booking,
             createrId: userInfo?.nameidentifier,
@@ -120,6 +131,7 @@ export const BookingPage = () => {
             const response = await bookingService.sendRequest(request);
             if (response.isSuccess) {
                 message.success('Booking successful');
+                setIsSuccess(true)
             } else {
                 message.error(response.message);
             }
@@ -129,34 +141,32 @@ export const BookingPage = () => {
     };
 
     return (
-        <div className="p-6 max-w-4xl mx-auto bg-white shadow-lg rounded-lg transition-all duration-300">
-            <ProjectCard project={project} />
+        <div className="p-6 max-w-4xl h-[80vh] flex items-center mx-auto bg-white transition-all duration-300">
+            {/* <ProjectCard project={project} /> */}
 
-            <div className="w-full flex justify-center mt-8">
-                <div className="w-full md:w-1/2 space-y-4">
+            <div className="flex justify-center w-full mt-8 shadow-lg rounded-lg py-10">
+                {!isSuccess ? (<div className="w-full md:w-1/2 space-y-4">
                     <p className="text-xl font-semibold text-gray-700">Request a Meeting</p>
-
                     <div>
-                        <label htmlFor="title" className="block text-sm font-medium text-gray-700">Title:</label>
-                        <input
+                        <label htmlFor="title" className="block text-sm font-medium text-gray-700">Title: <input
                             type="text"
                             id="title"
-                            className="w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-200 transition"
+                            className="px-4 py-2 border rounded-md focus:ring focus:ring-blue-200 transition"
                             onChange={(e) => setBooking({ ...booking, title: e.target.value })}
-                        />
+                        /></label>
+
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">Mentor:</label>
+                        <label className="text-sm font-medium text-gray-700">Mentor: </label>
                         <Select
                             showSearch
                             placeholder="Search for a mentor"
                             value={selectedMentor}
                             onSearch={handleSearch}
                             onChange={value => setSelectedMentor(value)}
-                            style={{ width: '100%' }}
+                            className='w-3/4'
                             filterOption={false}
-                            className="w-full"
                         >
                             {mentorList.map((mentor) => (
                                 <Select.Option key={mentor.mentorId} value={mentor.mentorId}>
@@ -164,6 +174,7 @@ export const BookingPage = () => {
                                 </Select.Option>
                             ))}
                         </Select>
+
 
                         <div className={`transition-all duration-300 ${selectedMentor ? 'opacity-100' : 'opacity-0 h-0'}`}>
                             {selectedMentor && <MentorCard mentorId={selectedMentor} />}
@@ -198,14 +209,14 @@ export const BookingPage = () => {
                         />
                     </div>
                     <Button
-                        className="btn-primary w-full"
+                        className="btn-primary"
                         onClick={handleBooking}
                         disabled={!end || !date || !selectedMentor}
                     >
                         Book
                     </Button>
-
-                </div>
+                </div>) : (<>Booking successful</>) }
+                
             </div>
         </div>
     );
