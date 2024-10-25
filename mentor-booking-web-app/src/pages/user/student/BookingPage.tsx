@@ -1,18 +1,30 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { projectService } from '../../../services/projectService';
 import ProjectCard from '../../../components/project/ProjectCard';
-import { Button, DatePicker, message, Select } from 'antd';
+import { Button, DatePicker, message, Select, TimePicker } from 'antd';
 import { debounce } from 'lodash';
 import { mentorService } from '../../../services/mentorService';
 import { MentorType } from '../../../types/user.types';
 import MentorCard from '../../../components/mentor/MentorCard';
-import TimeSlot from '../../../components/booking/TimeSlot';
 import { bookingService } from '../../../services/bookingService';
 import { useAuth } from '../../../auth/AuthContext';
-import { Dayjs } from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import { ProjectType } from '../../../types/project.type';
 
-const disabledSlots = ['10:00', '15:00', '16:00'];
+
+import utc from "dayjs/plugin/utc";
+// import utc from 'dayjs/plugin/utc' // ES 2015
+
+import timezone from "dayjs/plugin/timezone"; // dependent on utc plugin
+// import timezone from 'dayjs/plugin/timezone' // ES 2015
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
+
+const busyTimes = [
+    { start: "10:00", end: "11:00" },
+    { start: "13:00", end: "14:00" }
+];
 
 export const BookingPage = () => {
     const { userInfo } = useAuth();
@@ -20,7 +32,8 @@ export const BookingPage = () => {
     const [selectedMentor, setSelectedMentor] = useState<string>('');
     const [mentorList, setMentorList] = useState<MentorType[]>([]);
     const [date, setDate] = useState<Dayjs>();
-    const [slot, setSlot] = useState<string>();
+    const [start, setStart] = useState<Dayjs>()
+    const [end, setEnd] = useState<Dayjs>()
     const [booking, setBooking] = useState({
         title: '',
         mentorId: '',
@@ -34,6 +47,8 @@ export const BookingPage = () => {
         handleGetProject();
     }, []);
 
+    dayjs.extend(utc)
+    dayjs.extend(timezone)
     const handleGetProject = async () => {
         try {
             const res = await projectService.getProjectById('D1F47F88-C7E2-41CB-BB8D-E1ACB1E342AF');
@@ -63,19 +78,41 @@ export const BookingPage = () => {
         }
     };
 
+    const isTimeConflict = (start: Dayjs, end: Dayjs) => {
+        if (!date) {
+            return
+        }
+        return busyTimes.some(busy => {
+            const busyStart = dayjs(`${date.format('YYYY-MM-DD')} ` + busy.start, 'YYYY-MM-DD HH:mm');
+            const busyEnd = dayjs(`${date.format('YYYY-MM-DD')} ` + busy.end, 'YYYY-MM-DD HH:mm');
+            console.log(busyStart, busyEnd)
+            return start.isBefore(busyEnd) && end.isAfter(busyStart);
+        });
+    };
+
+    const handleCheck = () => {
+        if (!date || !start || !end) {
+            message.warning('Please choose date and time');
+            return;
+        }
+
+        const startDateTime = dayjs(`${date.format('YYYY-MM-DD')} ${start.format('HH:mm')}`, 'YYYY-MM-DD HH:mm');
+        const endDateTime = dayjs(`${date.format('YYYY-MM-DD')} ${end.format('HH:mm')}`, 'YYYY-MM-DD HH:mm');
+        console.log(startDateTime, endDateTime)
+        if (isTimeConflict(startDateTime, endDateTime)) {
+            message.error('Time conflict');
+        } else {
+            message.success('Success');
+        }
+    };
+
     const handleBooking = async () => {
-        const startHour = slot?.split(':')[0];
+        handleCheck()
         const request = {
             ...booking,
             createrId: userInfo?.nameidentifier,
-            start: date?.set('hour', parseInt(startHour || '10'))
-                .set('minute', 0)
-                .set('second', 0)
-                .set('millisecond', 0),
-            end: date?.set('hour', parseInt(startHour || '10') + 1)
-                .set('minute', 0)
-                .set('second', 0)
-                .set('millisecond', 0),
+            start: dayjs(`${date?.format('YYYY-MM-DD')} ${start?.format('HH:mm')}`, 'YYYY-MM-DD HH:mm').tz('Asia/Bangkok').format(),
+            end: dayjs(`${date?.format('YYYY-MM-DD')} ${end?.format('HH:mm')}`, 'YYYY-MM-DD HH:mm').tz('Asia/Bangkok').format(),
             projectId: project?.id || '',
             mentorId: selectedMentor,
         };
@@ -136,28 +173,38 @@ export const BookingPage = () => {
                     <div className={`transition-all duration-300 ${selectedMentor ? 'opacity-100' : 'opacity-0 h-0'}`}>
                         <label className="block text-sm font-medium text-gray-700">Date:</label>
                         <DatePicker
+                            format="YYYY-MM-DD"
+                            placeholder='Choose Date'
                             onChange={(date) => setDate(date)}
                             className="w-full"
+                            minDate={dayjs()}
                         />
                     </div>
-
                     <div className={`transition-all duration-300 ${date ? 'opacity-100' : 'opacity-0 h-0'}`}>
-                        <label className="block text-sm font-medium text-gray-700">Time:</label>
-                        <TimeSlot
-                            setSlot={setSlot}
-                            disabledSlots={disabledSlots}
+                        <TimePicker
+                            format="HH:mm"
+                            minuteStep={30}
+                            placeholder="Start time"
+                            onChange={(time) => setStart(time)}
+                            disabled={!date}
+                        />
+                        <TimePicker
+                            format="HH:mm"
+                            minuteStep={30}
+                            placeholder="End time"
+                            minDate={start}
+                            onChange={(time) => setEnd(time)}
+                            disabled={!start}
                         />
                     </div>
+                    <Button
+                        className="btn-primary w-full"
+                        onClick={handleBooking}
+                        disabled={!end || !date || !selectedMentor}
+                    >
+                        Book
+                    </Button>
 
-                    <div>
-                        <Button
-                            className="btn-primary w-full"
-                            onClick={handleBooking}
-                            disabled={!slot || !date || !selectedMentor}
-                        >
-                            Book
-                        </Button>
-                    </div>
                 </div>
             </div>
         </div>
