@@ -15,6 +15,7 @@ import ProjectPage from "../pages/user/student/ProjectPage";
 import ProtectedRoute from "./ProtectRoute";
 import { ProjectDetailPage } from "../pages/project/ProjectDetailPage";
 import { BookingPage } from "../pages/user/student/BookingPage";
+import StudentRequestPage from "../pages/user/student/StudentRequestPage";
 
 const AppRoutes: React.FC = () => {
   return (
@@ -24,7 +25,7 @@ const AppRoutes: React.FC = () => {
         <Route path={paths.login} element={<LoginPage />} />
         <Route path={paths.register} element={<Register />} />
         <Route path="/auth/google/callback" element={<GoogleAuthCallback />} />
-        
+
         {/* General routes */}
         <Route path="/" element={<Navigate to={paths.home} replace />} />
         <Route path={paths.home} element={<HomePage />} />
@@ -65,17 +66,17 @@ const AppRoutes: React.FC = () => {
         <Route
           path={paths.projectDetail}
           element={
-            <ProtectedRoute allowedRoles={['Admin','Mentor','Student']}>
+            <ProtectedRoute allowedRoles={['Admin', 'Mentor', 'Student']}>
               <ProjectDetailPage />
             </ProtectedRoute>
           }
         />
-        
+
         {/* Mentor routes */}
         <Route
           path="/mentor/calendar/:mentorId"
           element={
-            <ProtectedRoute allowedRoles={['Admin','Mentor']}>
+            <ProtectedRoute allowedRoles={['Admin', 'Mentor']}>
               <CalendarEventPage />
             </ProtectedRoute>
           }
@@ -86,6 +87,14 @@ const AppRoutes: React.FC = () => {
           element={
             <ProtectedRoute allowedRoles={['Student']}>
               <BookingPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/students/requests/:studentId"
+          element={
+            <ProtectedRoute allowedRoles={['Student']}>
+              <StudentRequestPage />
             </ProtectedRoute>
           }
         />

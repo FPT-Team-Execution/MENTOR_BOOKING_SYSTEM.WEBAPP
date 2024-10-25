@@ -33,7 +33,7 @@ const paths = {
 
   request: "/requests",
   requestDetail: "/requests/:id",
-  studentRequestDetail: (studentId: string) => `/students/${studentId}/requests`,
+  studentRequestDetail: (studentId: string) => `/requests/${studentId}`,
 };
 
 export default paths;

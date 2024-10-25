@@ -1,39 +1,82 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Tag, Typography, DatePicker } from 'antd';
 import moment from 'moment';
-import { getProjectsByStudentId, getRequests } from "../services/requestService.ts";
+import { } from '../../../services/requestService';
+import dayjs, { Dayjs } from 'dayjs';
+
+// import { getProjectsByStudentId, getRequests } from "../services/requestService";
 const { Title } = Typography;
 const { RangePicker } = DatePicker;
-
-const RequestTable: React.FC = () => {
-    const [requests, setRequests] = useState([]);
-    const [filteredRequests, setFilteredRequests] = useState([]);
-    const [selectedDates, setSelectedDates] = useState([]);
+interface Request {
+    id: number;
+    title: string;
+    mentorName: string;
+    start: string;
+    end: string;
+    status: string;
+}
+interface StudentRequestTableProps {
+    studentId: string; // Khai báo kiểu cho mentorId
+}
+const RequestTable: React.FC<StudentRequestTableProps> = ({ studentId }) => {
+    const [requests, setRequests] = useState<Request[]>([]);
+    const [filteredRequests, setFilteredRequests] = useState<Request[]>([]);
+    const [selectedDates, setSelectedDates] = useState<[Dayjs | null, Dayjs | null] | null>(null);
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [pageSize, setPageSize] = useState<number>(10);
     const [totalItems, setTotalItems] = useState<number>(0);
 
     useEffect(() => {
-        const fetchRequests = async () => {
-            try {
-                const studentId = '123'; // Giả sử có studentId đã xác định
-                const projects = await getProjectsByStudentId({ studentId, page: 1, size: 100, sortOrder: 'asc' }); // Fetch projects của student
-                const allRequests = await getRequests({ page: 1, size: 100, sortOrder: 'asc' }); // Fetch tất cả requests
+        // const fetchRequests = async () => {
+        //     try {
+        //         const studentId = '123'; // Giả sử có studentId đã xác định
+        //         const projects = await getProjectsByStudentId({ studentId, page: 1, size: 100, sortOrder: 'asc' }); // Fetch projects của student
+        //         const allRequests = await getRequests({ page: 1, size: 100, sortOrder: 'asc' }); // Fetch tất cả requests
 
-                const projectIds = projects.map((p) => p.id);
-                const relatedRequests = allRequests.filter((r) =>
-                    projectIds.includes(r.projectId)
-                );
-                setRequests(relatedRequests);
-                setFilteredRequests(relatedRequests);
-                setTotalItems(relatedRequests.length);
-            } catch (error) {
-                console.error('Error fetching requests:', error);
-            }
-        };
+        //         const projectIds = projects.map((p: any) => p.id);
+        //         const relatedRequests = allRequests.filter((r:any) =>
+        //             projectIds.includes(r.projectId)
+        //         );
+        //         setRequests(relatedRequests);
+        //         setFilteredRequests(relatedRequests);
+        //         setTotalItems(relatedRequests.length);
+        //     } catch (error) {
+        //         console.error('Error fetching requests:', error);
+        //     }
+        // };
 
-        fetchRequests();
-    }, []);
+        // fetchRequests();
+        const mockData: Request[] = [
+            {
+                id: 1,
+                title: 'Request A',
+                mentorName: 'John Doe',
+                start: moment().subtract(2, 'days').toISOString(),
+                end: moment().subtract(1, 'days').toISOString(),
+                status: 'Accepted',
+            },
+            {
+                id: 2,
+                title: 'Request B',
+                mentorName: 'Jane Smith',
+                start: moment().subtract(5, 'days').toISOString(),
+                end: moment().subtract(4, 'days').toISOString(),
+                status: 'Pending',
+            },
+            {
+                id: 3,
+                title: 'Request C',
+                mentorName: 'Tom Brown',
+                start: moment().subtract(1, 'days').toISOString(),
+                end: moment().add(1, 'days').toISOString(),
+                status: 'Rejected',
+            },
+        ];
+
+        setRequests(mockData);
+        setFilteredRequests(mockData);
+        setTotalItems(mockData.length);
+    }, [studentId]);
 
     const onDateChange = (dates: any) => {
         setSelectedDates(dates);
@@ -81,7 +124,7 @@ const RequestTable: React.FC = () => {
             title: 'Status',
             dataIndex: 'status',
             key: 'status',
-            render: (status) => {
+            render: (status: any) => {
                 let color = status === 'Accepted' ? 'green' : status === 'Pending' ? 'orange' : 'red';
                 return <Tag color={color}>{status}</Tag>;
             },
