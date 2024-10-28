@@ -13,6 +13,7 @@ export const CREATE_PROJECT = `${BASE_URL}/projects`;
 export const GET_ALL_STUDENTS = '/students?page={page}&size={size}'
 
 export const REFRESH_TOKEN = '/auth/refresh'
+export const CALLBACK_URL = 'http://localhost:5173/auth/callback'
 
 // Calendar Events URLs
 export const GET_EVENTS_BY_MENTOR_URL = (mentorId: string, page: number, size: number) =>

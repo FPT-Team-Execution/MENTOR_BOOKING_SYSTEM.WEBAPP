@@ -13,6 +13,8 @@ interface AuthContextType {
   isLoading: boolean;
   handleLogin: (email: string, password: string) => Promise<void>;
   handleLogout: () => void;
+  setUserInfo: (user: TokenData) => void;
+  setIsAuthenticated: (auth: boolean) => void;
 }
 
 
@@ -32,7 +34,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         handleRefreshToken(token);
       } else {
         setIsLoading(false);
-        navigate('/login')
+        // navigate('/login')
       }
     } catch (err) {
       console.log(err)
@@ -54,6 +56,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     } catch (error) {
       console.error("Refresh token error:", error);
       navigate("/login");
+      setIsAuthenticated(false);
     } finally {
       setIsLoading(false); // Kết thúc loading sau khi xử lý token
     }
@@ -88,13 +91,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setJwtToken(null);
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
+    if(localStorage.getItem("googleAccessToken")){
+      localStorage.removeItem("googleAccessToken");
+    }
     setIsAuthenticated(false)
     navigate("/login");
   };
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, jwtToken, userInfo, isLoading, handleLogin, handleLogout }}
+      value={{ isAuthenticated, jwtToken, userInfo, isLoading, handleLogin, handleLogout, setUserInfo, setIsAuthenticated }}
     >
       {children}
     </AuthContext.Provider>
