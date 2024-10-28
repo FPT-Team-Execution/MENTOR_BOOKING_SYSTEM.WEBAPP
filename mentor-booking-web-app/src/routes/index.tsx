@@ -10,21 +10,24 @@ import { FeedbackPage } from "../pages/meeting/FeedbackPage";
 import { StudentPage } from "../pages/user/student/StudentPage";
 import Dashboard from "../pages/admin/DashBoard";
 import CalendarEventPage from "../pages/calendar/CalendarEventPage";
-import GoogleAuthCallback from "../components/Auth/GoogleAuthCallback";
+// import GoogleAuthCallback from "../components/Auth/GoogleAuthCallback";
 import ProjectPage from "../pages/user/student/ProjectPage";
 import ProtectedRoute from "./ProtectRoute";
 import { ProjectDetailPage } from "../pages/project/ProjectDetailPage";
 import { BookingPage } from "../pages/user/student/BookingPage";
+import { LoginGoogle } from "../components/Auth/LoginGoogle";
+import GoogleAuthCallback from "../components/Auth/GoogleAuthCallback";
 
 const AppRoutes: React.FC = () => {
   return (
     <div className="w-full">
       <Routes>
         {/* No auth routes */}
+        {/* <Route path="/login-google" element={<LoginGoogle />} /> */}
         <Route path={paths.login} element={<LoginPage />} />
         <Route path={paths.register} element={<Register />} />
-        <Route path="/auth/google/callback" element={<GoogleAuthCallback />} />
-        
+        {/* <Route path="/auth/google/callback" element={<GoogleAuthCallback />} /> */}
+        <Route path={paths.callback} element={<GoogleAuthCallback />} />
         {/* General routes */}
         <Route path="/" element={<Navigate to={paths.home} replace />} />
         <Route path={paths.home} element={<HomePage />} />

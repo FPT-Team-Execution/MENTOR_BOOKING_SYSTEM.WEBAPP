@@ -17,7 +17,7 @@ const HomePage: React.FC = () => {
       localStorage.setItem("refreshToken", refreshToken);
     }
   }, [location.search, navigate]);
-  return <>Welcome to the Home Page! Tho!</>;
+  return <>Welcome to the Home Page! </>;
 };
 
 export default HomePage;

@@ -1,18 +1,29 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAuth } from "../../auth/AuthContext";
+import axios from "axios";
+import { useSearchParams } from "react-router-dom";
 
 // Client side setup
 const googleAuthUrl = "https://accounts.google.com/o/oauth2/v2/auth";
 const clientId =
   "1096581745243-bj51g3cd4rq13codonsoftbk8h7tq4mi.apps.googleusercontent.com";
-const redirectUri = "https://localhost:7554/api/auth/signin-google";
-const scope = "openid profile email";
+const redirectUri = "http://localhost:5173/auth/callback";
+// const scope = "openid profile email";
+// region scope:
+const calendarScope = "https://www.googleapis.com/auth/calendar";
+const profileScope = "https://www.googleapis.com/auth/userinfo.profile";
+const emailScope = "https://www.googleapis.com/auth/userinfo.email";
+const scope = `${calendarScope} ${profileScope} ${emailScope}`;
+// end scope
 const responseType = "code";
-const accessType = "offline"; // To get refresh token
+const accessType = "offline";
+
+// To get refresh token
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { handleLogin } = useAuth();
+
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,9 +35,44 @@ const Login = () => {
   };
   const loginWithGoogle = async () => {
     //TODO: login with google here
-    const authUrl = `${googleAuthUrl}?response_type=${responseType}&client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&access_type=${accessType}`;
+    // const authUrl = `${googleAuthUrl}?response_type=${responseType}&client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&access_type=${accessType}`;
+    // window.location.href = authUrl;
+    const authUrl = `${googleAuthUrl}?redirect_uri=${redirectUri}&response_type=${responseType}&client_id=${clientId}&scope=${scope}&access_type=${accessType}`;
+    // redirect to authUrl.
+
+    // call Google call back uri https://localhost:7554/api/auth/signin-google. with 2 field: code & callbackuri.
+
+    // get response and set access token and refresh token
     window.location.href = authUrl;
   };
+
+  // React.useEffect(() => {
+  //   const urlParams = new URLSearchParams(window.location.search);
+  //   const code = urlParams.get("code");
+
+  //   if (code) {
+  //     (async () => {
+  //       try {
+  //         const response = await axios.get(`https://localhost:7554/api/auth/signin-google?code=${code}&callbackUri=${redirectUri}`);
+
+  //         if (response.data.isSuccess) {
+  //           const { accessToken, refreshToken } = response.data.responseRequestModel.jwtModel;
+  //           // Store tokens or pass them to the authentication context
+  //           console.log("Access Token:", accessToken);
+  //           localStorage.setItem("accessToken", accessToken);
+  //           console.log("Refresh Token:", refreshToken);
+  //           localStorage.setItem("refreshToken", refreshToken);
+  //           // Handle login with tokens
+  //         } else {
+  //           alert("Google login failed");
+  //         }
+  //       } catch (error) {
+  //         console.error("Error during Google login:", error);
+  //         alert("Google login failed");
+  //       }
+  //     })();
+  //   }
+  // }, []);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
