@@ -14,7 +14,6 @@ import GoogleAuthCallback from "../components/Auth/GoogleAuthCallback";
 import ProjectPage from "../pages/user/student/ProjectPage";
 import ProtectedRoute from "./ProtectRoute";
 import { ProjectDetailPage } from "../pages/project/ProjectDetailPage";
-import { BookingPage } from "../pages/user/student/BookingPage";
 
 const AppRoutes: React.FC = () => {
   return (
@@ -57,7 +56,7 @@ const AppRoutes: React.FC = () => {
         <Route
           path={paths.project}
           element={
-            <ProtectedRoute allowedRoles={['Admin']}>
+            <ProtectedRoute allowedRoles={['Admin','Student']}>
               <ProjectPage />
             </ProtectedRoute>
           }
