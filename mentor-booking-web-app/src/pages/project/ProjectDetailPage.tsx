@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { ProjectType } from '../../types/project.type';
 import ProjectCard from '../../components/project/ProjectCard';
 import StudentProjectList from '../../components/user/student/StudentProjectList';
@@ -8,7 +8,6 @@ import { projectService } from '../../services/projectService';
 import { StudentType } from '../../types/user.types';
 import { debounce } from 'lodash'
 import { studentService } from '../../services/studentService';
-import paths from '../../routes/path';
 import { BookingPage } from '../user/student/BookingPage';
 
 
