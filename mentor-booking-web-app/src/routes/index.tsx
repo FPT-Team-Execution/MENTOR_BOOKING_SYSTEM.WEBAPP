@@ -14,7 +14,6 @@ import CalendarEventPage from "../pages/calendar/CalendarEventPage";
 import ProjectPage from "../pages/user/student/ProjectPage";
 import ProtectedRoute from "./ProtectRoute";
 import { ProjectDetailPage } from "../pages/project/ProjectDetailPage";
-import { BookingPage } from "../pages/user/student/BookingPage";
 import { LoginGoogle } from "../components/Auth/LoginGoogle";
 import GoogleAuthCallback from "../components/Auth/GoogleAuthCallback";
 
@@ -60,7 +59,7 @@ const AppRoutes: React.FC = () => {
         <Route
           path={paths.project}
           element={
-            <ProtectedRoute allowedRoles={['Admin']}>
+            <ProtectedRoute allowedRoles={['Admin','Student']}>
               <ProjectPage />
             </ProtectedRoute>
           }
@@ -84,14 +83,6 @@ const AppRoutes: React.FC = () => {
           }
         />
         {/* Student routes */}
-        <Route
-          path={paths.booking}
-          element={
-            <ProtectedRoute allowedRoles={['Student']}>
-              <BookingPage />
-            </ProtectedRoute>
-          }
-        />
       </Routes>
     </div>
   );

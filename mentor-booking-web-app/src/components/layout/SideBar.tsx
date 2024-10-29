@@ -25,7 +25,6 @@ const adminMenu: MenuItem[] = [
 const studentMenu: MenuItem[] = [
   { label: "Home", icon: <HomeOutlined />, key: paths.home },
   { label: "Project", icon: <ProjectOutlined />, key: paths.project },
-  { label: "Book Meeting", icon: <SendOutlined />, key: paths.booking }
 ];
 
 const mentorMenu: MenuItem[] = [
