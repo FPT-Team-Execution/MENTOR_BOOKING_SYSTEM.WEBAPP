@@ -16,6 +16,8 @@ import utc from "dayjs/plugin/utc";
 // import utc from 'dayjs/plugin/utc' // ES 2015
 
 import timezone from "dayjs/plugin/timezone"; // dependent on utc plugin
+import RequestCard from '../../../components/project/RequestCard';
+import { BusyTimeData } from '../../../types/common.types';
 // import timezone from 'dayjs/plugin/timezone' // ES 2015
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -29,7 +31,7 @@ export const BookingPage = () => {
     const [date, setDate] = useState<Dayjs>();
     const [start, setStart] = useState<Dayjs>()
     const [end, setEnd] = useState<Dayjs>()
-    const [busyTimes, setBusyTimes] = useState([])
+    const [busyTimes, setBusyTimes] = useState<BusyTimeData[]>([])
     const [booking, setBooking] = useState({
         title: '',
         mentorId: '',
@@ -38,7 +40,7 @@ export const BookingPage = () => {
         projectId: '',
         createrId: ''
     });
-    const [isSuccess,setIsSuccess] = useState(false)
+    const [isSuccess, setIsSuccess] = useState(false)
 
     useEffect(() => {
         handleGetProject();
@@ -118,7 +120,7 @@ export const BookingPage = () => {
         if (!handleCheck()) {
             message.error('Time conflict')
             return
-        } 
+        }
         const request = {
             ...booking,
             createrId: userInfo?.nameidentifier,
@@ -132,6 +134,7 @@ export const BookingPage = () => {
             if (response.isSuccess) {
                 message.success('Booking successful');
                 setIsSuccess(true)
+                setBooking(response.requestModel)
             } else {
                 message.error(response.message);
             }
@@ -145,7 +148,7 @@ export const BookingPage = () => {
             {/* <ProjectCard project={project} /> */}
 
             <div className="flex justify-center w-full mt-8 shadow-lg rounded-lg py-10">
-                {!isSuccess ? (<div className="w-full md:w-1/2 space-y-4">
+                {!isSuccess ? (<div className="md:w-1/2 space-y-4">
                     <p className="text-xl font-semibold text-gray-700">Request a Meeting</p>
                     <div>
                         <label htmlFor="title" className="block text-sm font-medium text-gray-700">Title: <input
@@ -215,8 +218,18 @@ export const BookingPage = () => {
                     >
                         Book
                     </Button>
-                </div>) : (<>Booking successful</>) }
-                
+                </div>) : (<div className='m-4' >
+                    <div>Book Successful
+                        <RequestCard
+                            title={booking.title}
+                            start={booking.start}
+                            end={booking.end}
+                        />
+
+                    </div>
+
+                </div>)}
+
             </div>
         </div>
     );
