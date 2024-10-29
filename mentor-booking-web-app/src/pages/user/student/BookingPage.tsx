@@ -1,27 +1,18 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { projectService } from '../../../services/projectService';
 import ProjectCard from '../../../components/project/ProjectCard';
-import { Button, DatePicker, message, Select, TimePicker } from 'antd';
+import { Button, DatePicker, message, Select } from 'antd';
 import { debounce } from 'lodash';
 import { mentorService } from '../../../services/mentorService';
 import { MentorType } from '../../../types/user.types';
 import MentorCard from '../../../components/mentor/MentorCard';
+import TimeSlot from '../../../components/booking/TimeSlot';
 import { bookingService } from '../../../services/bookingService';
 import { useAuth } from '../../../auth/AuthContext';
-import dayjs, { Dayjs } from 'dayjs';
+import { Dayjs } from 'dayjs';
 import { ProjectType } from '../../../types/project.type';
 
-
-import utc from "dayjs/plugin/utc";
-// import utc from 'dayjs/plugin/utc' // ES 2015
-
-import timezone from "dayjs/plugin/timezone"; // dependent on utc plugin
-import RequestCard from '../../../components/project/RequestCard';
-import { BusyTimeData } from '../../../types/common.types';
-// import timezone from 'dayjs/plugin/timezone' // ES 2015
-dayjs.extend(utc);
-dayjs.extend(timezone);
-
+const disabledSlots = ['10:00', '15:00', '16:00'];
 
 export const BookingPage = () => {
     const { userInfo } = useAuth();
@@ -29,9 +20,7 @@ export const BookingPage = () => {
     const [selectedMentor, setSelectedMentor] = useState<string>('');
     const [mentorList, setMentorList] = useState<MentorType[]>([]);
     const [date, setDate] = useState<Dayjs>();
-    const [start, setStart] = useState<Dayjs>()
-    const [end, setEnd] = useState<Dayjs>()
-    const [busyTimes, setBusyTimes] = useState<BusyTimeData[]>([])
+    const [slot, setSlot] = useState<string>();
     const [booking, setBooking] = useState({
         title: '',
         mentorId: '',
@@ -40,18 +29,11 @@ export const BookingPage = () => {
         projectId: '',
         createrId: ''
     });
-    const [isSuccess, setIsSuccess] = useState(false)
 
     useEffect(() => {
         handleGetProject();
     }, []);
 
-    useEffect(() => {
-        handleGetBusyTimes()
-    }, [date])
-
-    dayjs.extend(utc)
-    dayjs.extend(timezone)
     const handleGetProject = async () => {
         try {
             const res = await projectService.getProjectById('D1F47F88-C7E2-41CB-BB8D-E1ACB1E342AF');
@@ -60,18 +42,6 @@ export const BookingPage = () => {
             console.error(err);
         }
     };
-
-    const handleGetBusyTimes = async () => {
-        try {
-            if (!date) {
-                return
-            }
-            const res = await mentorService.getBusyTimes(selectedMentor, date.format('YYYY-MM-DD'))
-            setBusyTimes(res.responseModel.events)
-        } catch (err) {
-            console.log(err)
-        }
-    }
 
     const handleSearch = useCallback(
         debounce((value: string) => {
@@ -93,39 +63,19 @@ export const BookingPage = () => {
         }
     };
 
-    const isTimeConflict = (start: Dayjs, end: Dayjs) => {
-        if (!date) {
-            return
-        }
-        return busyTimes.some(busy => {
-            const busyStart = dayjs(`${date.format('YYYY-MM-DD')} ` + busy.start, 'YYYY-MM-DD HH:mm');
-            const busyEnd = dayjs(`${date.format('YYYY-MM-DD')} ` + busy.end, 'YYYY-MM-DD HH:mm');
-            console.log(busyStart, busyEnd)
-            return start.isBefore(busyEnd) && end.isAfter(busyStart);
-        });
-    };
-
-    const handleCheck = () => {
-        if (!date || !start || !end) {
-            message.warning('Please choose date and time');
-            return;
-        }
-
-        const startDateTime = dayjs(`${date.format('YYYY-MM-DD')} ${start.format('HH:mm')}`, 'YYYY-MM-DD HH:mm');
-        const endDateTime = dayjs(`${date.format('YYYY-MM-DD')} ${end.format('HH:mm')}`, 'YYYY-MM-DD HH:mm');
-        return !isTimeConflict(startDateTime, endDateTime)
-    };
-
     const handleBooking = async () => {
-        if (!handleCheck()) {
-            message.error('Time conflict')
-            return
-        }
+        const startHour = slot?.split(':')[0];
         const request = {
             ...booking,
             createrId: userInfo?.nameidentifier,
-            start: dayjs(`${date?.format('YYYY-MM-DD')} ${start?.format('HH:mm')}`, 'YYYY-MM-DD HH:mm').tz('Asia/Bangkok').format(),
-            end: dayjs(`${date?.format('YYYY-MM-DD')} ${end?.format('HH:mm')}`, 'YYYY-MM-DD HH:mm').tz('Asia/Bangkok').format(),
+            start: date?.set('hour', parseInt(startHour || '10'))
+                .set('minute', 0)
+                .set('second', 0)
+                .set('millisecond', 0),
+            end: date?.set('hour', parseInt(startHour || '10') + 1)
+                .set('minute', 0)
+                .set('second', 0)
+                .set('millisecond', 0),
             projectId: project?.id || '',
             mentorId: selectedMentor,
         };
@@ -133,8 +83,6 @@ export const BookingPage = () => {
             const response = await bookingService.sendRequest(request);
             if (response.isSuccess) {
                 message.success('Booking successful');
-                setIsSuccess(true)
-                setBooking(response.requestModel)
             } else {
                 message.error(response.message);
             }
@@ -144,32 +92,34 @@ export const BookingPage = () => {
     };
 
     return (
-        <div className="p-6 max-w-4xl h-[80vh] flex items-center mx-auto bg-white transition-all duration-300">
-            {/* <ProjectCard project={project} /> */}
+        <div className="p-6 max-w-4xl mx-auto bg-white shadow-lg rounded-lg transition-all duration-300">
+            <ProjectCard project={project} />
 
-            <div className="flex justify-center w-full mt-8 shadow-lg rounded-lg py-10">
-                {!isSuccess ? (<div className="md:w-1/2 space-y-4">
+            <div className="w-full flex justify-center mt-8">
+                <div className="w-full md:w-1/2 space-y-4">
                     <p className="text-xl font-semibold text-gray-700">Request a Meeting</p>
+
                     <div>
-                        <label htmlFor="title" className="block text-sm font-medium text-gray-700">Title: <input
+                        <label htmlFor="title" className="block text-sm font-medium text-gray-700">Title:</label>
+                        <input
                             type="text"
                             id="title"
-                            className="px-4 py-2 border rounded-md focus:ring focus:ring-blue-200 transition"
+                            className="w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-200 transition"
                             onChange={(e) => setBooking({ ...booking, title: e.target.value })}
-                        /></label>
-
+                        />
                     </div>
 
                     <div>
-                        <label className="text-sm font-medium text-gray-700">Mentor: </label>
+                        <label className="block text-sm font-medium text-gray-700">Mentor:</label>
                         <Select
                             showSearch
                             placeholder="Search for a mentor"
                             value={selectedMentor}
                             onSearch={handleSearch}
                             onChange={value => setSelectedMentor(value)}
-                            className='w-3/4'
+                            style={{ width: '100%' }}
                             filterOption={false}
+                            className="w-full"
                         >
                             {mentorList.map((mentor) => (
                                 <Select.Option key={mentor.mentorId} value={mentor.mentorId}>
@@ -177,7 +127,6 @@ export const BookingPage = () => {
                                 </Select.Option>
                             ))}
                         </Select>
-
 
                         <div className={`transition-all duration-300 ${selectedMentor ? 'opacity-100' : 'opacity-0 h-0'}`}>
                             {selectedMentor && <MentorCard mentorId={selectedMentor} />}
@@ -187,49 +136,29 @@ export const BookingPage = () => {
                     <div className={`transition-all duration-300 ${selectedMentor ? 'opacity-100' : 'opacity-0 h-0'}`}>
                         <label className="block text-sm font-medium text-gray-700">Date:</label>
                         <DatePicker
-                            format="YYYY-MM-DD"
-                            placeholder='Choose Date'
                             onChange={(date) => setDate(date)}
                             className="w-full"
-                            minDate={dayjs()}
                         />
                     </div>
+
                     <div className={`transition-all duration-300 ${date ? 'opacity-100' : 'opacity-0 h-0'}`}>
-                        <TimePicker
-                            format="HH:mm"
-                            minuteStep={30}
-                            placeholder="Start time"
-                            onChange={(time) => setStart(time)}
-                            disabled={!date}
-                        />
-                        <TimePicker
-                            format="HH:mm"
-                            minuteStep={30}
-                            placeholder="End time"
-                            minDate={start}
-                            onChange={(time) => setEnd(time)}
-                            disabled={!start}
+                        <label className="block text-sm font-medium text-gray-700">Time:</label>
+                        <TimeSlot
+                            setSlot={setSlot}
+                            disabledSlots={disabledSlots}
                         />
                     </div>
-                    <Button
-                        className="btn-primary"
-                        onClick={handleBooking}
-                        disabled={!end || !date || !selectedMentor}
-                    >
-                        Book
-                    </Button>
-                </div>) : (<div className='m-4' >
-                    <div>Book Successful
-                        <RequestCard
-                            title={booking.title}
-                            start={booking.start}
-                            end={booking.end}
-                        />
 
+                    <div>
+                        <Button
+                            className="btn-primary w-full"
+                            onClick={handleBooking}
+                            disabled={!slot || !date || !selectedMentor}
+                        >
+                            Book
+                        </Button>
                     </div>
-
-                </div>)}
-
+                </div>
             </div>
         </div>
     );
