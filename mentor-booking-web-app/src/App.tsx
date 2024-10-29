@@ -7,20 +7,18 @@ import NavBar from "./components/layout/NavBar";
 import { LoadingPage } from "./components/layout/LoadingPage";
 
 function App() {
-  const { isLoading } = useAuth()
+  const { isLoading, isAuthenticated } = useAuth()
   return (
-    <>
-      {isLoading ?
-        (<LoadingPage />)
-        : (<div className="max-h-screen">
-          <div>
-            <NavBar />
-          </div>
-          <div className="flex">
-            <SideBar />
-            <AppRoutes />
-          </div>
-        </div>)}
+    <><div className="max-h-screen">
+      {isAuthenticated && <div>
+        <NavBar />
+      </div>}
+
+      <div className="flex">
+        {isAuthenticated && <SideBar />}
+        <AppRoutes />
+      </div>
+    </div>
     </>
   );
 }

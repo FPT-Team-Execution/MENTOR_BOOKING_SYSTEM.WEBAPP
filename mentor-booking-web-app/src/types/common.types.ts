@@ -37,3 +37,8 @@ export type TokenData = {
     nbf: number;
     [key: string]: any; // For any other fields
 };
+
+export type BusyTimeData = {
+    start: string,
+    end: string,
+}
