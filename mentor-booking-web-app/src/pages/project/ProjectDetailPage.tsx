@@ -9,6 +9,9 @@ import { StudentType } from '../../types/user.types';
 import { debounce } from 'lodash'
 import { studentService } from '../../services/studentService';
 import paths from '../../routes/path';
+import { BookingPage } from '../user/student/BookingPage';
+
+
 
 export const ProjectDetailPage = () => {
     const { id } = useParams();
@@ -17,6 +20,7 @@ export const ProjectDetailPage = () => {
     const [searchStudent, setSearchStudent] = useState<StudentType[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedStudent, setSelectedStudent] = useState<string | undefined>(undefined);
+    const [isBooking,setIsBooking] = useState<boolean>(false)
 
     useEffect(() => {
         handleGetProject();
@@ -88,7 +92,7 @@ export const ProjectDetailPage = () => {
                         <ProjectCard project={project} />
                         <div>
                             <Button type="primary" onClick={showModal}>Add Member</Button>
-                            <Link to={paths.booking}><Button type="primary">Booking</Button></Link>
+                            <Button type="primary" onClick={() => setIsBooking(true)}>Booking</Button>
                         </div>
                     </div>
                     <StudentProjectList students={students} />
@@ -120,6 +124,9 @@ export const ProjectDetailPage = () => {
                         <Button type="primary" onClick={handleOk}>Add Member</Button>
                     </div>
                 </div>
+            </Modal>
+            <Modal title="Booking" open={isBooking} onCancel={() => setIsBooking(false)} onOk={() => setIsBooking(false)}>
+                <BookingPage project={project}/>
             </Modal>
         </div>
     );

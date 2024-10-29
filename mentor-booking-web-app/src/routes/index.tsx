@@ -81,14 +81,6 @@ const AppRoutes: React.FC = () => {
           }
         />
         {/* Student routes */}
-        <Route
-          path={paths.booking}
-          element={
-            <ProtectedRoute allowedRoles={['Student']}>
-              <BookingPage />
-            </ProtectedRoute>
-          }
-        />
       </Routes>
     </div>
   );

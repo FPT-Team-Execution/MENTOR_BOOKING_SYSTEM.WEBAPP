@@ -1,6 +1,4 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { projectService } from '../../../services/projectService';
-import ProjectCard from '../../../components/project/ProjectCard';
 import { Button, DatePicker, message, Select, TimePicker } from 'antd';
 import { debounce } from 'lodash';
 import { mentorService } from '../../../services/mentorService';
@@ -16,20 +14,20 @@ import utc from "dayjs/plugin/utc";
 // import utc from 'dayjs/plugin/utc' // ES 2015
 
 import timezone from "dayjs/plugin/timezone"; // dependent on utc plugin
+import { BusyTimeData } from '../../../types/common.types';
 // import timezone from 'dayjs/plugin/timezone' // ES 2015
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
 
-export const BookingPage = () => {
+export const BookingPage: React.FC<{ project?: ProjectType }> = ({ project }) =>{
     const { userInfo } = useAuth();
-    const [project, setProject] = useState<ProjectType>();
     const [selectedMentor, setSelectedMentor] = useState<string>('');
     const [mentorList, setMentorList] = useState<MentorType[]>([]);
     const [date, setDate] = useState<Dayjs>();
     const [start, setStart] = useState<Dayjs>()
     const [end, setEnd] = useState<Dayjs>()
-    const [busyTimes, setBusyTimes] = useState([])
+    const [busyTimes, setBusyTimes] = useState<BusyTimeData[]>([])
     const [booking, setBooking] = useState({
         title: '',
         mentorId: '',
@@ -41,23 +39,11 @@ export const BookingPage = () => {
     const [isSuccess,setIsSuccess] = useState(false)
 
     useEffect(() => {
-        handleGetProject();
-    }, []);
-
-    useEffect(() => {
         handleGetBusyTimes()
     }, [date])
 
     dayjs.extend(utc)
     dayjs.extend(timezone)
-    const handleGetProject = async () => {
-        try {
-            const res = await projectService.getProjectById('D1F47F88-C7E2-41CB-BB8D-E1ACB1E342AF');
-            setProject(res.responseRequestModel.project);
-        } catch (err) {
-            console.error(err);
-        }
-    };
 
     const handleGetBusyTimes = async () => {
         try {
@@ -141,9 +127,6 @@ export const BookingPage = () => {
     };
 
     return (
-        <div className="p-6 max-w-4xl h-[80vh] flex items-center mx-auto bg-white transition-all duration-300">
-            {/* <ProjectCard project={project} /> */}
-
             <div className="flex justify-center w-full mt-8 shadow-lg rounded-lg py-10">
                 {!isSuccess ? (<div className="w-full md:w-1/2 space-y-4">
                     <p className="text-xl font-semibold text-gray-700">Request a Meeting</p>
@@ -218,6 +201,5 @@ export const BookingPage = () => {
                 </div>) : (<>Booking successful</>) }
                 
             </div>
-        </div>
     );
 };
