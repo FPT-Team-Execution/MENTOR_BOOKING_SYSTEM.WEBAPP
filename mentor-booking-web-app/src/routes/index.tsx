@@ -16,6 +16,7 @@ import ProtectedRoute from "./ProtectRoute";
 import { ProjectDetailPage } from "../pages/project/ProjectDetailPage";
 import { BookingPage } from "../pages/user/student/BookingPage";
 import StudentRequestPage from "../pages/user/student/StudentRequestPage";
+import MentorRequestPage from "../pages/mentor-page/MentorRequestPage";
 
 const AppRoutes: React.FC = () => {
   return (
@@ -91,10 +92,20 @@ const AppRoutes: React.FC = () => {
           }
         />
         <Route
+          // path="/students/requests/:studentId"
           path="/students/requests/:studentId"
           element={
             <ProtectedRoute allowedRoles={['Student']}>
               <StudentRequestPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/mentor/requests/:mentorId"
+          element={
+            <ProtectedRoute allowedRoles={['Student']}>
+              <MentorRequestPage />
             </ProtectedRoute>
           }
         />

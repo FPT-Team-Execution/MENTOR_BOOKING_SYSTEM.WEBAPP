@@ -40,4 +40,5 @@ export const GET_MENTOR = '/mentors/{id}'
 export const REQUEST = '/requests'
 // Request URLs
 export const REQUEST_URL = `${BASE_URL}/requests`;
-export const GET_PROJECT_BY_STUDENT_ID = (studentId: string) => `${BASE_URL}/projects/student/${studentId}`;
+// export const GET_PROJECT_BY_STUDENT_ID = (studentId: string) => `${BASE_URL}/projects/student/${studentId}`;
+export const GET_PROJECT_BY_STUDENT_ID = "/api/projects";

@@ -1,18 +1,15 @@
-
 import React, { useEffect, useState } from 'react';
-import { Table, Tag, Typography, DatePicker } from 'antd';
+import { Table, Tag, Typography, DatePicker, Button, message } from 'antd';
 import moment from 'moment';
-import { getProjectsByStudentId, getRequests } from '../../../services/requestService';
+import { getRequests, updateRequestsById } from '../../services/requestService';
 import dayjs, { Dayjs } from 'dayjs';
-import { StudentType } from '../../../types/user.types';
-import { RequestType } from '../../../types/request.type';
+import { RequestType } from '../../types/request.type';
 
 const { Title } = Typography;
 const { RangePicker } = DatePicker;
 
-
-interface StudentRequestTableProps {
-    studentId: string;
+interface MentorRequestTableProps {
+    mentorId: string;
 }
 interface PaginationData {
     totalItems: number;
@@ -26,29 +23,52 @@ const paginationInfo: PaginationData = {
     pageSize: 2,
     totalPages: Math.ceil(1 / 2),
 };
-const RequestTable: React.FC<StudentRequestTableProps> = ({ studentId }) => {
+const MentorRequestTable: React.FC<MentorRequestTableProps> = ({ mentorId }) => {
     const [requests, setRequests] = useState<RequestType[]>([]);
     const [filteredRequests, setFilteredRequests] = useState<RequestType[]>([]);
     const [selectedDates, setSelectedDates] = useState<[Dayjs | null, Dayjs | null] | null>(null);
     const [currentPage, setCurrentPage] = useState(paginationInfo.pageIndex);
     const [pageSize, setPageSize] = useState<number>(10);
 
-
     useEffect(() => {
         const fetchRequests = async () => {
             try {
-                const projects = await getProjectsByStudentId(studentId, 'Activated', 1, 10, 'asc');
-                const allRequests = await getRequests(1, 10, "asc");
+                const allRequests = await getRequests(1, 10, "asc"); // Lấy tất cả requests
                 setRequests(allRequests);
                 setFilteredRequests(allRequests);
-                console.log('Fetched Requests:', allRequests);
             } catch (error) {
                 console.error('Error fetching requests:', error);
             }
         };
 
         fetchRequests();
-    }, [studentId]);
+    }, [mentorId]);
+
+    const handleAccept = async (requestId: string) => {
+        try {
+            await updateRequestsById(requestId, 'Title', 'Accepted');
+            message.success('Request accepted successfully!');
+            setRequests((prev) =>
+                prev.map((req) => (req.id === requestId ? { ...req, status: 'Accepted' } : req))
+            );
+        } catch (error) {
+            console.error('Error accepting request:', error);
+            message.error('Failed to accept request');
+        }
+    };
+
+    const handleDeny = async (requestId: string) => {
+        try {
+            await updateRequestsById(requestId, 'Title', 'Denied');
+            message.success('Request denied successfully!');
+            setRequests((prev) =>
+                prev.map((req) => (req.id === requestId ? { ...req, status: 'Denied' } : req))
+            );
+        } catch (error) {
+            console.error('Error denying request:', error);
+            message.error('Failed to deny request');
+        }
+    };
 
     const onDateChange = (dates: any) => {
         setSelectedDates(dates);
@@ -94,17 +114,35 @@ const RequestTable: React.FC<StudentRequestTableProps> = ({ studentId }) => {
                 return <Tag color={color}>{status}</Tag>;
             },
         },
+        {
+            title: 'Actions',
+            key: 'actions',
+            render: (text: any, record: RequestType) => (
+                <div>
+                    {record.status === 'Pending' && (
+                        <>
+                            <Button type="primary" onClick={() => handleAccept(record.id)} style={{ marginRight: 8 }}>
+                                Accept
+                            </Button>
+                            <Button type="primary" danger onClick={() => handleDeny(record.id)}>
+                                Deny
+                            </Button>
+                        </>
+                    )}
+                </div>
+            ),
+        },
     ];
 
     return (
         <div style={{ padding: '24px' }}>
-            <Title level={2}>Student Request Status</Title>
+            <Title level={2}>Mentor Request Management</Title>
             <div style={{ marginBottom: '16px' }}>
                 <RangePicker onChange={onDateChange} value={selectedDates} />
             </div>
             <Table
                 columns={columns}
-                dataSource={(requests || []).slice((currentPage - 1) * pageSize, currentPage * pageSize)}
+                dataSource={(filteredRequests || []).slice((currentPage - 1) * pageSize, currentPage * pageSize)}
                 rowKey="id"
                 pagination={{
                     current: currentPage,
@@ -119,4 +157,4 @@ const RequestTable: React.FC<StudentRequestTableProps> = ({ studentId }) => {
     );
 };
 
-export default RequestTable;
+export default MentorRequestTable;
