@@ -26,7 +26,7 @@ axiosInstance.interceptors.response.use(
     async (error) => {
         const originalConfig = error.config; // Store original request config
 
-        if (error.response && error.response.status === 400 && !originalConfig._retry) {
+        if (error.response && error.response.status === 401 && !originalConfig._retry) {
             originalConfig._retry = true; // Mark this request as a retry
             const refresh = localStorage.getItem('refreshToken');
 
