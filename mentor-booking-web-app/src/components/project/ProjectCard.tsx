@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React from "react";
 import { Card, Tag } from "antd";
 import { CalendarOutlined, UserOutlined } from "@ant-design/icons";
