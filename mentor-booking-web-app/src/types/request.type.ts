@@ -12,4 +12,6 @@ export type RequestType = {
     createdOn: string;
     updatedBy?: string;
     updatedOn?: string;
+    start: string;
+    end: string;
 }

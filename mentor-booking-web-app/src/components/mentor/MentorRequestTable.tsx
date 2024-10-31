@@ -11,31 +11,24 @@ const { RangePicker } = DatePicker;
 interface MentorRequestTableProps {
     mentorId: string;
 }
-interface PaginationData {
-    totalItems: number;
-    pageIndex: number;
-    pageSize: number;
-    totalPages: number;
-}
-const paginationInfo: PaginationData = {
-    totalItems: 1,
-    pageIndex: 1,
-    pageSize: 2,
-    totalPages: Math.ceil(1 / 2),
-};
+
 const MentorRequestTable: React.FC<MentorRequestTableProps> = ({ mentorId }) => {
     const [requests, setRequests] = useState<RequestType[]>([]);
     const [filteredRequests, setFilteredRequests] = useState<RequestType[]>([]);
     const [selectedDates, setSelectedDates] = useState<[Dayjs | null, Dayjs | null] | null>(null);
-    const [currentPage, setCurrentPage] = useState(paginationInfo.pageIndex);
+    const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState<number>(10);
 
     useEffect(() => {
         const fetchRequests = async () => {
             try {
-                const allRequests = await getRequests(1, 10, "asc"); // Lấy tất cả requests
-                setRequests(allRequests);
-                setFilteredRequests(allRequests);
+
+
+                const allRequests = await getRequests(1, 10, "asc");
+                const filteredRequests = allRequests.responseRequestModel.items;
+                setRequests(filteredRequests);
+                setFilteredRequests(filteredRequests);
+                console.log('Fetched Requests:', filteredRequests);
             } catch (error) {
                 console.error('Error fetching requests:', error);
             }
@@ -44,12 +37,12 @@ const MentorRequestTable: React.FC<MentorRequestTableProps> = ({ mentorId }) => 
         fetchRequests();
     }, [mentorId]);
 
-    const handleAccept = async (requestId: string) => {
+    const handleAccept = async (id: string) => {
         try {
-            await updateRequestsById(requestId, 'Title', 'Accepted');
+            await updateRequestsById(id, 'Title', 0);
             message.success('Request accepted successfully!');
             setRequests((prev) =>
-                prev.map((req) => (req.id === requestId ? { ...req, status: 'Accepted' } : req))
+                prev.map((req) => (req.id === id ? { ...req, status: 'Accepted' } : req))
             );
         } catch (error) {
             console.error('Error accepting request:', error);
@@ -57,12 +50,12 @@ const MentorRequestTable: React.FC<MentorRequestTableProps> = ({ mentorId }) => 
         }
     };
 
-    const handleDeny = async (requestId: string) => {
+    const handleDeny = async (id: string) => {
         try {
-            await updateRequestsById(requestId, 'Title', 'Denied');
+            await updateRequestsById(id, 'Title', 1);
             message.success('Request denied successfully!');
             setRequests((prev) =>
-                prev.map((req) => (req.id === requestId ? { ...req, status: 'Denied' } : req))
+                prev.map((req) => (req.id === id ? { ...req, status: 'Denied' } : req))
             );
         } catch (error) {
             console.error('Error denying request:', error);
@@ -95,14 +88,14 @@ const MentorRequestTable: React.FC<MentorRequestTableProps> = ({ mentorId }) => 
         },
         {
             title: 'Start Date',
-            dataIndex: 'createdOn',
-            key: 'createdOn',
+            dataIndex: 'start',
+            key: 'start',
             render: (date: string | undefined) => date ? moment(date).format('YYYY-MM-DD HH:mm') : 'N/A',
         },
         {
             title: 'End Date',
-            dataIndex: 'updatedOn',
-            key: 'updatedOn',
+            dataIndex: 'end',
+            key: 'end',
             render: (date: string | undefined) => date ? moment(date).format('YYYY-MM-DD HH:mm') : 'N/A',
         },
         {
@@ -111,7 +104,8 @@ const MentorRequestTable: React.FC<MentorRequestTableProps> = ({ mentorId }) => 
             key: 'status',
             render: (status: string) => {
                 let color = status === 'Accepted' ? 'green' : status === 'Pending' ? 'orange' : 'red';
-                return <Tag color={color}>{status}</Tag>;
+                let statusEnum = status === '1' ? 'Accepted' : status === '2' ? 'Rejected' : 'Pending';
+                return <Tag color={color}>{statusEnum}</Tag>;
             },
         },
         {
@@ -119,7 +113,7 @@ const MentorRequestTable: React.FC<MentorRequestTableProps> = ({ mentorId }) => 
             key: 'actions',
             render: (text: any, record: RequestType) => (
                 <div>
-                    {record.status === 'Pending' && (
+                    {record.status == '2' && (
                         <>
                             <Button type="primary" onClick={() => handleAccept(record.id)} style={{ marginRight: 8 }}>
                                 Accept
@@ -147,7 +141,7 @@ const MentorRequestTable: React.FC<MentorRequestTableProps> = ({ mentorId }) => 
                 pagination={{
                     current: currentPage,
                     pageSize: pageSize,
-                    total: paginationInfo.totalItems,
+                    total: filteredRequests.length,
                     onChange: handleChangePage,
                     showSizeChanger: false,
                 }}

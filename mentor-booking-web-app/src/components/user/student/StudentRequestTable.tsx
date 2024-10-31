@@ -6,6 +6,7 @@ import { getProjectsByStudentId, getRequests } from '../../../services/requestSe
 import dayjs, { Dayjs } from 'dayjs';
 import { StudentType } from '../../../types/user.types';
 import { RequestType } from '../../../types/request.type';
+import { isNull } from 'lodash';
 
 const { Title } = Typography;
 const { RangePicker } = DatePicker;
@@ -14,34 +15,38 @@ const { RangePicker } = DatePicker;
 interface StudentRequestTableProps {
     studentId: string;
 }
-interface PaginationData {
-    totalItems: number;
-    pageIndex: number;
-    pageSize: number;
-    totalPages: number;
-}
-const paginationInfo: PaginationData = {
-    totalItems: 1,
-    pageIndex: 1,
-    pageSize: 2,
-    totalPages: Math.ceil(1 / 2),
-};
+// interface PaginationData {
+//     totalItems: number;
+//     pageIndex: number;
+//     pageSize: number;
+//     totalPages: number;
+// }
+// const paginationInfo: PaginationData = {
+//     totalItems: ,
+//     pageIndex: 1,
+//     pageSize: 2,
+//     totalPages: Math.ceil(1 / 2),
+// };
 const RequestTable: React.FC<StudentRequestTableProps> = ({ studentId }) => {
     const [requests, setRequests] = useState<RequestType[]>([]);
     const [filteredRequests, setFilteredRequests] = useState<RequestType[]>([]);
     const [selectedDates, setSelectedDates] = useState<[Dayjs | null, Dayjs | null] | null>(null);
-    const [currentPage, setCurrentPage] = useState(paginationInfo.pageIndex);
+    const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState<number>(10);
 
 
     useEffect(() => {
         const fetchRequests = async () => {
             try {
-                const projects = await getProjectsByStudentId(studentId, 'Activated', 1, 10, 'asc');
+
+                const projects = await getProjectsByStudentId(studentId, "", 1, 10, 'asc');
                 const allRequests = await getRequests(1, 10, "asc");
-                setRequests(allRequests);
-                setFilteredRequests(allRequests);
-                console.log('Fetched Requests:', allRequests);
+                const filteredRequests = allRequests.responseRequestModel.items.filter(request =>
+                    projects.responseRequestModel.items.some(project => project.id === request.projectId)
+                );
+                setRequests(filteredRequests);
+                setFilteredRequests(filteredRequests);
+                console.log('Fetched Requests:', filteredRequests);
             } catch (error) {
                 console.error('Error fetching requests:', error);
             }
@@ -55,7 +60,7 @@ const RequestTable: React.FC<StudentRequestTableProps> = ({ studentId }) => {
         if (dates && dates.length === 2) {
             const [startDate, endDate] = dates;
             const filtered = requests.filter((r) =>
-                moment(r.createdOn).isBetween(startDate, endDate, 'days', '[]')
+                moment(r.start).isBetween(startDate, endDate, 'days', '[]')
             );
             setFilteredRequests(filtered);
         } else {
@@ -75,14 +80,14 @@ const RequestTable: React.FC<StudentRequestTableProps> = ({ studentId }) => {
         },
         {
             title: 'Start Date',
-            dataIndex: 'createdOn',
-            key: 'createdOn',
+            dataIndex: 'start',
+            key: 'start',
             render: (date: string | undefined) => date ? moment(date).format('YYYY-MM-DD HH:mm') : 'N/A',
         },
         {
             title: 'End Date',
-            dataIndex: 'updatedOn',
-            key: 'updatedOn',
+            dataIndex: 'end',
+            key: 'end',
             render: (date: string | undefined) => date ? moment(date).format('YYYY-MM-DD HH:mm') : 'N/A',
         },
         {
@@ -90,8 +95,9 @@ const RequestTable: React.FC<StudentRequestTableProps> = ({ studentId }) => {
             dataIndex: 'status',
             key: 'status',
             render: (status: string) => {
-                let color = status === 'Accepted' ? 'green' : status === 'Pending' ? 'orange' : 'red';
-                return <Tag color={color}>{status}</Tag>;
+                let color = status === '1' ? 'green' : status === '2' ? 'red' : 'orange';
+                let statusEnum = status === '1' ? 'Accepted' : status === '2' ? 'Rejected' : 'Pending';
+                return <Tag color={color}>{statusEnum}</Tag>;
             },
         },
     ];
@@ -109,7 +115,7 @@ const RequestTable: React.FC<StudentRequestTableProps> = ({ studentId }) => {
                 pagination={{
                     current: currentPage,
                     pageSize: pageSize,
-                    total: paginationInfo.totalItems,
+                    total: requests.length,
                     onChange: handleChangePage,
                     showSizeChanger: false,
                 }}
