@@ -17,6 +17,7 @@ import { ProjectDetailPage } from "../pages/project/ProjectDetailPage";
 import { BookingPage } from "../pages/user/student/BookingPage";
 import StudentRequestPage from "../pages/user/student/StudentRequestPage";
 import MentorRequestPage from "../pages/mentor-page/MentorRequestPage";
+import CreateMeeting from "../pages/meeting/CreateMeetingPage";
 
 const AppRoutes: React.FC = () => {
   return (
@@ -104,12 +105,23 @@ const AppRoutes: React.FC = () => {
         <Route
           path="/mentor/requests/:mentorId"
           element={
-            <ProtectedRoute allowedRoles={['Mentor']}>
+            <ProtectedRoute allowedRoles={['Mentor', 'Student']}>
               <MentorRequestPage />
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/create-meeting/:id"
+          element={
+            <ProtectedRoute allowedRoles={['Mentor']}>
+              <CreateMeeting />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
+
+
+
     </div>
   );
 };

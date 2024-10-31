@@ -13,9 +13,12 @@ export const getRequests = async (
 ): Promise<ResponseRequestModel<PaginationModel<RequestType>>> => {
     try {
         // const endpoint = `/requests?page=${page}&size=${size}&sortOrder=${sortOrder}`;
-
+        const accessToken = localStorage.getItem("accessToken");
         const endpoint = `/requests`;
         const response = await axiosInstance.get(endpoint, {
+            // headers: {
+            //     Authorization: `Bearer ${accessToken}`,
+            // },
             params: {
                 page,
                 size,
@@ -54,7 +57,12 @@ export const getProjectsByStudentId = async (
 ): Promise<ResponseRequestModel<PaginationModel<ProjectType>>> => {
     try {
         const endpoint = `/projects/student/${studentId}`;
+        const accessToken = localStorage.getItem("accessToken");
         const response = await axiosInstance.get(endpoint, {
+            // headers: {
+            //     Authorization: `Bearer ${accessToken}`,
+            // }
+            // ,
             params: {
                 studentId,
                 projectStatus,
@@ -77,7 +85,7 @@ export const updateRequestsById = async (
 ): Promise<ResponseRequestModel<RequestType>> => {
     try {
         // const endpoint = `/requests?page=${page}&size=${size}&sortOrder=${sortOrder}`;
-
+        const accessToken = localStorage.getItem("accessToken");
         const endpoint = `/requests/${requestId}`;
         // const response = await axiosInstance.get(endpoint, {
         //     params: {
@@ -86,12 +94,18 @@ export const updateRequestsById = async (
         //         sortOrder
         //     }
         // });
-        const response = await axiosInstance.put(endpoint, {
-            params: {
+        const response = await axiosInstance.put(endpoint,
+            {
                 title,
                 status
-            }
-        });
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                }
+
+
+            });
         return response.data;
     } catch (error) {
         console.error("Error fetching requests:", error);

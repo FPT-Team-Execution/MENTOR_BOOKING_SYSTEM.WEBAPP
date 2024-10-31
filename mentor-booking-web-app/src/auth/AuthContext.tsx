@@ -20,9 +20,9 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [jwtToken, setJwtToken] = useState<string | null>(null);
-  const [isAuthenticated,setIsAuthenticated] = useState(false)
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [userInfo, setUserInfo] = useState<TokenData>();
-  const [isLoading, setIsLoading] = useState(true); 
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {

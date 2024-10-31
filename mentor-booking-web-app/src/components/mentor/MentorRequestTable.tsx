@@ -3,8 +3,8 @@ import { Table, Tag, Typography, DatePicker, Button, message } from 'antd';
 import moment from 'moment';
 import { getRequests, updateRequestsById } from '../../services/requestService';
 import dayjs, { Dayjs } from 'dayjs';
+import { useNavigate } from 'react-router-dom';
 import { RequestType } from '../../types/request.type';
-
 const { Title } = Typography;
 const { RangePicker } = DatePicker;
 
@@ -18,32 +18,34 @@ const MentorRequestTable: React.FC<MentorRequestTableProps> = ({ mentorId }) => 
     const [selectedDates, setSelectedDates] = useState<[Dayjs | null, Dayjs | null] | null>(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState<number>(10);
+    const navigate = useNavigate();
 
+
+    const fetchRequests = async () => {
+        try {
+
+
+            const allRequests = await getRequests(1, 10, "asc");
+            const filteredRequests = allRequests.responseRequestModel.items;
+            setRequests(filteredRequests);
+            setFilteredRequests(filteredRequests);
+            console.log('Fetched Requests:', filteredRequests);
+        } catch (error) {
+            console.error('Error fetching requests:', error);
+        }
+    };
     useEffect(() => {
-        const fetchRequests = async () => {
-            try {
 
-
-                const allRequests = await getRequests(1, 10, "asc");
-                const filteredRequests = allRequests.responseRequestModel.items;
-                setRequests(filteredRequests);
-                setFilteredRequests(filteredRequests);
-                console.log('Fetched Requests:', filteredRequests);
-            } catch (error) {
-                console.error('Error fetching requests:', error);
-            }
-        };
 
         fetchRequests();
     }, [mentorId]);
 
     const handleAccept = async (id: string) => {
         try {
-            await updateRequestsById(id, 'Title', 0);
+            await updateRequestsById(id, "title", 0);
             message.success('Request accepted successfully!');
-            setRequests((prev) =>
-                prev.map((req) => (req.id === id ? { ...req, status: 'Accepted' } : req))
-            );
+            navigate(`/create-meeting/${id}`);
+            await fetchRequests();
         } catch (error) {
             console.error('Error accepting request:', error);
             message.error('Failed to accept request');
@@ -52,11 +54,9 @@ const MentorRequestTable: React.FC<MentorRequestTableProps> = ({ mentorId }) => 
 
     const handleDeny = async (id: string) => {
         try {
-            await updateRequestsById(id, 'Title', 1);
+            await updateRequestsById(id, "title", 1);
             message.success('Request denied successfully!');
-            setRequests((prev) =>
-                prev.map((req) => (req.id === id ? { ...req, status: 'Denied' } : req))
-            );
+            await fetchRequests();
         } catch (error) {
             console.error('Error denying request:', error);
             message.error('Failed to deny request');
@@ -103,8 +103,8 @@ const MentorRequestTable: React.FC<MentorRequestTableProps> = ({ mentorId }) => 
             dataIndex: 'status',
             key: 'status',
             render: (status: string) => {
-                let color = status === 'Accepted' ? 'green' : status === 'Pending' ? 'orange' : 'red';
-                let statusEnum = status === '1' ? 'Accepted' : status === '2' ? 'Rejected' : 'Pending';
+                let color = status == '0' ? 'green' : status == '2' ? 'orange' : 'red';
+                let statusEnum = status == '0' ? 'Accepted' : status == '1' ? 'Rejected' : 'Pending';
                 return <Tag color={color}>{statusEnum}</Tag>;
             },
         },
