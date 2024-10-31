@@ -14,6 +14,9 @@ import CalendarEventPage from "../pages/calendar/CalendarEventPage";
 import ProjectPage from "../pages/user/student/ProjectPage";
 import ProtectedRoute from "./ProtectRoute";
 import { ProjectDetailPage } from "../pages/project/ProjectDetailPage";
+import { BookingPage } from "../pages/user/student/BookingPage";
+import StudentRequestPage from "../pages/user/student/StudentRequestPage";
+import MentorRequestPage from "../pages/mentor-page/MentorRequestPage";
 import { LoginGoogle } from "../components/Auth/LoginGoogle";
 import GoogleAuthCallback from "../components/Auth/GoogleAuthCallback";
 
@@ -67,22 +70,48 @@ const AppRoutes: React.FC = () => {
         <Route
           path={paths.projectDetail}
           element={
-            <ProtectedRoute allowedRoles={['Admin','Mentor','Student']}>
+            <ProtectedRoute allowedRoles={['Admin', 'Mentor', 'Student']}>
               <ProjectDetailPage />
             </ProtectedRoute>
           }
         />
-        
+
         {/* Mentor routes */}
         <Route
           path="/mentor/calendar/:mentorId"
           element={
-            <ProtectedRoute allowedRoles={['Admin','Mentor']}>
+            <ProtectedRoute allowedRoles={['Admin', 'Mentor', 'Student']}>
               <CalendarEventPage />
             </ProtectedRoute>
           }
         />
         {/* Student routes */}
+        <Route
+          path={paths.booking}
+          element={
+            <ProtectedRoute allowedRoles={['Student']}>
+              <BookingPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          // path="/students/requests/:studentId"
+          path="/students/requests/:studentId"
+          element={
+            <ProtectedRoute allowedRoles={['Student']}>
+              <StudentRequestPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/mentor/requests/:mentorId"
+          element={
+            <ProtectedRoute allowedRoles={['Mentor']}>
+              <MentorRequestPage />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </div>
   );
