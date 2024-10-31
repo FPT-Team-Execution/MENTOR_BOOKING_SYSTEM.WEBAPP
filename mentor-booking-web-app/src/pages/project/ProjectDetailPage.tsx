@@ -89,7 +89,7 @@ export const ProjectDetailPage = () => {
                 <>
                     <div className='flex w-full gap-5'>
                         <ProjectCard project={project} />
-                        <div>
+                        <div className='flex gap-2'>
                             <Button type="primary" onClick={showModal}>Add Member</Button>
                             <Button type="primary" onClick={() => setIsBooking(true)}>Booking</Button>
                         </div>
@@ -124,7 +124,7 @@ export const ProjectDetailPage = () => {
                     </div>
                 </div>
             </Modal>
-            <Modal title="Booking" open={isBooking} onCancel={() => setIsBooking(false)} onOk={() => setIsBooking(false)}>
+            <Modal title="Booking" open={isBooking} footer={[]} onCancel={() => setIsBooking(false)} onOk={() => setIsBooking(false)}>
                 <BookingPage project={project}/>
             </Modal>
         </div>

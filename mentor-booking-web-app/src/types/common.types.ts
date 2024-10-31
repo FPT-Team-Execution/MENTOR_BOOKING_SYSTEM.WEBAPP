@@ -16,6 +16,7 @@ export type PaginationModel<T> = {
     pageIndex: number,
     pageSize: number,
     totalPages: number,
+    totalItems: number,
     items: T[]
 }
 

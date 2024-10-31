@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Dropdown, Menu, message, Popconfirm, Modal } from 'antd';
+import { Table, Menu, message, Popconfirm, Modal } from 'antd';
 import { MoreOutlined } from '@ant-design/icons';
 import { studentService } from '../../../services/studentService';
 import { StudentType } from '../../../types/user.types';
@@ -21,7 +22,7 @@ const StudentTable: React.FC = () => {
         if (res) {
           console.log(res)
           setData(res.items)
-          setTotalItems(res.totalPages)
+          setTotalItems(res.totalItems)
         } else {
           console.log('Fail to fetch api')
         }
@@ -63,7 +64,6 @@ const StudentTable: React.FC = () => {
   };
 
 
-  // Menu for the ellipsis dropdown
   const menu = (fullname: string) => (
     <Menu>
       <Menu.Item key="1" onClick={() => handleEdit(fullname)}>
@@ -131,12 +131,6 @@ const StudentTable: React.FC = () => {
         }}
         bordered
       />
-      <Modal title="Update Point" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-        <div>
-          Student name: Banana
-        </div>
-
-      </Modal>
 
     </div>
   );

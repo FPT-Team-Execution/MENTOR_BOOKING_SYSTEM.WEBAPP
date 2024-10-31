@@ -10,7 +10,7 @@ export const MENTOR_REGISTER = `${BASE_URL}/auth/mentor/sign-up`;
 export const GOOGLE_SIGNIN = `${BASE_URL}/auth/google/signin`;
 export const CREATE_PROJECT = `${BASE_URL}/projects`;
 
-export const GET_ALL_STUDENTS = '/students?page={page}&size={size}'
+export const GET_ALL_STUDENTS = '/students?page={page}&size={size}&sortOrder=asc'
 
 export const REFRESH_TOKEN = '/auth/refresh'
 export const CALLBACK_URL = 'http://localhost:5173/auth/callback'

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React from "react";
 import { Card, Tag } from "antd";
 import { CalendarOutlined, UserOutlined } from "@ant-design/icons";
@@ -40,22 +41,6 @@ const ProjectCard: React.FC<{ project?: ProjectType }> = ({ project }) => {
           <span>Semester: {project.semester}</span>
         </div>
       </div>
-
-      {/* Created by and Mentor */}
-      <div className="mt-2 text-xs">
-        <div className="flex items-center text-gray-500">
-          <UserOutlined className="mr-1" />
-          <span>Created by: {project.createdBy}</span>
-        </div>
-        <div className="text-gray-500">
-          <span>Mentor ID: {project.mentorId}</span>
-        </div>
-      </div>
-
-      {/* Status tag */}
-      <Tag color={statusColors[project.status]} className="mt-1">
-        {project.status}
-      </Tag>
     </Card>
   );
 };
