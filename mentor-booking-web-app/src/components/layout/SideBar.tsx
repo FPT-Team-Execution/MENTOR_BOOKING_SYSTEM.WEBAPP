@@ -57,6 +57,13 @@ const SideBar: React.FC = () => {
   },[userInfo])
   
 
+  if (userInfo?.role === "Student" && !items.find(item => item?.key === '/students/requests')) {
+    items.push({ label: "Request", icon: <UserOutlined />, key: '/students/requests' });
+  }
+
+  if (userInfo?.role === "Mentor" && !items.find(item => item?.key === '/mentor/requests')) {
+    items.push({ label: "Request", icon: <UserOutlined />, key: '/mentor/requests' });
+  }
   return (
     <Menu
       className="w-48"

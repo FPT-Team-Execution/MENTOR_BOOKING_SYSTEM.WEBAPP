@@ -6,7 +6,6 @@ import paths from "../../routes/path";
 
 const CalendarEventPage: React.FC = () => {
   const navigate = useNavigate();
-  const { mentorId } = useParams<{ mentorId: string }>(); // Lấy mentorId từ URL
 
   const handleOnBackClick = () => {
     navigate(paths.home); // Điều hướng về trang chính hoặc trang khác
@@ -15,7 +14,7 @@ const CalendarEventPage: React.FC = () => {
   return (
     <div>
       <h1>Calendar Events</h1>
-      {mentorId && <MyCalendar mentorId={mentorId} />} {/* Truyền mentorId vào MyCalendar */}
+      {<MyCalendar />} {/* Truyền mentorId vào MyCalendar */}
       <Button onClick={handleOnBackClick}>Back</Button>
     </div>
   );
