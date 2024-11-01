@@ -11,29 +11,31 @@ const StudentTable: React.FC = () => {
   const [data, setData] = useState<StudentType[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [pageSize, setPageSize] = useState<number>(10); 
+  const [pageSize, setPageSize] = useState<number>(5); 
   const [totalItems,setTotalItems] = useState<number>(0)
 
   useEffect(() => {
 
-    const handleFetch = async () => {
-      try {
-        const res = await studentService.getAllStudent(currentPage.toString(), pageSize.toString())
-        if (res) {
-          console.log(res)
-          setData(res.items)
-          setTotalItems(res.totalItems)
-        } else {
-          console.log('Fail to fetch api')
-        }
-      } catch (err) {
-        console.log("Fail to load students: " + err)
-      }
-    }
-
     handleFetch();
 
   }, [currentPage])
+
+
+  const handleFetch = async () => {
+    try {
+      const res = await studentService.getAllStudent(currentPage.toString(), pageSize.toString())
+      if (res) {
+        console.log(res)
+        setData(res.items)
+        setTotalItems(res.totalPages*pageSize)
+        setCurrentPage(res.pageIndex)
+      } else {
+        console.log('Fail to fetch api')
+      }
+    } catch (err) {
+      console.log("Fail to load students: " + err)
+    }
+  }
 
   // Functions for showing confirmation messages
   const handleEdit = (fullname: string) => {
@@ -87,6 +89,7 @@ const StudentTable: React.FC = () => {
 
   // Change page handler
   const handleChangePage = (page: number) => {
+    console.log(page)
     setCurrentPage(page);
   };
 
@@ -127,7 +130,8 @@ const StudentTable: React.FC = () => {
           pageSize: pageSize,
           total: totalItems,
           onChange: handleChangePage,
-          showSizeChanger: false, // Disable changing page size
+          showSizeChanger: false,
+          
         }}
         bordered
       />
