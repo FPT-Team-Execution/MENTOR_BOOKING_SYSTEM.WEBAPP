@@ -9,6 +9,7 @@ import { StudentType } from '../../types/user.types';
 import { debounce } from 'lodash'
 import { studentService } from '../../services/studentService';
 import { BookingPage } from '../user/student/BookingPage';
+import { useAuth } from '../../auth/AuthContext';
 
 
 
@@ -20,6 +21,7 @@ export const ProjectDetailPage = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedStudent, setSelectedStudent] = useState<string | undefined>(undefined);
     const [isBooking,setIsBooking] = useState<boolean>(false)
+    const { userInfo } = useAuth()
 
     useEffect(() => {
         handleGetProject();
@@ -91,7 +93,7 @@ export const ProjectDetailPage = () => {
                         <ProjectCard project={project} />
                         <div className='flex gap-2'>
                             <Button type="primary" onClick={showModal}>Add Member</Button>
-                            <Button type="primary" onClick={() => setIsBooking(true)}>Booking</Button>
+                            {userInfo?.role === 'Student' && <Button type="primary" onClick={() => setIsBooking(true)}>Booking</Button>}
                         </div>
                     </div>
                     <StudentProjectList students={students} />
@@ -125,7 +127,7 @@ export const ProjectDetailPage = () => {
                 </div>
             </Modal>
             <Modal title="Booking" open={isBooking} footer={[]} onCancel={() => setIsBooking(false)} onOk={() => setIsBooking(false)}>
-                <BookingPage project={project}/>
+                {isBooking && <BookingPage project={project}/>}
             </Modal>
         </div>
     );
