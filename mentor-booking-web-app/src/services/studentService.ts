@@ -17,8 +17,15 @@ const searchStudent = async (search: string) => {
     return result.data.responseRequestModel
 }
 
+const updateStudentPoint = async (payload: unknown) => {
+    const url = '/point-transactions'
+    const result = await axiosInstance.post(url,payload)
+    return result.data.responseRequestModel
+}
+
 export const studentService = {
     getAllStudent,
-    searchStudent
+    searchStudent,
+    updateStudentPoint
 }
 
