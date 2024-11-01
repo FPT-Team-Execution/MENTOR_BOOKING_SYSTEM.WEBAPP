@@ -13,8 +13,6 @@ const CreateMeeting: React.FC = () => {
             try {
                 if (requestId) {
                     const request = await getRequestsById(requestId);
-                    // Không cần thiết phải sử dụng requestDetails để điền vào form
-                    // Nếu bạn cần thông tin để hiển thị, có thể lưu vào state nhưng không cần dùng để điền vào form
                 }
             } catch (error) {
                 console.error('Failed to fetch request details:', error);

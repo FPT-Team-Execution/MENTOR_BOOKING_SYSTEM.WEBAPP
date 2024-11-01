@@ -11,8 +11,8 @@ export const createMeeting = async (
         // const endpoint = `/requests?page=${page}&size=${size}&sortOrder=${sortOrder}`;
         const accessToken = localStorage.getItem("accessToken");
         const endpoint = `/meetings`;
-        const response = await axiosInstance.post(`/meetings/${accessToken}`, {
-            // accessToken, // Gửi token trong body
+        const response = await axiosInstance.post(`/meetings`, {
+            accessToken,
             requestId,
             description,
             location,
@@ -25,6 +25,7 @@ export const createMeeting = async (
 
 
             });
+
         return response.data;
     } catch (error) {
         console.error("Error fetching requests:", error);

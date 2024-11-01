@@ -76,7 +76,7 @@ const AppRoutes: React.FC = () => {
 
         {/* Mentor routes */}
         <Route
-          path="/mentor/calendar/:mentorId"
+          path="/calendar"
           element={
             <ProtectedRoute allowedRoles={['Admin', 'Mentor', 'Student']}>
               <CalendarEventPage />
@@ -94,7 +94,7 @@ const AppRoutes: React.FC = () => {
         />
         <Route
           // path="/students/requests/:studentId"
-          path="/students/requests/:studentId"
+          path="/students/requests"
           element={
             <ProtectedRoute allowedRoles={['Student']}>
               <StudentRequestPage />
@@ -103,9 +103,9 @@ const AppRoutes: React.FC = () => {
         />
 
         <Route
-          path="/mentor/requests/:mentorId"
+          path="/mentor/requests"
           element={
-            <ProtectedRoute allowedRoles={['Mentor', 'Student']}>
+            <ProtectedRoute allowedRoles={['Mentor']}>
               <MentorRequestPage />
             </ProtectedRoute>
           }

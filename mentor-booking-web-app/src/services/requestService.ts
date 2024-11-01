@@ -16,9 +16,7 @@ export const getRequests = async (
         const accessToken = localStorage.getItem("accessToken");
         const endpoint = `/requests`;
         const response = await axiosInstance.get(endpoint, {
-            // headers: {
-            //     Authorization: `Bearer ${accessToken}`,
-            // },
+
             params: {
                 page,
                 size,
@@ -59,10 +57,7 @@ export const getProjectsByStudentId = async (
         const endpoint = `/projects/student/${studentId}`;
         const accessToken = localStorage.getItem("accessToken");
         const response = await axiosInstance.get(endpoint, {
-            // headers: {
-            //     Authorization: `Bearer ${accessToken}`,
-            // }
-            // ,
+
             params: {
                 studentId,
                 projectStatus,

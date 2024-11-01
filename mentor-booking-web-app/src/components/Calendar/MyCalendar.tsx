@@ -4,9 +4,6 @@ import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 // Định nghĩa interface cho props
-interface MyCalendarProps {
-  mentorId: string; // Khai báo kiểu cho mentorId
-}
 
 // Định nghĩa interface cho event bao gồm cả status
 interface CalendarEvent {
@@ -21,7 +18,7 @@ interface CalendarEvent {
 // Khởi tạo localizer cho calendar
 const localizer = momentLocalizer(moment);
 
-const MyCalendar: React.FC<MyCalendarProps> = ({ mentorId }) => {
+const MyCalendar: React.FC = () => {
   // Khai báo state cho events với kiểu CalendarEvent[]
   const [events, setEvents] = useState<CalendarEvent[]>([]);
 
@@ -32,30 +29,30 @@ const MyCalendar: React.FC<MyCalendarProps> = ({ mentorId }) => {
         id: "1",
         title: "Meeting with Mentor",
         status: "Confirmed",  // Status của sự kiện
-        start: new Date(2024, 9, 10, 10, 0), // 10 October 2024, 10:00 AM
-        end: new Date(2024, 9, 10, 12, 0),  // 10 October 2024, 12:00 PM
+        start: new Date(2024, 11, 10, 10, 0), // 10 October 2024, 10:00 AM
+        end: new Date(2024, 11, 10, 12, 0),  // 10 October 2024, 12:00 PM
         allDay: false,
       },
       {
         id: "2",
         title: "Code Review",
         status: "Pending",  // Status của sự kiện
-        start: new Date(2024, 9, 12, 14, 0), // 12 October 2024, 2:00 PM
-        end: new Date(2024, 9, 12, 15, 30), // 12 October 2024, 3:30 PM
+        start: new Date(2024, 11, 12, 14, 0), // 12 October 2024, 2:00 PM
+        end: new Date(2024, 11, 12, 15, 30), // 12 October 2024, 3:30 PM
         allDay: false,
       },
       {
         id: "3",
         title: "Project Presentation",
         status: "Completed",  // Status của sự kiện
-        start: new Date(2024, 9, 15, 9, 0),  // 15 October 2024, 9:00 AM
-        end: new Date(2024, 9, 15, 11, 0),   // 15 October 2024, 11:00 AM
+        start: new Date(2024, 11, 15, 9, 0),  // 15 October 2024, 9:00 AM
+        end: new Date(2024, 11, 15, 11, 0),   // 15 October 2024, 11:00 AM
         allDay: false,
       },
     ];
 
     setEvents(demoEvents);
-  }, [mentorId]);
+  });
 
   // Custom component để hiển thị event với title và status
   const EventComponent = ({ event }: { event: CalendarEvent }) => (

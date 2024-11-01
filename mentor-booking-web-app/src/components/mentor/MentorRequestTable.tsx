@@ -40,11 +40,11 @@ const MentorRequestTable: React.FC<MentorRequestTableProps> = ({ mentorId }) => 
         fetchRequests();
     }, [mentorId]);
 
-    const handleAccept = async (id: string) => {
+    const handleAccept = async (requestId: string) => {
         try {
-            await updateRequestsById(id, "title", 0);
+            await updateRequestsById(requestId, "title", 0);
             message.success('Request accepted successfully!');
-            navigate(`/create-meeting/${id}`);
+            navigate(`/create-meeting/${requestId}`);
             await fetchRequests();
         } catch (error) {
             console.error('Error accepting request:', error);
@@ -124,6 +124,15 @@ const MentorRequestTable: React.FC<MentorRequestTableProps> = ({ mentorId }) => 
                         </>
                     )}
                 </div>
+            ),
+        },
+        {
+            title: 'View Project',
+            key: 'viewProject',
+            render: (text: any, record: RequestType) => (
+                <Button type="link" onClick={() => navigate(`/project/${record.projectId}`)}>
+                    View Project
+                </Button>
             ),
         },
     ];
