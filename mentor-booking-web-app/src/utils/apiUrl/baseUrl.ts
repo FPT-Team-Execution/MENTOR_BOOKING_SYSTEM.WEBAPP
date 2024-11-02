@@ -46,3 +46,7 @@ export const GET_BUSY_TIMES = '/calendar-events/busy-event?MentorId={mentorId}&D
 export const REQUEST_URL = `${BASE_URL}/requests`;
 // export const GET_PROJECT_BY_STUDENT_ID = (studentId: string) => `${BASE_URL}/projects/student/${studentId}`;
 export const GET_PROJECT_BY_STUDENT_ID = "/api/projects";
+
+export const signInGoogleApiUrl = (code: string) => {
+    return `https://localhost:7554/api/auth/signin-google?code=${code}&callbackuri=http://localhost:5173/auth/callback`
+}
