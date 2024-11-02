@@ -1,13 +1,14 @@
 // GoogleAuthCallback.tsx
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { useAuth } from "../../auth/AuthContext";
 import { signInGoogleApiUrl } from "../../utils/apiUrl/baseUrl";
 import { decode } from "../../utils/utils";
 import { ExternalSignInResponseModel, ResponseRequestModel, TokenData } from "../../types/common.types";
 import { useRequest } from "ahooks";
 import { message } from "antd";
+import axiosInstance from "../../utils/axios/axiosInstance";
+import { AxiosError } from "axios";
 
 const GoogleAuthCallback: React.FC = () => {
 
@@ -18,9 +19,45 @@ const GoogleAuthCallback: React.FC = () => {
 
   const { loading } = useRequest(async () => {
 
-    if (isAuthenticated) {
-      switch (userInfo?.role) {
+    try {
+      if (isAuthenticated) {
+        switch (userInfo?.role) {
+          case "Mentor": {
+            navigate("/homepage")
+            break;
+          }
+          default: {
+            setIsAuthenticated(false);
+            message.error("Your are not mentor!");
+            navigate("/login")
+          }
+        }
+      }
+
+      if (!code) {
+        return;
+      }
+      const response = await axiosInstance.get<ResponseRequestModel<ExternalSignInResponseModel>>(signInGoogleApiUrl(code));
+      const data = response.data;
+
+      if (!data.isSuccess) {
+        message.success(data.message);
+      }
+
+      const googleToken = data.responseRequestModel.googleToken;
+      const jwtModel = data.responseRequestModel.jwtModel;
+
+      localStorage.setItem("accessToken", jwtModel.accessToken);
+      localStorage.setItem("refreshToken", jwtModel.refreshToken);
+      localStorage.setItem("googleAccessToken", googleToken.access_token);
+
+      const userData: TokenData | undefined = decode(jwtModel.accessToken);
+
+      switch (userData?.role) {
         case "Mentor": {
+          setUserInfo(userData!);
+          setIsAuthenticated(true);
+          message.success("Login successfully!");
           navigate("/homepage")
           break;
         }
@@ -30,40 +67,34 @@ const GoogleAuthCallback: React.FC = () => {
           navigate("/login")
         }
       }
-    }
+    } catch (error) {
 
-    if (!code) {
-      return;
-    }
-    const response = await axios.get<ResponseRequestModel<ExternalSignInResponseModel>>(signInGoogleApiUrl(code));
-    const data = response.data;
+      if (error instanceof AxiosError) {
 
-    if (!data.isSuccess) {
-      message.success(data.message);
-    }
+        if (error.response) {
+          switch (error.response.status) {
+            case 500:
+              message.error("Role or account was invalid, please contact Admin!");
+              break;
+            case 401:
+              message.error("Unauthorized access. Please log in.");
+              navigate("/login");
+              break;
+            default:
+              message.error("An unexpected error occurred!");
+          }
+        } else {
+          message.error("Failed to connect to the server.");
+        }
 
-    const googleToken = data.responseRequestModel.googleToken;
-    const jwtModel = data.responseRequestModel.jwtModel;
+      } else {
 
-    localStorage.setItem("accessToken", jwtModel.accessToken);
-    localStorage.setItem("refreshToken", jwtModel.refreshToken);
-    localStorage.setItem("googleAccessToken", googleToken.access_token);
+        message.error("Something went wrong")
+        console.log(error)
 
-    const userData: TokenData | undefined = decode(jwtModel.accessToken);
-
-    switch (userData?.role) {
-      case "Mentor": {
-        setUserInfo(userData!);
-        setIsAuthenticated(true);
-        message.success("Login successfully!");
-        navigate("/homepage")
-        break;
       }
-      default: {
-        setIsAuthenticated(false);
-        message.error("Your are not mentor!");
-        navigate("/login")
-      }
+
+      navigate("/login");
     }
 
   }, {
