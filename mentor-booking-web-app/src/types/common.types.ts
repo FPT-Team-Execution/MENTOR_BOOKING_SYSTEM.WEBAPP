@@ -1,3 +1,4 @@
+import { GoogleResponse } from './common.types';
 export type ResponseRequestModel<T> = {
     isSuccess: true,
     message: string,
@@ -47,4 +48,18 @@ export type BusyTimeData = {
 export type JwtModel = {
     accessToken: string,
     refreshToken: string
+}
+
+export type GoogleTokenResponse = {
+    access_token: string,
+    refresh_token: string,
+    expires_in: string,
+    token_type: string,
+    scope: string,
+    isSuccess: boolean
+}
+
+export type ExternalSignInResponseModel = {
+    jwtModel : JwtModel,
+    googleToken: GoogleResponse
 }
