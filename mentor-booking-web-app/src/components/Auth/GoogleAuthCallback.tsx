@@ -20,6 +20,7 @@ const GoogleAuthCallback: React.FC = () => {
   const { loading } = useRequest(async () => {
 
     try {
+
       if (isAuthenticated) {
         switch (userInfo?.role) {
           case "Mentor": {
@@ -37,6 +38,7 @@ const GoogleAuthCallback: React.FC = () => {
       if (!code) {
         return;
       }
+
       const response = await axiosInstance.get<ResponseRequestModel<ExternalSignInResponseModel>>(signInGoogleApiUrl(code));
       const data = response.data;
 
@@ -67,24 +69,25 @@ const GoogleAuthCallback: React.FC = () => {
           navigate("/login")
         }
       }
+
     } catch (error) {
 
       if (error instanceof AxiosError) {
 
         if (error.response) {
+
           switch (error.response.status) {
             case 500:
               message.error("Role or account was invalid, please contact Admin!");
               break;
-            case 401:
-              message.error("Unauthorized access. Please log in.");
-              navigate("/login");
-              break;
             default:
               message.error("An unexpected error occurred!");
           }
+
         } else {
+
           message.error("Failed to connect to the server.");
+
         }
 
       } else {
