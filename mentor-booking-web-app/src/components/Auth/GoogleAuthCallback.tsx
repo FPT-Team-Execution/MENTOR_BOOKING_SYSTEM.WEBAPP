@@ -36,6 +36,7 @@ const GoogleAuthCallback: React.FC = () => {
       }
 
       if (!code) {
+        navigate("/login");
         return;
       }
 
@@ -98,6 +99,7 @@ const GoogleAuthCallback: React.FC = () => {
       }
 
       navigate("/login");
+
     }
 
   }, {
