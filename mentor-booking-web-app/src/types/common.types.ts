@@ -43,3 +43,8 @@ export type BusyTimeData = {
     start: string,
     end: string,
 }
+
+export type JwtModel = {
+    accessToken: string,
+    refreshToken: string
+}
