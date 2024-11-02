@@ -17,7 +17,7 @@ import { ProjectDetailPage } from "../pages/project/ProjectDetailPage";
 import { BookingPage } from "../pages/user/student/BookingPage";
 import StudentRequestPage from "../pages/user/student/StudentRequestPage";
 import MentorRequestPage from "../pages/mentor-page/MentorRequestPage";
-import { LoginGoogle } from "../components/Auth/LoginGoogle";
+// import { LoginGoogle } from "../components/Auth/LoginGoogle";
 import GoogleAuthCallback from "../components/Auth/GoogleAuthCallback";
 import CreateMeeting from "../pages/meeting/CreateMeetingPage";
 
@@ -63,7 +63,7 @@ const AppRoutes: React.FC = () => {
         <Route
           path={paths.project}
           element={
-            <ProtectedRoute allowedRoles={['Admin','Student']}>
+            <ProtectedRoute allowedRoles={['Admin', 'Student']}>
               <ProjectPage />
             </ProtectedRoute>
           }
@@ -114,7 +114,7 @@ const AppRoutes: React.FC = () => {
           }
         />
         <Route
-          path="/create-meeting/:id"
+          path="/create-meeting/:requestId"
           element={
             <ProtectedRoute allowedRoles={['Mentor']}>
               <CreateMeeting />

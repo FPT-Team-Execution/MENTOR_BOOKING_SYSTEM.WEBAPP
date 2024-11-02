@@ -2,17 +2,19 @@ import React, { useEffect, useState } from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
+import { getRequests } from '../../services/requestService';
+import { getMeeting } from '../../services/meetingService';
+import { RequestType } from '../../types/request.type';
+import { MeetingType } from '../../types/meeting.type';
+import { decode } from "../../utils/utils";
+import { TokenData } from "../../types/common.types";
 
-// Định nghĩa interface cho props
-
-// Định nghĩa interface cho event bao gồm cả status
 interface CalendarEvent {
-  id: string;
   title: string;
   status: string;
   start: Date;
   end: Date;
-  allDay: boolean;
+  location: string
 }
 
 // Khởi tạo localizer cho calendar
@@ -21,38 +23,74 @@ const localizer = momentLocalizer(moment);
 const MyCalendar: React.FC = () => {
   // Khai báo state cho events với kiểu CalendarEvent[]
   const [events, setEvents] = useState<CalendarEvent[]>([]);
+  const [userInfo, setUserInfo] = useState<TokenData>();
+  const accessToken = localStorage.getItem("accessToken");
 
   useEffect(() => {
-    // Dữ liệu ảo để demo
-    const demoEvents = [
-      {
-        id: "1",
-        title: "Meeting with Mentor",
-        status: "Confirmed",  // Status của sự kiện
-        start: new Date(2024, 11, 10, 10, 0), // 10 October 2024, 10:00 AM
-        end: new Date(2024, 11, 10, 12, 0),  // 10 October 2024, 12:00 PM
-        allDay: false,
-      },
-      {
-        id: "2",
-        title: "Code Review",
-        status: "Pending",  // Status của sự kiện
-        start: new Date(2024, 11, 12, 14, 0), // 12 October 2024, 2:00 PM
-        end: new Date(2024, 11, 12, 15, 30), // 12 October 2024, 3:30 PM
-        allDay: false,
-      },
-      {
-        id: "3",
-        title: "Project Presentation",
-        status: "Completed",  // Status của sự kiện
-        start: new Date(2024, 11, 15, 9, 0),  // 15 October 2024, 9:00 AM
-        end: new Date(2024, 11, 15, 11, 0),   // 15 October 2024, 11:00 AM
-        allDay: false,
-      },
-    ];
+    // Giải mã `accessToken` và lưu vào `userInfo`
+    if (accessToken != null) {
+      setUserInfo(decode(accessToken));
+    }
+  }, [accessToken]);
+  useEffect(() => {
+    const fetchRequests = async () => {
+      try {
+        // Kiểm tra nếu `userInfo` và `nameidentifier` đã được thiết lập
+        if (userInfo?.nameidentifier) {
 
-    setEvents(demoEvents);
-  });
+          const allRequests = await getRequests(1, 10, "asc");
+          const allMeeting = await getMeeting(1, 10);
+          const filteredRequests = allRequests.responseRequestModel.items.filter(request =>
+            request.mentorId == userInfo.nameidentifier && request.status == "0"
+          );
+
+
+          const calendarEvents: CalendarEvent[] = filteredRequests.flatMap((request) => {
+            const meeting = allMeeting.responseRequestModel.items.find(
+              (meet: MeetingType) => meet.requestId == request.id
+            );
+            const getMeetingStatusText = (status: string | number) => {
+              switch (status) {
+                case "0":
+                case 0:
+                  return "New";
+                case "1":
+                case 1:
+                  return "Done";
+                case "2":
+                case 2:
+                  return "Delayed";
+                case "3":
+                case 3:
+                  return "Canceled";
+                default:
+                  return "Unknown Status"; // Trường hợp không xác định
+              }
+            };
+
+            // Nếu có meeting phù hợp với requestId
+            if (meeting) {
+              return {
+                title: `${request.title}`,
+                status: getMeetingStatusText(meeting.status),
+                start: new Date(request.start), // Assuming `startDate` is a date string
+                end: new Date(request.end), // Assuming `endDate` is a date string
+                location: meeting.location || "No location specified",
+              };
+            }
+            return [];
+          });
+
+          setEvents(calendarEvents);
+          console.log('Fetched Requests:', filteredRequests);
+        }
+      } catch (error) {
+        console.error('Error fetching requests:', error);
+      }
+    };
+
+    fetchRequests();
+  }, [userInfo]); // Chỉ chạy khi `userInfo` thay đổi và đã có giá trị
 
   // Custom component để hiển thị event với title và status
   const EventComponent = ({ event }: { event: CalendarEvent }) => (
@@ -62,6 +100,7 @@ const MyCalendar: React.FC = () => {
       <div>
         {moment(event.start).format('HH:mm')} - {moment(event.end).format('HH:mm')}
       </div>
+      <div>Location: {event.location}</div>
     </span>
   );
 
@@ -74,7 +113,7 @@ const MyCalendar: React.FC = () => {
         endAccessor="end"
         style={{ height: '100%' }}
         selectable
-        onSelectEvent={event => alert(event.title)} // Hành động khi chọn sự kiện
+        onSelectEvent={event => alert(`${event.title} \n Location: ${event.location}`)} // Hành động khi chọn sự kiện
         onSelectSlot={slotInfo => alert(`Selected slot: \n\n${slotInfo.start} - ${slotInfo.end}`)} // Hành động khi chọn khoảng thời gian
         components={{
           event: EventComponent,  // Sử dụng custom component cho event
@@ -88,20 +127,3 @@ export default MyCalendar;
 
 
 
-// const fetchEvents = async () => {
-    //   try {
-    //     const data = await getEventsByMentorId(mentorId, 1, 10);
-    //     const formattedEvents = data.map(event => ({
-    //       id: event.id,
-    //       title: event.summary,
-    //       start: new Date(event.start), // Chuyển đổi sang Date object
-    //       end: new Date(event.end), // Chuyển đổi sang Date object
-    //       allDay: false, // Thiết lập nếu đây là sự kiện cả ngày hay không
-    //     }));
-    //     setEvents(formattedEvents); // Gán dữ liệu đã định dạng vào state
-    //   } catch (error) {
-    //     console.error('Error fetching events:', error);
-    //   }
-    // // };  
-
-    // fetchEvents();//Fetch Api

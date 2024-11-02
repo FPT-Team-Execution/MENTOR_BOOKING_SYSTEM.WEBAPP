@@ -1,6 +1,7 @@
 import axiosInstance from "../utils/axios/axiosInstance";
 import { MeetingType } from "../types/meeting.type";
 import { ResponseRequestModel, PaginationModel } from "../types/common.types";
+import axios from "axios";
 export const createMeeting = async (
     requestId: string,
     description: string,
@@ -10,9 +11,7 @@ export const createMeeting = async (
     try {
         // const endpoint = `/requests?page=${page}&size=${size}&sortOrder=${sortOrder}`;
         const accessToken = localStorage.getItem("accessToken");
-        const endpoint = `/meetings`;
-        const response = await axiosInstance.post(`/meetings`, {
-            accessToken,
+        const response = await axiosInstance.post(`/meetings?accessToken=` + accessToken, {
             requestId,
             description,
             location,
@@ -23,8 +22,30 @@ export const createMeeting = async (
                     Authorization: `Bearer ${accessToken}`,
                 }
 
-
             });
+
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching requests:", error);
+        throw error;
+    }
+};
+
+export const getMeeting = async (
+    page: number,
+    size: number
+): Promise<ResponseRequestModel<PaginationModel<MeetingType>>> => {
+    try {
+        // const endpoint = `/requests?page=${page}&size=${size}&sortOrder=${sortOrder}`;
+        const accessToken = localStorage.getItem("accessToken");
+        const response = await axiosInstance.get(`/meetings`, {
+            params: { page, size }
+            // ,
+            // headers: {
+            //   Authorization: `Bearer ${accessToken}`,
+            // },
+        }
+        );
 
         return response.data;
     } catch (error) {

@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Form, Input, Button, message } from 'antd';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { createMeeting } from '../../services/meetingService'; // Giả sử bạn đã tạo service này
 import { getRequestsById } from '../../services/requestService'; // Dịch vụ để lấy yêu cầu theo ID
 
 const CreateMeeting: React.FC = () => {
     const [form] = Form.useForm();
     const { requestId } = useParams<{ requestId: string }>();
-
+    const navigate = useNavigate();
     useEffect(() => {
         const fetchRequestDetails = async () => {
             try {
@@ -30,10 +30,11 @@ const CreateMeeting: React.FC = () => {
         }
 
         try {
-            await createMeeting(requestId ?? "", values.description, values.location, false);
+            await createMeeting(requestId != null ? requestId : "", values.description, values.location, false);
             message.success('Meeting created successfully!');
             // Chuyển hướng hoặc reset form tùy theo nhu cầu
             form.resetFields(); // Reset form sau khi tạo cuộc họp
+            navigate(`/calendar`);
         } catch (error) {
             console.error('Failed to create meeting:', error);
             message.error('Failed to create meeting');

@@ -123,6 +123,13 @@ const MentorRequestTable: React.FC<MentorRequestTableProps> = ({ mentorId }) => 
                             </Button>
                         </>
                     )}
+                    {record.status == '0' && (
+                        <>
+                            <Button type="link" onClick={() => navigate(`/calendar`)}>
+                                View Schedule
+                            </Button>
+                        </>
+                    )}
                 </div>
             ),
         },
