@@ -1,8 +1,7 @@
 import { useRequest } from "ahooks";
 import axiosInstance from "../../utils/axios/axiosInstance";
-import { ResponseModel, ResponseRequestModel } from "../../types/common.types";
-import { GetMentorResModel } from "../../types/mentor.types";
-import { MENTOR_OWN_PROFILE_URL, UPLOAD_AVATAR_URL } from "../../utils/apiUrl/baseUrl";
+import { PageRequestModel, PaginationModel, ResponseModel, ResponseRequestModel } from "../../types/common.types";
+import { MAJOR_API_URL, STUDENT_OWN_PROFILE_URL, UPLOAD_AVATAR_URL } from "../../utils/apiUrl/baseUrl";
 import { Button, Card, DatePicker, Form, Image, Input, message, Select } from "antd";
 import { useState } from "react";
 import moment from "moment";
@@ -10,28 +9,38 @@ import ImageUploadButton from "../ui/ImageUploadButton";
 import { AxiosError } from "axios";
 import { useAuth } from "../../auth/AuthContext";
 import { Option } from "antd/es/mentions";
+import { GetStudentResModel } from "../../types/student.types";
+import { Major } from "../../types/mentor.types";
 
 
-const MentorProfileCard = () => {
+const StudentProfileCard = () => {
     const { userInfo } = useAuth();
-    const [form] = Form.useForm<GetMentorResModel>();
+    const [form] = Form.useForm<GetStudentResModel>();
+    const [majors, setMajors] = useState<Major[]>([]);
     const [avatarUrl, setAvatarUrl] = useState<string>();
 
     const { loading: getLoading } = useRequest(async () => {
         try {
-            const response = await axiosInstance.get<ResponseRequestModel<GetMentorResModel>>(MENTOR_OWN_PROFILE_URL);
-            setInitialFormValues(response.data.responseRequestModel);
-            console.log(response.data.responseRequestModel);
-            setAvatarUrl(response.data.responseRequestModel.avatarUrl);
+            const response = await axiosInstance.get<ResponseModel<GetStudentResModel>>(STUDENT_OWN_PROFILE_URL);
+            const pageReq: PageRequestModel = {
+                size: 100,
+                page: 1,
+                sort: ""
+            }
+            const majorResponse = await axiosInstance.get<ResponseRequestModel<PaginationModel<Major>>>(MAJOR_API_URL(undefined, pageReq))
+            setMajors(majorResponse.data.responseRequestModel.items)
+            setInitialFormValues(response.data.responseModel);
+            console.log(response.data.responseModel);
+            setAvatarUrl(response.data.responseModel.avatarUrl);
         } catch (error) {
             console.log(error);
         }
     })
 
-    const { loading: putLoading, runAsync: putRunAsync } = useRequest(async (data: GetMentorResModel) => {
+    const { loading: putLoading, runAsync: putRunAsync } = useRequest(async (data: GetStudentResModel) => {
 
         try {
-            const response = await axiosInstance.put<ResponseModel<boolean>>(MENTOR_OWN_PROFILE_URL, data);
+            const response = await axiosInstance.put<ResponseModel<boolean>>(STUDENT_OWN_PROFILE_URL, data);
             if (response.data.isSuccess) {
                 message.success(response.data.message);
             }
@@ -46,22 +55,22 @@ const MentorProfileCard = () => {
         manual: true
     })
 
-    const setInitialFormValues = (mentorProfile: GetMentorResModel) => {
+    const setInitialFormValues = (studentProfile: GetStudentResModel) => {
         form.setFieldsValue({
-            fullName: mentorProfile?.fullName,
-            avatarUrl: mentorProfile?.avatarUrl,
-            birthday: mentorProfile.birthday ? moment(mentorProfile.birthday) : null,
-            consumePoint: mentorProfile?.consumePoint,
-            email: mentorProfile?.email,
-            industry: mentorProfile?.industry,
-            major: mentorProfile?.major,
-            userName: mentorProfile?.userName,
-            id: mentorProfile.id,
-            gender: mentorProfile.gender
+            fullName: studentProfile?.fullName,
+            avatarUrl: studentProfile?.avatarUrl,
+            birthday: studentProfile.birthday ? moment(studentProfile.birthday) : null,
+            walletPoint: studentProfile?.walletPoint,
+            email: studentProfile?.email,
+            university: studentProfile?.university,
+            majorId: studentProfile?.majorId,
+            userName: studentProfile?.userName,
+            id: studentProfile.id,
+            gender: studentProfile.gender
         })
     }
 
-    const handleSubmit = async (values: GetMentorResModel) => {
+    const handleSubmit = async (values: GetStudentResModel) => {
         values.id = userInfo?.nameidentifier ?? ""
         await putRunAsync(values)
     }
@@ -97,8 +106,8 @@ const MentorProfileCard = () => {
                         </Form.Item>
 
                         <Form.Item
-                            label="Industry"
-                            name="industry"
+                            label="University"
+                            name="university"
                             rules={[{ required: true, message: 'Please input the email!' }]}
                         >
                             <Input />
@@ -106,13 +115,29 @@ const MentorProfileCard = () => {
 
                         <div className="lg:flex justify-between items-center gap-4">
                             <Form.Item
-                                label="ConsumePoint"
-                                name="consumePoint"
+                                label="WalletPoint"
+                                name="walletPoint"
                                 rules={[{ required: true, message: 'Please input the email!' }]}
                             >
                                 <Input />
                             </Form.Item>
 
+                            <Form.Item
+                                className="min-w-36"
+                                label="Major"
+                                name="majorId"
+                                rules={[
+                                    { required: true, message: "Please select your major." },
+                                ]}
+                            >
+                                <Select placeholder="Select Major">
+                                    {
+                                        majors.map((item) => (
+                                            <Option value={item.id}>{item.name}</Option>
+                                        ))
+                                    }
+                                </Select>
+                            </Form.Item>
 
                             <Form.Item
                                 className="min-w-36"
@@ -171,4 +196,4 @@ const MentorProfileCard = () => {
     )
 }
 
-export default MentorProfileCard
+export default StudentProfileCard

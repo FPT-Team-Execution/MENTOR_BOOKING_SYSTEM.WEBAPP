@@ -1,5 +1,6 @@
 import { useAuth } from '../../auth/AuthContext'
-import UserProfileCard from '../../components/Profile/MentorProfileCard'
+import MentorProfileCard from '../../components/Profile/MentorProfileCard'
+import StudentProfileCard from '../../components/Profile/StudentProfileCard';
 
 const ProfilePage = () => {
 
@@ -8,10 +9,10 @@ const ProfilePage = () => {
     const checkProfile = () => {
         switch (userInfo?.role) {
             case "Mentor": {
-                return (<UserProfileCard />)
+                return (<MentorProfileCard />)
             }
             case "Student": {
-                return (<h1>Not emplement</h1>)
+                return (<StudentProfileCard />)
             }
         }
     }
