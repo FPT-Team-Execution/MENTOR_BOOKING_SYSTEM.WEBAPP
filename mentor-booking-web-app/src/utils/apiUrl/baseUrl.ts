@@ -44,8 +44,6 @@ export const GET_MENTORS = (page : number, size: number) => `/mentors?page=${pag
 export const UPDATE_MENTOR =  '/mentors/profile'
 export const GET_MENTOR_DEGREES = (mentorId: string, page : number, size: number) => `/mentors/${mentorId}/degrees?page=${page}&size=${size}`
 
-
-
 export const REQUEST = '/requests'
 
 export const GET_BUSY_TIMES = '/calendar-events/busy-event?MentorId={mentorId}&Day={day}'
@@ -65,22 +63,20 @@ export const GOOGLE_CALENDAR_FRAME_URL = (email: string | undefined) => {
 
 export const MENTOR_OWN_PROFILE_URL = "/mentors/profile";
 
-
-
 export const STUDENT_OWN_PROFILE_URL = "/students/profile";
 
 export const UPLOAD_AVATAR_URL = "/auth/avatar";
 
 export const MAJOR_API_URL = (id: string | undefined, query: PageRequestModel | undefined) => {
-
+    //get pagination
     if (query) {
         return `/majors?page=${query.page}&size=${query.size}`
     }
-
+    //get by Id + delete
     if (id) {
         return `/majors/${id}`
     }
-
+    //post + put
     return `/majors`;
 }
 

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+  AppstoreOutlined,
   CalendarOutlined,
   CommentOutlined,
   DashboardOutlined,
@@ -20,7 +21,17 @@ const adminMenu: MenuItem[] = [
   { label: "Project", icon: <ProjectOutlined />, key: paths.project },
   { label: "Feedback", icon: <CommentOutlined />, key: paths.feedback },
   { label: "Student", icon: <UserOutlined />, key: paths.student },
-  { label: "Mentor", icon: <UserOutlined />, key: paths.mentors }
+  { label: "Mentor", icon: <UserOutlined />, key: paths.mentors },
+  {
+    key: 'resource',
+    label: 'Resource',
+    icon: <AppstoreOutlined />,
+    children: [
+      { key: paths.major, label: 'Major' },
+      { key: paths.skill, label: 'Skill' },
+    ],
+  },
+
 ];
 
 const studentMenu: MenuItem[] = [

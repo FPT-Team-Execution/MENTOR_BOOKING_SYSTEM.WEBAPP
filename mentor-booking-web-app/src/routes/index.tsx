@@ -23,6 +23,7 @@ import CreateMeeting from "../pages/meeting/CreateMeetingPage";
 import { MentorPage } from "../pages/user/mentor/MentorPage";
 
 import ProfilePage from "../pages/profile/page";
+import { MajorPage } from "../pages/major/page";
 
 
 const AppRoutes: React.FC = () => {
@@ -98,6 +99,25 @@ const AppRoutes: React.FC = () => {
             </ProtectedRoute>
           }
         />
+
+        {/* Resource routes */}
+        <Route
+          path={paths.major}
+          element={
+            <ProtectedRoute allowedRoles={['Admin']}>
+              <MajorPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={paths.skill}
+          element={
+            <ProtectedRoute allowedRoles={['Admin']}>
+              <BookingPage />
+            </ProtectedRoute>
+          }
+        />
+      
         {/* Student routes */}
         <Route
           path={paths.booking}
