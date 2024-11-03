@@ -20,7 +20,10 @@ import MentorRequestPage from "../pages/mentor-page/MentorRequestPage";
 import { LoginGoogle } from "../components/Auth/LoginGoogle";
 import GoogleAuthCallback from "../components/Auth/GoogleAuthCallback";
 import CreateMeeting from "../pages/meeting/CreateMeetingPage";
+import { MentorPage } from "../pages/user/mentor/MentorPage";
+
 import ProfilePage from "../pages/profile/page";
+
 
 const AppRoutes: React.FC = () => {
   return (
@@ -87,6 +90,14 @@ const AppRoutes: React.FC = () => {
             </ProtectedRoute>
           }
         />
+        <Route
+          path={paths.mentors}
+          element={
+            <ProtectedRoute allowedRoles={['Admin', 'Mentor', 'Student']}>
+              <MentorPage />
+            </ProtectedRoute>
+          }
+        />
         {/* Student routes */}
         <Route
           path={paths.booking}
@@ -114,7 +125,7 @@ const AppRoutes: React.FC = () => {
             </ProtectedRoute>
           }
         />
-        <Route
+      <Route
           path="/create-meeting/:id"
           element={
             <ProtectedRoute allowedRoles={['Mentor']}>

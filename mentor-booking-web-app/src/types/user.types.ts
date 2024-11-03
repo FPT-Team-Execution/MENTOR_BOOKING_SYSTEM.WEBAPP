@@ -26,7 +26,7 @@ export type MentorType = {
   consumePoint: number;
 
   fullName: string;
-  avatarUrl: string;
+  avatarUrl: string | null;
   gender: string;
   birthday: Date | null;
 
