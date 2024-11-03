@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+  CalendarOutlined,
   CommentOutlined,
   DashboardOutlined,
   HomeOutlined,
@@ -28,7 +29,7 @@ const studentMenu: MenuItem[] = [
 
 const mentorMenu: MenuItem[] = [
   { label: "Home", icon: <HomeOutlined />, key: paths.home },
-  { label: "Calendar", icon: <HomeOutlined />, key: paths.calender },
+  { label: "Calendar", icon: <CalendarOutlined />, key: paths.calender },
   { label: "Project", icon: <ProjectOutlined />, key: paths.project },
 ];
 
