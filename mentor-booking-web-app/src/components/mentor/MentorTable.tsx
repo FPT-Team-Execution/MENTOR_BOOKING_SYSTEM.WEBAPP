@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import moment from "moment";
-import React, { lazy, useState } from "react";
+import React, { useState } from "react";
 import {
   Form,
   Table,
@@ -22,13 +22,9 @@ import { MentorType } from "../../types/user.types";
 import { mentorService } from "../../services/mentorService";
 import { useRequest } from "ahooks";
 import { PageRequestModel, PageResponseModel } from "../../types/common.types";
-import { EditOutlined, PlusOutlined, UploadOutlined } from "@ant-design/icons";
-import axiosInstance from "../../utils/axios/axiosInstance";
-import { RcFile } from "antd/es/upload";
-import { delay } from "lodash";
+import { EditOutlined, PlusOutlined } from "@ant-design/icons";
 
 const { Option } = Select;
-type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
 
 const MentorTable: React.FC = () => {
   const [query, setQuery] = useState<PageRequestModel>({
