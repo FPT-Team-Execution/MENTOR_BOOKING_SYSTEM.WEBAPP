@@ -54,3 +54,7 @@ export const SIGN_IN_GOOGLE_URL = (code: string) => {
 export const GOOGLE_CALENDAR_FRAME_URL = (email: string | undefined) => {
     return `https://calendar.google.com/calendar/embed?src=${email}&ctz=Asia/Ho_Chi_Minh&showTz=0`
 }
+
+export const MENTOR_OWN_PROFILE_URL = "/mentors/profile";
+
+export const UPLOAD_AVATAR_URL = "/auth/avatar";

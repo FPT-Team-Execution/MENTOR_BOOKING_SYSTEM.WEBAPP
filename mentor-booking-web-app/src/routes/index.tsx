@@ -20,6 +20,7 @@ import MentorRequestPage from "../pages/mentor-page/MentorRequestPage";
 import { LoginGoogle } from "../components/Auth/LoginGoogle";
 import GoogleAuthCallback from "../components/Auth/GoogleAuthCallback";
 import CreateMeeting from "../pages/meeting/CreateMeetingPage";
+import ProfilePage from "../pages/profile/page";
 
 const AppRoutes: React.FC = () => {
   return (
@@ -63,7 +64,7 @@ const AppRoutes: React.FC = () => {
         <Route
           path={paths.project}
           element={
-            <ProtectedRoute allowedRoles={['Admin','Student']}>
+            <ProtectedRoute allowedRoles={['Admin', 'Student']}>
               <ProjectPage />
             </ProtectedRoute>
           }
@@ -121,6 +122,18 @@ const AppRoutes: React.FC = () => {
             </ProtectedRoute>
           }
         />
+
+        {/* User Routes */}
+
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute allowedRoles={['Admin', 'Mentor', 'Student']}>
+              <ProfilePage />
+            </ProtectedRoute>
+          }
+        />
+
       </Routes>
 
 
