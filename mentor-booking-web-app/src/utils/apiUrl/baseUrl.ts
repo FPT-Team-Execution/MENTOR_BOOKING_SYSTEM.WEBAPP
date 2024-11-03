@@ -39,8 +39,12 @@ export const SEARCH_STUDENT = '/groups/students/search/{searchItem}'
 
 export const SEARCH_MENTOR = '/mentors/search/{searchItem}'
 export const GET_MENTOR = '/mentors/{id}'
-export const GET_MENTORS = (page: number, size: number) => `/mentors?page=${page}&size=${size}`
-export const UPDATE_MENTOR = '/mentors/profile'
+
+export const GET_MENTORS = (page : number, size: number) => `/mentors?page=${page}&size=${size}`
+export const UPDATE_MENTOR =  '/mentors/profile'
+export const GET_MENTOR_DEGREES = (mentorId: string, page : number, size: number) => `/mentors/${mentorId}/degrees?page=${page}&size=${size}`
+
+
 
 export const REQUEST = '/requests'
 
@@ -61,6 +65,9 @@ export const GOOGLE_CALENDAR_FRAME_URL = (email: string | undefined) => {
 
 export const MENTOR_OWN_PROFILE_URL = "/mentors/profile";
 
+
+export const UPLOAD_AVATAR_URL = "/auth/avatar";
+
 export const STUDENT_OWN_PROFILE_URL = "/students/profile";
 
 export const UPLOAD_AVATAR_URL = "/auth/avatar";
@@ -77,3 +84,4 @@ export const MAJOR_API_URL = (id: string | undefined, query: PageRequestModel | 
 
     return `/majors`;
 }
+
