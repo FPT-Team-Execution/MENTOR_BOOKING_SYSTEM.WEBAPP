@@ -1,6 +1,5 @@
-
 import React, { useEffect, useState } from 'react';
-import { Table, Tag, Typography, DatePicker } from 'antd';
+import { Table, Tag, Typography, DatePicker, Modal, Popconfirm, Button } from 'antd';
 import moment from 'moment';
 import { getProjectsByStudentId, getRequests } from '../../../services/requestService';
 import dayjs, { Dayjs } from 'dayjs';
@@ -9,11 +8,9 @@ import { StudentType } from '../../../types/user.types';
 import { RequestType } from '../../../types/request.type';
 import { isNull } from 'lodash';
 import { TokenData } from "../../../types/common.types";
+
 const { Title } = Typography;
 const { RangePicker } = DatePicker;
-
-
-
 
 const RequestTable: React.FC = () => {
     const [requests, setRequests] = useState<RequestType[]>([]);
@@ -22,9 +19,11 @@ const RequestTable: React.FC = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState<number>(10);
     const [userInfo, setUserInfo] = useState<TokenData>();
+    const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+    const [editingRequest, setEditingRequest] = useState<RequestType | null>(null);
     const accessToken = localStorage.getItem("accessToken");
+
     useEffect(() => {
-        // Giải mã `accessToken` và lưu vào `userInfo`
         if (accessToken != null) {
             setUserInfo(decode(accessToken));
         }
@@ -33,7 +32,6 @@ const RequestTable: React.FC = () => {
     useEffect(() => {
         const fetchRequests = async () => {
             try {
-                // Kiểm tra nếu `userInfo` và `nameidentifier` đã được thiết lập
                 if (userInfo?.nameidentifier) {
                     const projects = await getProjectsByStudentId(userInfo.nameidentifier, "", 1, 10, 'asc');
                     const allRequests = await getRequests(1, 10, "asc");
@@ -44,7 +42,6 @@ const RequestTable: React.FC = () => {
 
                     setRequests(filteredRequests);
                     setFilteredRequests(filteredRequests);
-                    console.log('Fetched Requests:', filteredRequests);
                 }
             } catch (error) {
                 console.error('Error fetching requests:', error);
@@ -52,8 +49,7 @@ const RequestTable: React.FC = () => {
         };
 
         fetchRequests();
-    }, [userInfo]); // Chỉ chạy khi `userInfo` thay đổi và đã có giá trị
-
+    }, [userInfo]);
 
     const onDateChange = (dates: any) => {
         setSelectedDates(dates);
@@ -70,6 +66,21 @@ const RequestTable: React.FC = () => {
 
     const handleChangePage = (page: number) => {
         setCurrentPage(page);
+    };
+
+    const handleEdit = (request: RequestType) => {
+        setEditingRequest(request);
+        setIsEditModalVisible(true);
+    };
+
+    const handleDelete = (requestId: string) => {
+        setRequests(requests.filter(request => request.id !== requestId));
+        setFilteredRequests(filteredRequests.filter(request => request.id !== requestId));
+    };
+
+    const handleEditModalClose = () => {
+        setIsEditModalVisible(false);
+        setEditingRequest(null);
     };
 
     const columns = [
@@ -94,17 +105,39 @@ const RequestTable: React.FC = () => {
             title: 'Status',
             dataIndex: 'status',
             key: 'status',
-            render: (status: string) => {
-                let color = status === '1' ? 'green' : status === '2' ? 'red' : 'orange';
-                let statusEnum = status === '1' ? 'Accepted' : status === '2' ? 'Rejected' : 'Pending';
+            render: (status: number) => {
+                const color = status === 0 ? 'green' : status === 1 ? 'red' : 'orange';
+                const statusEnum = status === 0 ? 'Accepted' : status === 1 ? 'Rejected' : 'Pending';
                 return <Tag color={color}>{statusEnum}</Tag>;
+            },
+        },
+        {
+            title: 'Actions',
+            key: 'actions',
+            render: (_, request: RequestType) => {
+                if (request.status === 2) {  // Assuming '3' indicates "Pending"
+                    return (
+                        <div className="flex gap-2">
+                            <Button type="primary" onClick={() => handleEdit(request)}>Edit</Button>
+                            <Popconfirm
+                                title="Are you sure you want to delete this request?"
+                                onConfirm={() => handleDelete(request.id)}
+                                okText="Yes"
+                                cancelText="No"
+                            >
+                                <Button type="primary" danger>Delete</Button>
+                            </Popconfirm>
+                        </div>
+                    );
+                }
+                return <span className="text-gray-500">Not Editable</span>;
             },
         },
     ];
 
     return (
-        <div style={{ padding: '24px' }}>
-            <div style={{ marginBottom: '16px' }}>
+        <div className="p-6">
+            <div className="mb-4">
                 <RangePicker onChange={onDateChange} value={selectedDates} />
             </div>
             <Table
@@ -119,7 +152,17 @@ const RequestTable: React.FC = () => {
                     showSizeChanger: false,
                 }}
                 bordered
+                className="w-full"
             />
+            <Modal
+                title="Edit Request"
+                open={isEditModalVisible}
+                onCancel={handleEditModalClose}
+                onOk={handleEditModalClose}
+                okText="Update"
+            >
+                <p>Editing request: {editingRequest?.title}</p>
+            </Modal>
         </div>
     );
 };

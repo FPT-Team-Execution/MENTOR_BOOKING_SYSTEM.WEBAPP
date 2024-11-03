@@ -1,25 +1,32 @@
 import React, { useEffect, useState } from "react";
 import { Button, Modal, message } from "antd";
-import axios from "axios";
 import ProjectList from "../../../components/project/ProjectList";
 import CreateProjectForm from "../../../components/project/CreateProjectForm";
-import ProjectDetails from "../../../components/project/ProjectDetails";
-import { Link } from "react-router-dom";
+import { useAuth } from "../../../auth/AuthContext";
+import { projectService } from "../../../services/projectService";
+import { ProjectType } from "../../../types/project.type";
 
 const ProjectPage: React.FC = () => {
-  const [projects, setProjects] = useState([]);
+  const [projects, setProjects] = useState<ProjectType[]>([]);
   const [loading, setLoading] = useState(false);
   const [isCreateModalVisible, setIsCreateModalVisible] = useState(false);
-  const [selectedProject, setSelectedProject] = useState(null);
+  const { userInfo } = useAuth()
 
   // Fetch list of created projects
   const fetchProjects = async () => {
     setLoading(true);
     try {
-      // Get projects by student ID API
-      const { data } = await axios.get("/api/projects/students/{studentId}");
-      setProjects(data);
-    } catch (error) {
+      if (userInfo?.nameidentifier) {
+        const res = await projectService.getProject({
+          userRole: userInfo?.role,
+          page: 1,
+          size: 10,
+          sortOrder: 'des'
+        }, userInfo?.nameidentifier)
+        setProjects(res.responseRequestModel.items);
+      }
+
+    } catch {
       message.error("Failed to load projects");
     } finally {
       setLoading(false);
@@ -37,10 +44,6 @@ const ProjectPage: React.FC = () => {
     fetchProjects(); // Reload project list
   };
 
-  // Handle viewing project details
-  const viewProjectDetails = (project: any) => {
-    setSelectedProject(project);
-  };
 
   useEffect(() => {
     fetchProjects();
@@ -59,28 +62,17 @@ const ProjectPage: React.FC = () => {
       <ProjectList
         projects={projects}
         loading={loading}
-        onView={viewProjectDetails}
       />
 
       {/* Modal for creating a new project */}
       <Modal
         title="Create New Project"
-        visible={isCreateModalVisible}
+        open={isCreateModalVisible}
         onCancel={() => setIsCreateModalVisible(false)}
         footer={null}
       >
         <CreateProjectForm onProjectCreated={handleProjectCreated} />
       </Modal>
-
-      {/* Modal for viewing project details */}
-      {selectedProject && (
-        <ProjectDetails
-          project={selectedProject}
-          onClose={() => setSelectedProject(null)}
-        />
-      )}
-      <Link to='/project/123'>Project Detail</Link>
-      <Link to='/mentor/calendar/5f10c206-033a-4930-95a5-ac66570ba58'>Calendar</Link>
     </div>
   );
 };

@@ -7,7 +7,7 @@ export type RequestType = {
     projectId: string;
     createrId: string;
     creater?: StudentType;
-    status: string;
+    status: number;
     createdBy: string;
     createdOn: string;
     updatedBy?: string;

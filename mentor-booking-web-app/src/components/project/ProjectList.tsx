@@ -1,32 +1,34 @@
 import React from "react";
-import { List, Card, Button } from "antd";
+import { Spin } from "antd";
+import ProjectCard from "./ProjectCard";
+import { ProjectType } from "../../types/project.type";
 
 interface ProjectListProps {
-  projects: any[];
+  projects: ProjectType[];
   loading: boolean;
-  onView: (project: any) => void;
 }
 
 const ProjectList: React.FC<ProjectListProps> = ({
   projects,
   loading,
-  onView,
 }) => {
   return (
-    // <List
-    //   grid={{ gutter: 16, column: 3 }}
-    //   loading={loading}
-    //   dataSource={projects}
-    //   renderItem={(project) => (
-    //     <List.Item>
-    //       <Card title={project.title}>
-    //         <p>{project.description}</p>
-    //         <Button onClick={() => onView(project)}>View Details</Button>
-    //       </Card>
-    //     </List.Item>
-    //   )}
-    // />
-    <p className="text-center">No projects found</p>
+    <Spin spinning={loading}>
+      <div>
+      {
+        projects ? 
+        (<div className="flex flex-wrap justify-start gap-1">
+          {
+            projects.map(project =>
+              <ProjectCard key={project.id} project={project}/>
+            )
+          }
+        </div>)
+        : (<>No project found</>)
+      }
+    </div>
+    </Spin>
+    
   );
 };
 
