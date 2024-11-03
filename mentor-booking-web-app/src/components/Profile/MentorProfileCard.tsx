@@ -11,33 +11,24 @@ import ImageUploadButton from "../ui/ImageUploadButton";
 
 
 const UserProfileCard = () => {
-    const { userInfo } = useAuth();
     const [form] = Form.useForm<GetMentorResModel>();
-    const [mentorProfile, setMentorProfile] = useState<GetMentorResModel>();
     const [avatarUrl, setAvatarUrl] = useState<string>();
 
-    const { loading } = useRequest(async () => {
-        switch (userInfo?.role) {
-            case ("Mentor"): {
-                try {
-                    const response = await axiosInstance.get<ResponseRequestModel<GetMentorResModel>>(MENTOR_OWN_PROFILE_URL);
-                    setInitialFormValues(response.data.responseRequestModel);
-                    setMentorProfile(response.data.responseRequestModel);
-                    console.log(response.data.responseRequestModel);
-                    setAvatarUrl(response.data.responseRequestModel.avatarUrl);
-                } catch (error) {
-                    console.log(error);
-                }
-                break;
-            }
-            case ("Student"): {
-                break;
-            }
-            case ("Admin"): {
-                break;
-            }
+    const { loading: getLoading } = useRequest(async () => {
+        try {
+            const response = await axiosInstance.get<ResponseRequestModel<GetMentorResModel>>(MENTOR_OWN_PROFILE_URL);
+            setInitialFormValues(response.data.responseRequestModel);
+            console.log(response.data.responseRequestModel);
+            setAvatarUrl(response.data.responseRequestModel.avatarUrl);
+        } catch (error) {
+            console.log(error);
         }
+    })
 
+    const { loading: putLoading, runAsync: putRunAsync } = useRequest(async (data: GetMentorResModel) => {
+
+    }, {
+        manual: true
     })
 
     const setInitialFormValues = (mentorProfile: GetMentorResModel) => {
@@ -53,8 +44,8 @@ const UserProfileCard = () => {
         })
     }
 
-    const handleSubmit = () => {
-
+    const handleSubmit = async (values: GetMentorResModel) => {
+        await putRunAsync()
     }
 
     const handleRefreshAvatarUrl = (newUrl: string) => {
@@ -66,7 +57,7 @@ const UserProfileCard = () => {
 
             <div className="w-6/12">
                 <Card
-                    loading={loading}
+                    loading={getLoading}
                     title={"Profile"}
                 >
                     <Form className={'w-full'} form={form} onFinish={handleSubmit} layout="vertical">
@@ -112,7 +103,7 @@ const UserProfileCard = () => {
                         </Form.Item>
 
                         <Form.Item>
-                            <Button type="primary" htmlType="submit">
+                            <Button loading={putLoading} type="primary" htmlType="submit">
                                 Update
                             </Button>
                         </Form.Item>

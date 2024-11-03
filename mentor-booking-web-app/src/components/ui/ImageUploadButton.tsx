@@ -26,6 +26,7 @@ const ImageUploadButton = (props: IProps) => {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
+
             });
 
             console.log(response);
