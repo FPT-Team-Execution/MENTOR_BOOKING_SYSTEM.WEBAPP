@@ -1,4 +1,3 @@
-import React from 'react'
 import StudentTable from '../../../components/user/student/StudentTable'
 
 export const StudentPage = () => {

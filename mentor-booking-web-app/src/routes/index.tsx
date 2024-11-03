@@ -22,6 +22,11 @@ import GoogleAuthCallback from "../components/Auth/GoogleAuthCallback";
 import CreateMeeting from "../pages/meeting/CreateMeetingPage";
 import MentorMeetingPage from "../pages/mentor-page/MentorMeetingPage";
 import UpdateMeetingPage from "../pages/meeting/UpdateMeetingPage";
+import { MentorPage } from "../pages/user/mentor/MentorPage";
+
+import ProfilePage from "../pages/profile/page";
+import { MajorPage } from "../pages/major/page";
+
 
 const AppRoutes: React.FC = () => {
   return (
@@ -65,7 +70,7 @@ const AppRoutes: React.FC = () => {
         <Route
           path={paths.project}
           element={
-            <ProtectedRoute allowedRoles={['Admin', 'Student']}>
+            <ProtectedRoute allowedRoles={['Admin','Student']}>
               <ProjectPage />
             </ProtectedRoute>
           }
@@ -88,6 +93,33 @@ const AppRoutes: React.FC = () => {
             </ProtectedRoute>
           }
         />
+        <Route
+          path={paths.mentors}
+          element={
+            <ProtectedRoute allowedRoles={['Admin', 'Mentor', 'Student']}>
+              <MentorPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Resource routes */}
+        <Route
+          path={paths.major}
+          element={
+            <ProtectedRoute allowedRoles={['Admin']}>
+              <MajorPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={paths.skill}
+          element={
+            <ProtectedRoute allowedRoles={['Admin']}>
+              <BookingPage />
+            </ProtectedRoute>
+          }
+        />
+      
         {/* Student routes */}
         <Route
           path={paths.booking}
@@ -106,7 +138,6 @@ const AppRoutes: React.FC = () => {
             </ProtectedRoute>
           }
         />
-
         <Route
           path="/mentor/requests"
           element={
@@ -116,7 +147,7 @@ const AppRoutes: React.FC = () => {
           }
         />
         <Route
-          path="/mentor/meetings"
+          path="/create-meeting/:id"
           element={
             <ProtectedRoute allowedRoles={['Mentor']}>
               <MentorMeetingPage />
@@ -131,19 +162,20 @@ const AppRoutes: React.FC = () => {
             </ProtectedRoute>
           }
         />
+      </Routes>
+
+        {/* User Routes */}
 
         <Route
-          path="/update-meeting/:meetingId"
+          path="/profile"
           element={
-            <ProtectedRoute allowedRoles={['Mentor']}>
-              <UpdateMeetingPage />
+            <ProtectedRoute allowedRoles={['Admin', 'Mentor', 'Student']}>
+              <ProfilePage />
             </ProtectedRoute>
           }
         />
+
       </Routes>
-
-
-
     </div>
   );
 };

@@ -1,3 +1,5 @@
+import { PageRequestModel } from "../../types/common.types";
+
 // BASE URL
 export const BASE_URL = "https://localhost:7554/api";
 
@@ -38,6 +40,10 @@ export const SEARCH_STUDENT = '/groups/students/search/{searchItem}'
 export const SEARCH_MENTOR = '/mentors/search/{searchItem}'
 export const GET_MENTOR = '/mentors/{id}'
 
+export const GET_MENTORS = (page : number, size: number) => `/mentors?page=${page}&size=${size}`
+export const UPDATE_MENTOR =  '/mentors/profile'
+export const GET_MENTOR_DEGREES = (mentorId: string, page : number, size: number) => `/mentors/${mentorId}/degrees?page=${page}&size=${size}`
+
 export const REQUEST = '/requests'
 
 export const GET_BUSY_TIMES = '/calendar-events/busy-event?MentorId={mentorId}&Day={day}'
@@ -54,3 +60,23 @@ export const SIGN_IN_GOOGLE_URL = (code: string) => {
 export const GOOGLE_CALENDAR_FRAME_URL = (email: string | undefined) => {
     return `https://calendar.google.com/calendar/embed?src=${email}&ctz=Asia/Ho_Chi_Minh&showTz=0`
 }
+
+export const MENTOR_OWN_PROFILE_URL = "/mentors/profile";
+
+export const STUDENT_OWN_PROFILE_URL = "/students/profile";
+
+export const UPLOAD_AVATAR_URL = "/auth/avatar";
+
+export const MAJOR_API_URL = (id: string | undefined, query: PageRequestModel | undefined) => {
+    //get pagination
+    if (query) {
+        return `/majors?page=${query.page}&size=${query.size}`
+    }
+    //get by Id + delete
+    if (id) {
+        return `/majors/${id}`
+    }
+    //post + put
+    return `/majors`;
+}
+
