@@ -13,10 +13,10 @@ export type ResponseModel<T> = {
 }
 
 export type PaginationModel<T> = {
-    pageIndex: number,
-    pageSize: number,
-    totalPages: number,
-    totalItems: number,
+    pageIndex: number | 0,
+    pageSize: number | 0,
+    totalPages: number | 0,
+    totalItems: number | 0,
     items: T[]
 }
 
@@ -61,4 +61,18 @@ export type GoogleTokenResponse = {
 export type ExternalSignInResponseModel = {
     jwtModel: JwtModel,
     googleToken: GoogleTokenResponse
+}
+
+//* Requets common
+export type PageRequestModel = {
+    page: number,
+    size: number,
+    sort: string| undefined,
+}
+export type PageResponseModel<T> = {
+    pageIndex: number | 0,
+    pageSize: number | 0,
+    totalPages: number | 0,
+    totalItems: number | 0,
+    items: T[]
 }

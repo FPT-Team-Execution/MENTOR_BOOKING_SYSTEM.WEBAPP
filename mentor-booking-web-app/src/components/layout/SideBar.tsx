@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import {
-  CalendarOutlined,
   CommentOutlined,
   DashboardOutlined,
   HomeOutlined,
@@ -19,7 +18,8 @@ const adminMenu: MenuItem[] = [
   { label: "Dashboard", icon: <DashboardOutlined />, key: paths.dashboard },
   { label: "Project", icon: <ProjectOutlined />, key: paths.project },
   { label: "Feedback", icon: <CommentOutlined />, key: paths.feedback },
-  { label: "Student", icon: <UserOutlined />, key: paths.student }
+  { label: "Student", icon: <UserOutlined />, key: paths.student },
+  { label: "Mentor", icon: <UserOutlined />, key: paths.mentors }
 ];
 
 const studentMenu: MenuItem[] = [
@@ -29,7 +29,7 @@ const studentMenu: MenuItem[] = [
 
 const mentorMenu: MenuItem[] = [
   { label: "Home", icon: <HomeOutlined />, key: paths.home },
-  { label: "Calendar", icon: <CalendarOutlined />, key: paths.calender },
+  { label: "Calendar", icon: <HomeOutlined />, key: paths.calender },
   { label: "Project", icon: <ProjectOutlined />, key: paths.project },
 ];
 
