@@ -52,5 +52,5 @@ export const SIGN_IN_GOOGLE_URL = (code: string) => {
 }
 
 export const GOOGLE_CALENDAR_FRAME_URL = (email: string | undefined) => {
-    return `https://calendar.google.com/calendar/embed?src=${email}&ctz=Asia/Ho_Chi_Minh&showTitle=0&showNav=0&showDate=0&showPrint=0&showTabs=0&showCalendars=0&showTz=0`
+    return `https://calendar.google.com/calendar/embed?src=${email}&ctz=Asia/Ho_Chi_Minh&showTz=0`
 }
