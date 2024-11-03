@@ -12,7 +12,17 @@ const addStudentToProject = async (data: unknown) => {
     return result.data
 }
 
+const getProject = async (params: unknown, id: string) => {
+    const url = '/projects/user/' + id
+    const result = await axiosInstance.get(url, {
+        params: params
+    })
+    return result.data
+
+}
+
 export const projectService = {
     getProjectById,
-    addStudentToProject
+    addStudentToProject,
+    getProject
 }
