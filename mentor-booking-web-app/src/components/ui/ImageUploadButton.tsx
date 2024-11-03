@@ -3,9 +3,12 @@ import { Upload, Button, message } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import type { UploadFile, RcFile } from 'antd/es/upload/interface';
 import axiosInstance from '../../utils/axios/axiosInstance';
+import { ResponseModel, UploadAvatarResModel } from '../../types/common.types';
+import { AxiosError } from 'axios';
 
 interface IProps {
     uploadUrl: string;
+    refreshUrl: (newUrl: string) => void;
 }
 
 const ImageUploadButton = (props: IProps) => {
@@ -19,17 +22,22 @@ const ImageUploadButton = (props: IProps) => {
             formData.append('file', file as RcFile);
 
             // Gọi API upload ảnh
-            const response = await axiosInstance.post(props.uploadUrl, formData, {
+            const response = await axiosInstance.post<ResponseModel<UploadAvatarResModel>>(props.uploadUrl, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
             });
 
+            console.log(response);
             onSuccess(response.data); // Gọi lại khi upload thành công
+            props.refreshUrl(response.data.responseModel.avatarUrl)
             message.success(`${file.name} uploaded successfully`);
         } catch (error) {
             onError(error); // Gọi lại khi upload thất bại
-            message.error(`${file.name} upload failed.`);
+            if (error instanceof AxiosError) {
+                message.error(error.response?.data.message);
+            }
+            console.log(error)
         }
     };
 

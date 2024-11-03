@@ -14,6 +14,7 @@ const UserProfileCard = () => {
     const { userInfo } = useAuth();
     const [form] = Form.useForm<GetMentorResModel>();
     const [mentorProfile, setMentorProfile] = useState<GetMentorResModel>();
+    const [avatarUrl, setAvatarUrl] = useState<string>();
 
     const { loading } = useRequest(async () => {
         switch (userInfo?.role) {
@@ -23,6 +24,7 @@ const UserProfileCard = () => {
                     setInitialFormValues(response.data.responseRequestModel);
                     setMentorProfile(response.data.responseRequestModel);
                     console.log(response.data.responseRequestModel);
+                    setAvatarUrl(response.data.responseRequestModel.avatarUrl);
                 } catch (error) {
                     console.log(error);
                 }
@@ -53,6 +55,10 @@ const UserProfileCard = () => {
 
     const handleSubmit = () => {
 
+    }
+
+    const handleRefreshAvatarUrl = (newUrl: string) => {
+        setAvatarUrl(newUrl)
     }
 
     return (
@@ -120,15 +126,15 @@ const UserProfileCard = () => {
                 <Card
                     title={"Avatar"}
                 >
-                    <div className="flex flex-col justify-center items-center">
+                    <div className="flex flex-col justify-center items-center gap-4">
                         <div>
                             <Image
-                                src={mentorProfile?.avatarUrl}
+                                src={avatarUrl}
                                 width={'200px'}
                             />
                         </div>
                         <div>
-                            <ImageUploadButton uploadUrl={UPLOAD_AVATAR_URL} />
+                            <ImageUploadButton refreshUrl={handleRefreshAvatarUrl} uploadUrl={UPLOAD_AVATAR_URL} />
                         </div>
                     </div>
                 </Card>

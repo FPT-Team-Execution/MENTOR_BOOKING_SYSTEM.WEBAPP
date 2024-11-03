@@ -62,3 +62,7 @@ export type ExternalSignInResponseModel = {
     jwtModel: JwtModel,
     googleToken: GoogleTokenResponse
 }
+
+export type UploadAvatarResModel = {
+    avatarUrl: string
+}
