@@ -47,6 +47,10 @@ export const REQUEST_URL = `${BASE_URL}/requests`;
 // export const GET_PROJECT_BY_STUDENT_ID = (studentId: string) => `${BASE_URL}/projects/student/${studentId}`;
 export const GET_PROJECT_BY_STUDENT_ID = "/api/projects";
 
-export const signInGoogleApiUrl = (code: string) => {
+export const SIGN_IN_GOOGLE_URL = (code: string) => {
     return `https://localhost:7554/api/auth/signin-google?code=${code}&callbackuri=http://localhost:5173/auth/callback`
+}
+
+export const GOOGLE_CALENDAR_FRAME_URL = (email: string | undefined) => {
+    return `https://calendar.google.com/calendar/embed?src=${email}&ctz=Asia/Ho_Chi_Minh&showTitle=0&showNav=0&showDate=0&showPrint=0&showTabs=0&showCalendars=0&showTz=0`
 }

@@ -1,8 +1,9 @@
 import React from "react";
 import { Button } from "antd";
-import { useNavigate, useParams } from "react-router-dom";
-import MyCalendar from "../../components/Calendar/MyCalendar"; // Đảm bảo đường dẫn chính xác
+import { useNavigate } from "react-router-dom";
 import paths from "../../routes/path";
+import GoogleCalendar from "../../components/Calendar/GoogleCalendar";
+
 
 const CalendarEventPage: React.FC = () => {
   const navigate = useNavigate();
@@ -14,8 +15,11 @@ const CalendarEventPage: React.FC = () => {
   return (
     <div>
       <h1>Calendar Events</h1>
-      {<MyCalendar />} {/* Truyền mentorId vào MyCalendar */}
+      {/* {<MyCalendar />} Truyền mentorId vào MyCalendar */}
       <Button onClick={handleOnBackClick}>Back</Button>
+
+      <GoogleCalendar />
+
     </div>
   );
 };
