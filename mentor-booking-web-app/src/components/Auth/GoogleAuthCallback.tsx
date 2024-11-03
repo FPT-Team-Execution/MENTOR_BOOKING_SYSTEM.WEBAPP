@@ -81,6 +81,9 @@ const GoogleAuthCallback: React.FC = () => {
             case 500:
               message.error("Role or account was invalid, please contact Admin!");
               break;
+            case 403:
+              message.error("You have no permission to sign in by google!");
+              break;
             default:
               message.error("An unexpected error occurred!");
           }
