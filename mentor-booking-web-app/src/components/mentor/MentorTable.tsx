@@ -160,24 +160,24 @@ const MentorTable: React.FC = () => {
       ),
     },
   ];
-  const [file, setFile] = useState<UploadFile | undefined>(undefined);
+//   const [file, setFile] = useState<UploadFile | undefined>(undefined);
   const [uploading, setUploading] = useState<boolean>(false);
 
-  const handlePreview = (file: UploadFile) => {
-    const url = URL.createObjectURL(file as any);
-    setAvatar(url);
-  };
-  const props: UploadProps = {
-    onRemove: () => {
-      setFile(undefined);
-    },
-    beforeUpload: (file) => {
-      setFile(file);
-      handlePreview(file);
-      return false;
-    },
-    fileList: file ? [file] : [],
-  };
+//   const handlePreview = (file: UploadFile) => {
+//     const url = URL.createObjectURL(file as any);
+//     setAvatar(url);
+//   };
+//   const props: UploadProps = {
+//     onRemove: () => {
+//       setFile(undefined);
+//     },
+//     beforeUpload: (file) => {
+//       setFile(file);
+//       handlePreview(file);
+//       return false;
+//     },
+//     fileList: file ? [file] : [],
+//   };
   return (
     <div className="p-4">
       <Table
@@ -210,7 +210,7 @@ const MentorTable: React.FC = () => {
               <Input readOnly />
             </Form.Item>
           </div>
-          <div className="my-2">
+          {/* <div className="my-2">
             <Upload {...props}>
               <div className="relative flex items-center justify-center w-38 h-38 cursor-pointer">
                 <Image
@@ -232,7 +232,7 @@ const MentorTable: React.FC = () => {
                 </div>
               </div>
             </Upload>
-          </div>
+          </div> */}
           <Form.Item hidden name="avatarUrl" label="Avatar URL">
             <Input placeholder="https://example.com/avatar.jpg" />
           </Form.Item>
@@ -304,7 +304,6 @@ const MentorTable: React.FC = () => {
               <DatePicker
                 showTime
                 className="w-auto"
-                onChange={(date, dateString) => {}}
                 placeholder="No birthday set"
               />
             </Form.Item>
