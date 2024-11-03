@@ -147,7 +147,7 @@ const AppRoutes: React.FC = () => {
           }
         />
         <Route
-          path="/create-meeting/:id"
+          path="/mentor/meetings"
           element={
             <ProtectedRoute allowedRoles={['Mentor']}>
               <MentorMeetingPage />
@@ -159,6 +159,15 @@ const AppRoutes: React.FC = () => {
           element={
             <ProtectedRoute allowedRoles={['Mentor']}>
               <CreateMeeting />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/update-meeting/:requestId"
+          element={
+            <ProtectedRoute allowedRoles={['Mentor']}>
+              <UpdateMeetingPage />
             </ProtectedRoute>
           }
         />
