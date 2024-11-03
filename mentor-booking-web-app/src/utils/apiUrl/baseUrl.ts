@@ -39,6 +39,8 @@ export const SEARCH_MENTOR = '/mentors/search/{searchItem}'
 export const GET_MENTOR = '/mentors/{id}'
 export const GET_MENTORS = (page : number, size: number) => `/mentors?page=${page}&size=${size}`
 export const UPDATE_MENTOR =  '/mentors/profile'
+export const GET_MENTOR_DEGREES = (mentorId: string, page : number, size: number) => `/mentors/${mentorId}/degrees?page=${page}&size=${size}`
+
 
 export const REQUEST = '/requests'
 
