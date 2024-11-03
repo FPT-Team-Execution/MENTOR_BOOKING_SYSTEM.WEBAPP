@@ -70,7 +70,7 @@ const AppRoutes: React.FC = () => {
         <Route
           path={paths.project}
           element={
-            <ProtectedRoute allowedRoles={['Admin','Student']}>
+            <ProtectedRoute allowedRoles={['Admin', 'Student']}>
               <ProjectPage />
             </ProtectedRoute>
           }
@@ -119,7 +119,7 @@ const AppRoutes: React.FC = () => {
             </ProtectedRoute>
           }
         />
-      
+
         {/* Student routes */}
         <Route
           path={paths.booking}
@@ -162,10 +162,6 @@ const AppRoutes: React.FC = () => {
             </ProtectedRoute>
           }
         />
-      </Routes>
-
-        {/* User Routes */}
-
         <Route
           path="/profile"
           element={
@@ -174,8 +170,12 @@ const AppRoutes: React.FC = () => {
             </ProtectedRoute>
           }
         />
-
       </Routes>
+
+
+
+
+
     </div>
   );
 };
