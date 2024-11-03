@@ -2,7 +2,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../auth/AuthContext";
-import { signInGoogleApiUrl } from "../../utils/apiUrl/baseUrl";
+import { SIGN_IN_GOOGLE_URL } from "../../utils/apiUrl/baseUrl";
 import { decode } from "../../utils/utils";
 import { ExternalSignInResponseModel, ResponseRequestModel, TokenData } from "../../types/common.types";
 import { useRequest } from "ahooks";
@@ -40,7 +40,7 @@ const GoogleAuthCallback: React.FC = () => {
         return;
       }
 
-      const response = await axiosInstance.get<ResponseRequestModel<ExternalSignInResponseModel>>(signInGoogleApiUrl(code));
+      const response = await axiosInstance.get<ResponseRequestModel<ExternalSignInResponseModel>>(SIGN_IN_GOOGLE_URL(code));
       const data = response.data;
 
       if (!data.isSuccess) {

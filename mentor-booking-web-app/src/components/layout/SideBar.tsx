@@ -4,7 +4,6 @@ import {
   DashboardOutlined,
   HomeOutlined,
   ProjectOutlined,
-  SendOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 import { Menu, MenuProps } from "antd";
@@ -18,8 +17,8 @@ const adminMenu: MenuItem[] = [
   { label: "Home", icon: <HomeOutlined />, key: paths.home },
   { label: "Dashboard", icon: <DashboardOutlined />, key: paths.dashboard },
   { label: "Project", icon: <ProjectOutlined />, key: paths.project },
-  { label: "Feedback", icon: <CommentOutlined/>, key: paths.feedback },
-  { label: "Student", icon: <UserOutlined/>, key: paths.student }
+  { label: "Feedback", icon: <CommentOutlined />, key: paths.feedback },
+  { label: "Student", icon: <UserOutlined />, key: paths.student }
 ];
 
 const studentMenu: MenuItem[] = [
@@ -29,8 +28,8 @@ const studentMenu: MenuItem[] = [
 
 const mentorMenu: MenuItem[] = [
   { label: "Home", icon: <HomeOutlined />, key: paths.home },
+  { label: "Calendar", icon: <HomeOutlined />, key: paths.calender },
   { label: "Project", icon: <ProjectOutlined />, key: paths.project },
-  { label: "Request", icon: <SendOutlined/>, key: '/'}
 ];
 
 
@@ -42,9 +41,9 @@ const menu = {
 
 const SideBar: React.FC = () => {
   const navigate = useNavigate();
-  const [items,setItems] = useState<MenuItem[]>(studentMenu)
+  const [items, setItems] = useState<MenuItem[]>(studentMenu)
   const { userInfo } = useAuth()
-  
+
   useEffect(() => {
     const role = userInfo?.role
     if (role === 'Admin') {
@@ -54,8 +53,8 @@ const SideBar: React.FC = () => {
     } else {
       setItems(menu['student'])
     }
-  },[userInfo])
-  
+  }, [userInfo])
+
 
   if (userInfo?.role === "Student" && !items.find(item => item?.key === '/students/requests')) {
     items.push({ label: "Request", icon: <UserOutlined />, key: '/students/requests' });
