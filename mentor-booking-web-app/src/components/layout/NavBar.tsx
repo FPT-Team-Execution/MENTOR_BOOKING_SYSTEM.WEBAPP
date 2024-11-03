@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, Dropdown, MenuProps, Space } from "antd";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import paths from "../../routes/path";
 import { useAuth } from "../../auth/AuthContext";
 
@@ -8,9 +8,15 @@ import { useAuth } from "../../auth/AuthContext";
 
 export default function NavBar() {
   const { isAuthenticated, handleLogout } = useAuth();
+  const navigate = useNavigate();
   const items: MenuProps['items'] = [
     {
       key: 1,
+      label: "Profile",
+      onClick: () => navigate("/profile"),
+    },
+    {
+      key: 2,
       label: "Logout",
       onClick: handleLogout,
     }
@@ -26,26 +32,26 @@ export default function NavBar() {
         </div>
         {
           !isAuthenticated ?
-          (
-            <Space>
-              <Link to={paths.login}>
-                <Button type="text" className="text-gray-600">
-                  Log in
-                </Button>
-              </Link>
-              <Link to={paths.register}>
-                <Button type="primary" className="bg-blue-600 hover:bg-blue-500 text-white">
-                  Sign up
-                </Button>
-              </Link>
-            </Space>
-          ) : (
-            <Dropdown menu={{items}}>
-              <div className="h-9 w-9 rounded-[50%]">
-                <img className="w-full h-full " src="..\src\assets\image\UserLogo.png" alt="" />
-              </div>
-            </Dropdown>
-          )
+            (
+              <Space>
+                <Link to={paths.login}>
+                  <Button type="text" className="text-gray-600">
+                    Log in
+                  </Button>
+                </Link>
+                <Link to={paths.register}>
+                  <Button type="primary" className="bg-blue-600 hover:bg-blue-500 text-white">
+                    Sign up
+                  </Button>
+                </Link>
+              </Space>
+            ) : (
+              <Dropdown menu={{ items }}>
+                <div className="h-9 w-9 rounded-[50%]">
+                  <img className="w-full h-full " src="..\src\assets\image\UserLogo.png" alt="" />
+                </div>
+              </Dropdown>
+            )
         }
 
       </div>
