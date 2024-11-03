@@ -39,7 +39,8 @@ export type GetMentorResModel = {
     createdBy: string,
     createdOn: Date,
     updatedBy: string,
-    updatedOn: Date
+    updatedOn: Date,
+    gender: string
 }
 
 type Major = {

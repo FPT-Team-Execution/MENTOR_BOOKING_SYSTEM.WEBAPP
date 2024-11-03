@@ -1,16 +1,19 @@
 import { useRequest } from "ahooks";
-import { useAuth } from "../../auth/AuthContext"
 import axiosInstance from "../../utils/axios/axiosInstance";
-import { ResponseRequestModel } from "../../types/common.types";
+import { ResponseModel, ResponseRequestModel } from "../../types/common.types";
 import { GetMentorResModel } from "../../types/mentor.types";
 import { MENTOR_OWN_PROFILE_URL, UPLOAD_AVATAR_URL } from "../../utils/apiUrl/baseUrl";
-import { Button, Card, DatePicker, Form, Image, Input } from "antd";
+import { Button, Card, DatePicker, Form, Image, Input, message, Select } from "antd";
 import { useState } from "react";
 import moment from "moment";
 import ImageUploadButton from "../ui/ImageUploadButton";
+import { AxiosError } from "axios";
+import { useAuth } from "../../auth/AuthContext";
+import { Option } from "antd/es/mentions";
 
 
 const UserProfileCard = () => {
+    const { userInfo } = useAuth();
     const [form] = Form.useForm<GetMentorResModel>();
     const [avatarUrl, setAvatarUrl] = useState<string>();
 
@@ -27,6 +30,18 @@ const UserProfileCard = () => {
 
     const { loading: putLoading, runAsync: putRunAsync } = useRequest(async (data: GetMentorResModel) => {
 
+        try {
+            const response = await axiosInstance.put<ResponseModel<boolean>>(MENTOR_OWN_PROFILE_URL, data);
+            if (response.data.isSuccess) {
+                message.success(response.data.message);
+            }
+        } catch (error) {
+            if (error instanceof AxiosError) {
+                message.error(error.response?.data.message)
+            }
+            console.log(error)
+        }
+
     }, {
         manual: true
     })
@@ -41,11 +56,14 @@ const UserProfileCard = () => {
             industry: mentorProfile?.industry,
             major: mentorProfile?.major,
             userName: mentorProfile?.userName,
+            id: mentorProfile.id,
+            gender: mentorProfile.gender
         })
     }
 
     const handleSubmit = async (values: GetMentorResModel) => {
-        await putRunAsync()
+        values.id = userInfo?.nameidentifier ?? ""
+        await putRunAsync(values)
     }
 
     const handleRefreshAvatarUrl = (newUrl: string) => {
@@ -86,21 +104,39 @@ const UserProfileCard = () => {
                             <Input />
                         </Form.Item>
 
-                        <Form.Item
-                            label="ConsumePoint"
-                            name="consumePoint"
-                            rules={[{ required: true, message: 'Please input the email!' }]}
-                        >
-                            <Input />
-                        </Form.Item>
+                        <div className="flex justify-between items-center">
+                            <Form.Item
+                                label="ConsumePoint"
+                                name="consumePoint"
+                                rules={[{ required: true, message: 'Please input the email!' }]}
+                            >
+                                <Input />
+                            </Form.Item>
 
-                        <Form.Item
-                            label="Birthday"
-                            name="birthday"
-                            rules={[{ required: true, message: 'Please input the birthday!' }]}
-                        >
-                            <DatePicker />
-                        </Form.Item>
+
+                            <Form.Item
+                                className="min-w-36"
+                                label="Gender"
+                                name="gender"
+                                rules={[
+                                    { required: true, message: "Please select your gender." },
+                                ]}
+                            >
+                                <Select placeholder="Select Gender">
+                                    <Option value="male">Male</Option>
+                                    <Option value="female">Female</Option>
+                                    <Option value="other">Other</Option>
+                                </Select>
+                            </Form.Item>
+
+                            <Form.Item
+                                label="Birthday"
+                                name="birthday"
+                                rules={[{ required: true, message: 'Please input the birthday!' }]}
+                            >
+                                <DatePicker />
+                            </Form.Item>
+                        </div>
 
                         <Form.Item>
                             <Button loading={putLoading} type="primary" htmlType="submit">
