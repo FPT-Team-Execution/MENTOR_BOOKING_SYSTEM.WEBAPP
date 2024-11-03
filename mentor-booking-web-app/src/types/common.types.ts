@@ -1,4 +1,3 @@
-import { GoogleResponse } from './common.types';
 export type ResponseRequestModel<T> = {
     isSuccess: true,
     message: string,
@@ -60,6 +59,6 @@ export type GoogleTokenResponse = {
 }
 
 export type ExternalSignInResponseModel = {
-    jwtModel : JwtModel,
-    googleToken: GoogleResponse
+    jwtModel: JwtModel,
+    googleToken: GoogleTokenResponse
 }
