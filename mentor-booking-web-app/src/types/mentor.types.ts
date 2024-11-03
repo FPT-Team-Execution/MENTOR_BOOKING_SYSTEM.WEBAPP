@@ -43,7 +43,7 @@ export type GetMentorResModel = {
     gender: string
 }
 
-type Major = {
+export type Major = {
     id: string,
     name: string
 }
