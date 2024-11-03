@@ -31,6 +31,9 @@ const paths = {
   //student
   project: "/project",
   projectDetail: "/project/:id",
+  //major
+  major: "/resource/major",
+  skill: "/resource/skill",
 
   request: "/requests",
   requestDetail: "/requests/:id",
