@@ -56,6 +56,7 @@ const App: React.FC = () => {
       if (res?.data.isSuccess) {
         setIsConfirmToken(true);
         api.open({
+          type: 'success',
           message: 'Notification',
           description:
             'Register sucessfully!',
