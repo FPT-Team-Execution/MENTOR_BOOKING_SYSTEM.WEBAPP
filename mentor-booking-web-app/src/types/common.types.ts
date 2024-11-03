@@ -75,7 +75,7 @@ export type PageResponseModel<T> = {
     totalPages: number | 0,
     totalItems: number | 0,
     items: T[]
-
+}
 export type UploadAvatarResModel = {
     avatarUrl: string
 
