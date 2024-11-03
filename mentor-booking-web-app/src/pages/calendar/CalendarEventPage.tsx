@@ -2,13 +2,11 @@ import React from "react";
 import { Button } from "antd";
 import { useNavigate } from "react-router-dom";
 import paths from "../../routes/path";
-import { useAuth } from "../../auth/AuthContext";
-import { GOOGLE_CALENDAR_FRAME_URL } from "../../utils/apiUrl/baseUrl";
+import GoogleCalendar from "../../components/Calendar/GoogleCalendar";
 
 
 const CalendarEventPage: React.FC = () => {
   const navigate = useNavigate();
-  const { userInfo } = useAuth();
 
   const handleOnBackClick = () => {
     navigate(paths.home); // Điều hướng về trang chính hoặc trang khác
@@ -20,12 +18,7 @@ const CalendarEventPage: React.FC = () => {
       {/* {<MyCalendar />} Truyền mentorId vào MyCalendar */}
       <Button onClick={handleOnBackClick}>Back</Button>
 
-      <div>
-        <iframe src={GOOGLE_CALENDAR_FRAME_URL(userInfo?.name)}
-          width="auto"
-          height="auto">
-        </iframe>
-      </div>
+      <GoogleCalendar />
 
     </div>
   );
