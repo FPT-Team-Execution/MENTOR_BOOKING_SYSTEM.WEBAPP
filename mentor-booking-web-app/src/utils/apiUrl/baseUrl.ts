@@ -66,7 +66,6 @@ export const GOOGLE_CALENDAR_FRAME_URL = (email: string | undefined) => {
 export const MENTOR_OWN_PROFILE_URL = "/mentors/profile";
 
 
-export const UPLOAD_AVATAR_URL = "/auth/avatar";
 
 export const STUDENT_OWN_PROFILE_URL = "/students/profile";
 
