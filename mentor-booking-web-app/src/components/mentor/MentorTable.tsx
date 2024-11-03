@@ -92,14 +92,25 @@ const MentorTable: React.FC = () => {
     if (mentor) {
       try {
         setUploading(true);
-        //TODO: call upload image and 
+        //TODO: call upload images
    
+
+        //* update mentor
+        const result =  await mentorService.updateMentor(mentor);
+        if(result.isSuccess){
+            message.success("Update Successful")
+            setIsModalOpen(false);
+            await refresh();
+        }
+        else{
+            message.error("Update Successful")
+        }
         setUploading(false);
-        // setIsModalOpen(false);
-        await refresh();
+        
+        
       } catch (err) {
-        message.error("Failed to update points");
-       
+        message.error("Error occured");
+        setUploading(false);
       }
     }
   };

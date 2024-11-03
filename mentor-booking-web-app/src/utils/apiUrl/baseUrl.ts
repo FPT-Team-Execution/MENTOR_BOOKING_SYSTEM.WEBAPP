@@ -38,6 +38,7 @@ export const SEARCH_STUDENT = '/groups/students/search/{searchItem}'
 export const SEARCH_MENTOR = '/mentors/search/{searchItem}'
 export const GET_MENTOR = '/mentors/{id}'
 export const GET_MENTORS = (page : number, size: number) => `/mentors?page=${page}&size=${size}`
+export const UPDATE_MENTOR =  '/mentors/profile'
 
 export const REQUEST = '/requests'
 
