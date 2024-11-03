@@ -3,6 +3,9 @@ import { StudentType } from '../types/user.types';
 export type RequestType = {
     id: string;
     title: string;
+    start: string;
+    end: string;
+    mentorId: string
     calendarEventId?: string;
     projectId: string;
     createrId: string;
@@ -12,6 +15,4 @@ export type RequestType = {
     createdOn: string;
     updatedBy?: string;
     updatedOn?: string;
-    start: string;
-    end: string;
 }

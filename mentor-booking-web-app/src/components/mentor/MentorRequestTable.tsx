@@ -8,11 +8,9 @@ import { RequestType } from '../../types/request.type';
 const { Title } = Typography;
 const { RangePicker } = DatePicker;
 
-interface MentorRequestTableProps {
-    mentorId: string;
-}
 
-const MentorRequestTable: React.FC<MentorRequestTableProps> = ({ mentorId }) => {
+
+const MentorRequestTable: React.FC = () => {
     const [requests, setRequests] = useState<RequestType[]>([]);
     const [filteredRequests, setFilteredRequests] = useState<RequestType[]>([]);
     const [selectedDates, setSelectedDates] = useState<[Dayjs | null, Dayjs | null] | null>(null);
@@ -38,7 +36,7 @@ const MentorRequestTable: React.FC<MentorRequestTableProps> = ({ mentorId }) => 
 
 
         fetchRequests();
-    }, [mentorId]);
+    }, []);
 
     const handleAccept = async (requestId: string) => {
         try {

@@ -17,9 +17,11 @@ import { ProjectDetailPage } from "../pages/project/ProjectDetailPage";
 import { BookingPage } from "../pages/user/student/BookingPage";
 import StudentRequestPage from "../pages/user/student/StudentRequestPage";
 import MentorRequestPage from "../pages/mentor-page/MentorRequestPage";
-import { LoginGoogle } from "../components/Auth/LoginGoogle";
+// import { LoginGoogle } from "../components/Auth/LoginGoogle";
 import GoogleAuthCallback from "../components/Auth/GoogleAuthCallback";
 import CreateMeeting from "../pages/meeting/CreateMeetingPage";
+import MentorMeetingPage from "../pages/mentor-page/MentorMeetingPage";
+import UpdateMeetingPage from "../pages/meeting/UpdateMeetingPage";
 
 const AppRoutes: React.FC = () => {
   return (
@@ -63,7 +65,7 @@ const AppRoutes: React.FC = () => {
         <Route
           path={paths.project}
           element={
-            <ProtectedRoute allowedRoles={['Admin','Student']}>
+            <ProtectedRoute allowedRoles={['Admin', 'Student']}>
               <ProjectPage />
             </ProtectedRoute>
           }
@@ -114,10 +116,27 @@ const AppRoutes: React.FC = () => {
           }
         />
         <Route
-          path="/create-meeting/:id"
+          path="/mentor/meetings"
+          element={
+            <ProtectedRoute allowedRoles={['Mentor']}>
+              <MentorMeetingPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/create-meeting/:requestId"
           element={
             <ProtectedRoute allowedRoles={['Mentor']}>
               <CreateMeeting />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/update-meeting/:meetingId"
+          element={
+            <ProtectedRoute allowedRoles={['Mentor']}>
+              <UpdateMeetingPage />
             </ProtectedRoute>
           }
         />
