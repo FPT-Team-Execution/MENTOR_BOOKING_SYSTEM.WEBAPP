@@ -51,12 +51,8 @@ export const logout = async () => {
 };
 
 export const studentRegister = async (studentData: StudentData) => {
-  try {
     const res = await axiosInstance.post(STUDENT_REGISTER, studentData);
     return { res: res, err: null };
-  } catch (error) {
-    return { res: null, err: error };
-  }
 };
 
 export const mentorRegister = async (mentorData: MentorData) => {
