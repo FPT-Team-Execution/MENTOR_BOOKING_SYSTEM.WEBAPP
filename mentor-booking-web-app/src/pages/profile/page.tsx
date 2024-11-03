@@ -1,9 +1,9 @@
-import React from 'react'
+import UserProfileCard from '../../components/Profile/UserProfileCard'
 
 const ProfilePage = () => {
     return (
-        <div>
-            This is profile page
+        <div className='container'>
+            <UserProfileCard />
         </div>
     )
 }
