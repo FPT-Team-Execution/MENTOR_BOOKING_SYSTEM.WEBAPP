@@ -31,6 +31,7 @@ import { ResourcePage } from "../pages/resource/page";
 
 import { MajorPage } from "../pages/major/page";
 import StudentMeetingPage from "../pages/user/student/StudentMeetingPage";
+import CreateFeedbackPage from "../pages/mentor-page/CreateFeedbackPage";
 
 
 
@@ -169,10 +170,18 @@ const AppRoutes: React.FC = () => {
         />
 
         <Route
-          path="/update-meeting/:requestId"
+          path="/update-meeting/:meetingId"
           element={
             <ProtectedRoute allowedRoles={['Mentor']}>
               <UpdateMeetingPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/create-feedback/:meetingId/:userId"
+          element={
+            <ProtectedRoute allowedRoles={['Mentor']}>
+              <CreateFeedbackPage />
             </ProtectedRoute>
           }
         />

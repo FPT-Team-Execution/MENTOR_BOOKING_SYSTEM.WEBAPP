@@ -59,7 +59,7 @@ export const updateMeeting = async (
 ): Promise<ResponseRequestModel<MeetingType>> => {
     try {
         const accessToken = localStorage.getItem("accessToken");
-        const response = await axiosInstance.put(`/meetings/${meetingId}`, {
+        const response = await axiosInstance.put(`/feedbacks/${meetingId}`, {
 
             params: {
                 description,

@@ -126,9 +126,23 @@ const MentorMeetingTable: React.FC = () => {
             title: 'Actions',
             key: 'actions',
             render: (text: any, record: MeetingEvent) => (
-                <Button type="primary" onClick={() => navigate(`/update-meeting/${record.id}`)}>
-                    Update Meeting
-                </Button>
+                <div>
+                    {record.status === "New" && (
+                        <>
+                            <Button type="primary" onClick={() => navigate(`/update-meeting/${record.id}`)}>
+                                Update Meeting
+                            </Button>
+                        </>
+                    )}
+                    {record.status === "Done" && (
+                        <>
+                            <Button type="primary" onClick={() => navigate(`/create-feedback/${record.id}/${userInfo?.nameidentifier}`)}>
+                                Give Feedback
+                            </Button>
+                        </>
+                    )}
+                </div>
+
             ),
         },
     ];

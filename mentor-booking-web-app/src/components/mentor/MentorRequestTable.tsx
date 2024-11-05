@@ -111,7 +111,7 @@ const MentorRequestTable: React.FC = () => {
             key: 'actions',
             render: (text: any, record: RequestType) => (
                 <div>
-                    {record.status == '2' && (
+                    {record.status == 2 && (
                         <>
                             <Button type="primary" onClick={() => handleAccept(record.id)} style={{ marginRight: 8 }}>
                                 Accept
