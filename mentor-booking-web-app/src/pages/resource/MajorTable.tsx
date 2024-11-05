@@ -89,8 +89,9 @@ export const MajorTable = () => {
       title: "Actions",
       key: "actions",
       width: 100,
+      minWidth: 100,
       render: (record: Major) => (
-        <div className="inline-block">
+        <div className="inline">
           <Button
             type="link"
             icon={<EditOutlined />}
