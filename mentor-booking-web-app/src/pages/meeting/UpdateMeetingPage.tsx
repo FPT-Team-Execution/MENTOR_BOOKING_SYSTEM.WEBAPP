@@ -12,10 +12,10 @@ const UpdateMeetingPage: React.FC = () => {
         const fetchMeetingDetails = async () => {
             try {
                 if (meetingId) {
-                    const meeting = (await getMeetingById(meetingId));
+                    const meeting = await getMeetingById(meetingId);
                     form.setFieldsValue({
-                        description: meeting.responseRequestModel.description,
-                        location: meeting.responseRequestModel.location,
+                        description: meeting.responseRequestModel.meeting.description,
+                        location: meeting.responseRequestModel.meeting.location,
                     });
                 }
             } catch (error) {
@@ -35,7 +35,7 @@ const UpdateMeetingPage: React.FC = () => {
         }
 
         try {
-            await updateMeeting(meetingId ?? "", values.description, values.location, "", "New"); // Không gửi status
+            await updateMeeting(meetingId ?? "", values.description, values.location, "", "New");
             message.success('Meeting updated successfully!');
             // Chuyển hướng hoặc xử lý sau khi cập nhật thành công nếu cần
         } catch (error) {

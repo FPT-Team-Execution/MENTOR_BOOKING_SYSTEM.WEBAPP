@@ -1,5 +1,5 @@
 import axiosInstance from "../utils/axios/axiosInstance";
-import { MeetingType } from "../types/meeting.type";
+import { MeetingType, MeetingResponeModel } from "../types/meeting.type";
 import { ResponseRequestModel, PaginationModel } from "../types/common.types";
 export const createMeeting = async (
     requestId: string,
@@ -56,17 +56,16 @@ export const updateMeeting = async (
     location: string,
     meetUp: string,
     status: string
-): Promise<ResponseRequestModel<MeetingType>> => {
+): Promise<ResponseRequestModel<MeetingResponeModel>> => {
     try {
         const accessToken = localStorage.getItem("accessToken");
-        const response = await axiosInstance.put(`/feedbacks/${meetingId}`, {
+        const response = await axiosInstance.put(`/meetings/${meetingId}`, {
 
-            params: {
-                description,
-                location,
-                meetUp,
-                status
-            }
+            description,
+            location,
+            meetUp,
+            status
+
         },
             {
                 headers: {
@@ -84,7 +83,7 @@ export const updateMeeting = async (
 
 export const getMeetingById = async (
     meetingId: string
-): Promise<ResponseRequestModel<MeetingType>> => {
+): Promise<ResponseRequestModel<MeetingResponeModel>> => {
     try {
         const accessToken = localStorage.getItem("accessToken");
         const response = await axiosInstance.get(`/meetings/${meetingId}`);
