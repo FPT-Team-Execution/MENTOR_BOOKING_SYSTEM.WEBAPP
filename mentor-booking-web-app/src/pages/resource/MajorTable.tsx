@@ -262,6 +262,8 @@ export const MajorTable = () => {
               </Form.Item>
               <Form.Item name="parentName" label="Major Root">
                 <Select
+                  showSearch
+                  optionFilterProp="label"
                   loading={loading}
                   placeholder="Select super major"
                   // defaultValue={defaultValue}
