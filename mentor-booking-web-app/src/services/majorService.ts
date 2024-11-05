@@ -19,7 +19,7 @@ const createMajor = async (major: Major) : Promise<ResponseRequestModel<Major>> 
     return result.data 
 }
 const updateMajor = async (major: Major) : Promise<ResponseRequestModel<Major>> => {
-    const result = await axiosInstance.put(MAJOR_API_URL(undefined, undefined), major)
+    const result = await axiosInstance.put(MAJOR_API_URL(major.id, undefined), major)
     return result.data 
 }
 //no data response 
