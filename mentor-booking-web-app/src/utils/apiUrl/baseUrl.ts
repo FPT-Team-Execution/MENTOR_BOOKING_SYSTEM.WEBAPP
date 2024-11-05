@@ -80,3 +80,16 @@ export const MAJOR_API_URL = (id: string | undefined, query: PageRequestModel | 
     return `/majors`;
 }
 
+export const SKILL_API_URL = (id: string | undefined, query: PageRequestModel | undefined) => {
+    //get pagination
+    if (query) {
+        return `/skills?page=${query.page}&size=${query.size}`
+    }
+    //get by Id + delete
+    if (id) {
+        return `/skills/${id}`
+    }
+    //post + put
+    return `/skills`;
+}
+
