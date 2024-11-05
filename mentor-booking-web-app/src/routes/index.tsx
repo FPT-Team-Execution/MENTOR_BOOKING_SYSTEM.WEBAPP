@@ -25,7 +25,8 @@ import UpdateMeetingPage from "../pages/meeting/UpdateMeetingPage";
 import { MentorPage } from "../pages/user/mentor/MentorPage";
 
 import ProfilePage from "../pages/profile/page";
-import { MajorPage } from "../pages/major/page";
+import { ResourcePage } from "../pages/resource/page";
+
 
 
 const AppRoutes: React.FC = () => {
@@ -104,22 +105,13 @@ const AppRoutes: React.FC = () => {
 
         {/* Resource routes */}
         <Route
-          path={paths.major}
+          path={paths.resource}
           element={
             <ProtectedRoute allowedRoles={['Admin']}>
-              <MajorPage />
+              <ResourcePage />
             </ProtectedRoute>
           }
         />
-        <Route
-          path={paths.skill}
-          element={
-            <ProtectedRoute allowedRoles={['Admin']}>
-              <BookingPage />
-            </ProtectedRoute>
-          }
-        />
-
         {/* Student routes */}
         <Route
           path={paths.booking}

@@ -22,15 +22,7 @@ const adminMenu: MenuItem[] = [
   { label: "Feedback", icon: <CommentOutlined />, key: paths.feedback },
   { label: "Student", icon: <UserOutlined />, key: paths.student },
   { label: "Mentor", icon: <UserOutlined />, key: paths.mentors },
-  {
-    key: 'resource',
-    label: 'Resource',
-    icon: <AppstoreOutlined />,
-    children: [
-      { key: paths.major, label: 'Major' },
-      { key: paths.skill, label: 'Skill' },
-    ],
-  },
+  { label: "Resource", icon: <AppstoreOutlined />, key: paths.resource },
 
 ];
 
