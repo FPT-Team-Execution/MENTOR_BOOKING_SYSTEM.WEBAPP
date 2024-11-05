@@ -55,14 +55,13 @@ export const SkillTable = () => {
       await handleFetchMentors();
     },
     {
-      refreshDeps: [query],
+      refreshDeps: [queryMentor],
     }
   );
   const handleCreateSubmit = async (skill: SkillSummary) => {
     if (!skill) return;
 
     try {
-
       setActionLoading(true);
 
       const result = await skillService.createSkill(skill);
@@ -212,7 +211,7 @@ export const SkillTable = () => {
     form.setFieldsValue({
       id: "",
       name: "",
-      mentorName:  "",
+      mentorName: "",
       mentorId: "",
       mentorEmail: "",
     });
@@ -280,14 +279,19 @@ export const SkillTable = () => {
       icon: <UserOutlined />,
     })) || [];
 
-    const handleScroll = (event : any) => {
-        const { target } = event;
-        if (target.scrollTop + target.clientHeight >= target.scrollHeight) {
-          // User has scrolled to the bottom
-          alert('Scrolled to the bottom');
-          // Here you can load more options or perform any action
-        }
-      };
+  const handleScroll = (event: any) => {
+    const { target } = event;
+    if (target.scrollTop + target.clientHeight >= target.scrollHeight) {
+      if (mentorPagination != null && mentorPagination?.totalPages >= 1) {
+        //load more data of mentors by update query mentor
+        const index = queryMentor.page;
+        setQueryMentor({
+          ...queryMentor,
+          size: query.size * (index + 1),
+        });
+      }
+    }
+  };
   return (
     <div className="w-auto p-2">
       <div style={{ padding: "24px" }} className="border rounded-lg">
