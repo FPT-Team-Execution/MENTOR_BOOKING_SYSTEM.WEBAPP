@@ -1,0 +1,42 @@
+.homepage-container {
+    width: 100%;
+    /* Chiều rộng toàn bộ */
+    max-width: 1000px;
+    /* Hoặc chiều rộng tối đa bạn muốn */
+    margin: 0 auto;
+    /* Để căn giữa */
+}
+
+.swiper-container {
+    width: 100%;
+    height: 100%;
+}
+
+.slide {
+    height: 680px;
+    /* Điều chỉnh chiều cao slide */
+    background-size: cover;
+    /* Để hình ảnh đầy đủ */
+    display: flex;
+    /* Để căn giữa nội dung */
+    align-items: center;
+    /* Căn giữa theo chiều dọc */
+    justify-content: center;
+    /* Căn giữa theo chiều ngang */
+}
+
+.slide-content {
+    color: white;
+    /* Đặt màu chữ */
+    text-align: center;
+    /* Căn giữa chữ */
+}
+
+.slide h2 {
+    font-size: 3em;
+    margin-bottom: 10px;
+}
+
+.slide p {
+    font-size: 1.5em;
+}

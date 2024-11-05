@@ -140,7 +140,7 @@ const AppRoutes: React.FC = () => {
           }
         />
         <Route
-          path="/student/meetings"
+          path="/students/meetings"
           element={
             <ProtectedRoute allowedRoles={['Student']}>
               <StudentMeetingPage />

@@ -7,6 +7,7 @@ import {
   HomeOutlined,
   ProjectOutlined,
   UserOutlined,
+  MessageOutlined,
 } from "@ant-design/icons";
 import { Menu, MenuProps } from "antd";
 import { useNavigate } from "react-router-dom";
@@ -71,10 +72,12 @@ const SideBar: React.FC = () => {
 
   if (userInfo?.role === "Student" && !items.find(item => item?.key === '/students/requests')) {
     items.push({ label: "Request", icon: <UserOutlined />, key: '/students/requests' });
+    items.push({ label: "Meeting", icon: <MessageOutlined />, key: '/students/meetings' });
   }
 
   if (userInfo?.role === "Mentor" && !items.find(item => item?.key === '/mentor/requests')) {
     items.push({ label: "Request", icon: <UserOutlined />, key: '/mentor/requests' });
+    items.push({ label: "Meeting", icon: <MessageOutlined />, key: '/mentor/meetings' });
   }
   return (
     <Menu
