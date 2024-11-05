@@ -201,7 +201,20 @@ export const MajorTable = () => {
       key: item.id.toString(),
       icon: <CaretRightOutlined />,
     })) || [];
-  
+    const handleScroll = (event: any) => {
+      const { target } = event;
+      if (target.scrollTop + target.clientHeight >= target.scrollHeight) {
+        if (majorPagination != null && majorPagination?.totalPages >= 1) {
+          //load more data of mentors by update query mentor
+          const index = query.page;
+          setQuery({
+            ...query,
+            size: query.size * (index + 1),
+          });
+          
+        }
+      }
+    };
   return (
     <div className="w-auto p-2">
       <div style={{ padding: "24px" }} className="border rounded-lg">
@@ -267,6 +280,7 @@ export const MajorTable = () => {
                   loading={loading}
                   placeholder="Select super major"
                   // defaultValue={defaultValue}
+                  onPopupScroll={(e) => handleScroll(e)}
                   options={menuItems} // Assuming menuItems is the array of options you created
                 />
               </Form.Item>
