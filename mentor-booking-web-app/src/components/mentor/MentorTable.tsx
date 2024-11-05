@@ -61,7 +61,7 @@ const MentorTable: React.FC = () => {
         message.error(res.message);
       }
     } catch (err) {
-      console.log("Failed to load students: " + err);
+      console.log("Failed to load data: " + err);
     }
   };
 
@@ -72,7 +72,6 @@ const MentorTable: React.FC = () => {
       1,
       50
     );
-    console.log(degreesResponse);
     setDegrees(degreesResponse.responseRequestModel.items);
     //* set avatar
     setAvatar(
