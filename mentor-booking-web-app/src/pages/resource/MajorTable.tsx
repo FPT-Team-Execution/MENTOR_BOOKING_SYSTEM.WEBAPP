@@ -192,7 +192,7 @@ export const MajorTable = () => {
       }
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
-      message.error("Faile to load data");
+      message.error("Failed to load data");
     }
   };
   const menuItems =
