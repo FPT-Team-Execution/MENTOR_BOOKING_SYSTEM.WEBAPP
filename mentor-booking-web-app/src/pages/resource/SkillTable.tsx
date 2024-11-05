@@ -280,6 +280,14 @@ export const SkillTable = () => {
       icon: <UserOutlined />,
     })) || [];
 
+    const handleScroll = (event : any) => {
+        const { target } = event;
+        if (target.scrollTop + target.clientHeight >= target.scrollHeight) {
+          // User has scrolled to the bottom
+          alert('Scrolled to the bottom');
+          // Here you can load more options or perform any action
+        }
+      };
   return (
     <div className="w-auto p-2">
       <div style={{ padding: "24px" }} className="border rounded-lg">
@@ -347,9 +355,12 @@ export const SkillTable = () => {
               >
                 <Select
                   // defaultValue={defaultValue}
-                  options={mentorsItems}
+                  showSearch
+                  optionFilterProp="label"
                   placeholder="Select mentor"
                   loading={loading}
+                  onPopupScroll={(e) => handleScroll(e)}
+                  options={mentorsItems}
                 />
               </Form.Item>
               <div className="flex justify-end">
