@@ -90,3 +90,13 @@ export const refreshToken = async (refreshToken: string) => {
     console.log(error)
   }
 }
+
+export const getProfile = async (role: string) => {
+  try {
+    const url = "/" + role + "s/profile"
+    const res = await axiosInstance.get(url)
+    return res.data
+  } catch (error) {
+    console.log(error)
+  }
+}

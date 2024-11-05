@@ -1,15 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from "react";
-import { Card } from "antd";
+import { Card, Badge } from "antd";
 import { CalendarOutlined } from "@ant-design/icons";
 import moment from "moment"; // For formatting dates
 import 'antd/dist/reset.css'; // Make sure to import Antd CSS
 import { ProjectType } from "../../types/project.type";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import { mentorService } from "../../services/mentorService";
 import { MentorType } from "../../types/user.types";
-
 
 type ChildComponentProps = {
   className?: string;
@@ -34,48 +32,57 @@ const ProjectCard: React.FC<ChildComponentProps> = ({ project, className }) => {
 
   const handleGetMentor = async () => {
     if (project.mentorId) {
-      const res = await mentorService.getMentor(project.mentorId)
+      const res = await mentorService.getMentor(project.mentorId);
       if (res.isSuccess) {
-        setMentor(res.responseModel)
+        setMentor(res.responseModel);
       }
     }
-  }
+  };
 
   if (!project) {
     return <div>Project data not available</div>;
   }
 
   return (
-    <div className={`${className} min-w-64 min-h-52`}>
-      <Link to={`/project/${project.id}`}>
-        <Card className="border rounded-lg shadow-lg p-3 mb-4 max-w-xs text-left">
+    <div className={`${className} min-w-96 min-h-60`}>
+      <Link to={`/project/${project.id}`} className="no-underline">
+        <Card className="border border-gray-200 rounded-lg shadow-md bg-white hover:shadow-lg transition-shadow duration-300 mb-6">
           {/* Project Title */}
-          <h2 className="text-lg font-semibold text-gray-800">{project.title}</h2>
+          <h2 className="text-xl font-semibold text-blue-800 mb-1">
+            {project.title}
+          </h2>
+
+          {/* Project Status */}
+          <Badge
+            color={statusColors[project.status]}
+            text={project.status}
+            className="mb-2 text-sm font-medium"
+          />
 
           {/* Project Description */}
-          <p className="text-gray-600 my-2 text-sm">
-            {project.description ? project.description : "No description provided."}
+          <p className="text-gray-700 my-3 text-sm text-wrap max-w-96">
+          Description: {project.description ? project.description : "No description provided."}
           </p>
 
           {/* Mentor Info */}
           {mentor && (
-            <div className="flex items-center my-2">
+            <div className="flex items-center mt-2 mb-4">
+              <span className="mr-2">Mentor: </span> 
               <img
                 src={mentor.avatarUrl}
-                alt={`${mentor.fullName}'s avatar`}
-                className="w-8 h-8 rounded-full mr-2"
+                className="w-5 h-5 rounded-full mr-3 border border-gray-200"
               />
-              <span className="text-gray-700 text-sm font-medium">{mentor.fullName}</span>
+              <span className="text-gray-800 text-sm font-medium">{mentor.fullName}</span>
             </div>
           )}
 
           {/* Due date and semester */}
-          <div className="mt-2 text-xs">
-            <div className="flex items-center text-gray-500">
-              <CalendarOutlined className="mr-1" />
+          <div className="text-xs mt-2">
+            <div className="flex items-center text-gray-600 mb-1">
+              <CalendarOutlined className="mr-2" />
               <span>Due: {moment(project.dueDate).format("DD MMM YYYY")}</span>
             </div>
-            <div className="text-gray-500">
+            <div className="text-gray-600">
               <span>Semester: {project.semester}</span>
             </div>
           </div>
