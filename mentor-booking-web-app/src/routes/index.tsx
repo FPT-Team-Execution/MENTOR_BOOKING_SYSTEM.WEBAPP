@@ -33,6 +33,7 @@ import { MajorPage } from "../pages/major/page";
 import StudentMeetingPage from "../pages/user/student/StudentMeetingPage";
 import CreateFeedbackPage from "../pages/mentor-page/CreateFeedbackPage";
 import TransactionPage from "../pages/admin/TransactionPage";
+import StudentTransactionPage from "../pages/user/student/StudentTransactionPage";
 
 
 
@@ -199,6 +200,14 @@ const AppRoutes: React.FC = () => {
           element={
             <ProtectedRoute allowedRoles={['Admin', 'Mentor', 'Student']}>
               <ProfilePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={paths.studentTransaction}
+          element={
+            <ProtectedRoute allowedRoles={['Student']}>
+              <StudentTransactionPage />
             </ProtectedRoute>
           }
         />

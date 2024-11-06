@@ -71,7 +71,7 @@ export default function NavBar() {
               </Space>
             ) : (
               <div className="flex gap-5">
-                <div className="flex items-center ">
+                <Link to={paths.studentTransaction} className="flex items-center">
                   {
                     userInfo?.role === "Student" && <div className="flex"> {walletPoint}
                       <svg width="24px" height="24px" className="ml-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -81,7 +81,8 @@ export default function NavBar() {
                       </svg>
                     </div>
                   }
-                </div>
+                </Link>
+
                 <Dropdown menu={{ items }}>
                   <div className="h-9 w-9 rounded-[50%]">
                     {user?.avatarUrl ?

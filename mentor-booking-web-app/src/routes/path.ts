@@ -37,6 +37,7 @@ const paths = {
   request: "/requests",
   requestDetail: "/requests/:id",
   transaction: '/transactions',
+  studentTransaction: "/students/transactions",
   studentRequestDetail: (studentId: string) => `/requests/${studentId}`,
 };
 
