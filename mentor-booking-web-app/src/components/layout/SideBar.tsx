@@ -8,6 +8,7 @@ import {
   ProjectOutlined,
   UserOutlined,
   MessageOutlined,
+  HistoryOutlined,
 } from "@ant-design/icons";
 import { Menu, MenuProps } from "antd";
 import { useNavigate } from "react-router-dom";
@@ -24,6 +25,7 @@ const adminMenu: MenuItem[] = [
   { label: "Student", icon: <UserOutlined />, key: paths.student },
   { label: "Mentor", icon: <UserOutlined />, key: paths.mentors },
   { label: "Resource", icon: <AppstoreOutlined />, key: paths.resource },
+  { label: "Transaction", icon: <HistoryOutlined />, key: paths.transaction },
 
 ];
 
