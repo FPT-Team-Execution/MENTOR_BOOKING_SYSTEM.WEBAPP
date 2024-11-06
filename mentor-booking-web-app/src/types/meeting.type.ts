@@ -6,3 +6,7 @@ export type MeetingType = {
     meetUp?: string; // Optional meet-up information
     status: string;
 }
+
+export type MeetingResponeModel = {
+    meeting: MeetingType;
+}
