@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Table, message, Modal, Input, Button, Select, Popconfirm } from 'antd';
 import { studentService } from '../../../services/studentService';
 import { StudentType } from '../../../types/user.types';
+import CreateStudent from './CreateStudent';
 
 const { Option } = Select;
 
@@ -16,6 +17,16 @@ const StudentTable: React.FC = () => {
   const [amount, setAmount] = useState<number>(0);
   const [transactionType, setTransactionType] = useState<string>('Credit');
   const [kind, setKind] = useState<string>('Personal');
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+
+  const openCreateModal = () => {
+    setIsCreateModalOpen(true);
+  };
+
+  const closeCreateModal = () => {
+    setIsCreateModalOpen(false);
+    handleFetch();
+  };
 
   useEffect(() => {
     handleFetch();
@@ -150,6 +161,9 @@ const StudentTable: React.FC = () => {
 
   return (
     <div className="p-4">
+      <Button type="primary" onClick={openCreateModal} style={{ marginBottom: '16px' }}>
+        Create Student
+      </Button>
       <Table
         dataSource={data}
         columns={columns}
@@ -166,7 +180,7 @@ const StudentTable: React.FC = () => {
 
       <Modal
         title="Update Wallet Point"
-        visible={isModalOpen}
+        open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
       >
@@ -205,6 +219,14 @@ const StudentTable: React.FC = () => {
             <Option value="Project">Project</Option>
           </Select>
         </div>
+      </Modal>
+      <Modal
+        title="Create Student"
+        open={isCreateModalOpen}
+        onCancel={closeCreateModal}
+        footer={null} // No footer to rely on form submission
+      >
+        <CreateStudent />
       </Modal>
     </div>
   );
