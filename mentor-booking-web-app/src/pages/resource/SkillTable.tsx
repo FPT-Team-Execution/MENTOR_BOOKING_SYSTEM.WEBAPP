@@ -132,6 +132,7 @@ export const SkillTable = () => {
           onPressEnter={(e) => {
             setIsPressEnter((pre) => !pre);
             handleUpdate(e.target.value);
+            e.target.blur();
           }} //submit when pressEnter
           onBlur={(e) => {
             if (isPressEnter) {
