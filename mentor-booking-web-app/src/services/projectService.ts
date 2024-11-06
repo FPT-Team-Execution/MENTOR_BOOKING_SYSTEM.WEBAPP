@@ -61,7 +61,6 @@ const createProject = async (data: unknown) => {
 export const projectService = {
     getProjectById,
     addStudentToProject,
-    getProject
-    addStudentToProject,
+    getProject,
     createProject
 }
