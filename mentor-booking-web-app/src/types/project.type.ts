@@ -7,4 +7,5 @@ export type ProjectType = {
   createdBy?: string;
   mentorId: string;
   status: string;
+
 }
