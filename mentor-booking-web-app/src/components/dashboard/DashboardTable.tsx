@@ -10,6 +10,7 @@ import {
   EditOutlined,
   QuestionCircleOutlined,
 } from "@ant-design/icons";
+import moment from "moment";
 const DashBoardTable = () => {
   const [query, setQuery] = useState<PageRequestModel>({
     page: 1,
@@ -51,21 +52,24 @@ const DashBoardTable = () => {
       render: (_, __, index: number) => index + 1,
     },
     {
-      minWidth: 100,
       title: "Title",
       dataIndex: "title",
       key: "tilte",
     },
     {
-      title: "Due Date",
-      dataIndex: "dueDate",
-      key: "dueDate",
+      width: 150,
+      title: 'Due Date',
+      dataIndex: 'dueDate',
+      key: 'dueDate',
+      render: (dueDate: string | null) => {
+        // Format the date to 'YYYY-MM-DD' if it's not null
+        return <div>{dueDate ? moment(dueDate).format('YYYY-MM-DD') : 'No due date'}</div>;
+      },
     },
     {
+      width: 300,
       title: "Progress",
       key: "actions",
-      width: 100,
-      minWidth: 100,
       render: (record: ProjectType) => {
         //TODO: call progress by project Id
         
