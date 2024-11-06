@@ -8,6 +8,8 @@ import { mentorService } from "../../services/mentorService";
 import MentorCard from "../mentor/MentorCard";
 import { debounce } from "lodash";
 import { projectService } from "../../services/projectService";
+import { useNavigate } from "react-router-dom";
+import paths from "../../routes/path";
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -23,6 +25,7 @@ const CreateProjectForm: React.FC<CreateProjectProps> = ({
   const [selectedMentor, setSelectedMentor] = useState<string>("");
   const [mentorList, setMentorList] = useState<MentorType[]>([]);
   const [form] = Form.useForm(); // Create form instance
+  const navigate = useNavigate();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onFinish = async (values: any) => {
     setLoading(true);
@@ -36,10 +39,11 @@ const CreateProjectForm: React.FC<CreateProjectProps> = ({
         semester,
         mentorId: selectedMentor
       }
-      await projectService.createProject(projectData)
+      const result = await projectService.createProject(projectData)
       message.success("Project created successfully!");
       form.resetFields(); // Clear form fields after success
       setSelectedMentor(""); // Reset selected mentor
+      navigate(paths.projectDetail.replace(":id", result.responseModel.projectId)); 
       onProjectCreated();
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
