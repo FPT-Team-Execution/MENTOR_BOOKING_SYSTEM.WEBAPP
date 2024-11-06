@@ -23,9 +23,16 @@ const updateStudentPoint = async (payload: unknown) => {
     return result.data.responseRequestModel
 }
 
+const updateStudent = async (student: StudentType) => {
+    const url = '/students/profile'
+    const result = await axiosInstance.put(url,student)
+    return result.data.responseRequestModel
+}
+
 export const studentService = {
     getAllStudent,
     searchStudent,
-    updateStudentPoint
+    updateStudentPoint,
+    updateStudent
 }
 
