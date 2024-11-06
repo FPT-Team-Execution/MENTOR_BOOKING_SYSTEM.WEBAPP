@@ -4,6 +4,7 @@ import moment from 'moment';
 import { useNavigate } from 'react-router-dom';
 import { getRequests } from '../../services/requestService';
 import { getMeeting } from '../../services/meetingService';
+import { getFeedbackByMentorId } from '../../services/feedbackService';
 import { decode } from "../../utils/utils";
 import { TokenData } from "../../types/common.types";
 import { MeetingType } from '../../types/meeting.type';
@@ -23,7 +24,7 @@ const MentorMeetingTable: React.FC = () => {
     const [userInfo, setUserInfo] = useState<TokenData>();
     const accessToken = localStorage.getItem("accessToken");
     useEffect(() => {
-        // Giải mã `accessToken` và lưu vào `userInfo`
+        // Giải mã accessToken và lưu vào userInfo
         if (accessToken != null) {
             setUserInfo(decode(accessToken));
         }
@@ -33,7 +34,7 @@ const MentorMeetingTable: React.FC = () => {
             if (userInfo?.nameidentifier) {
                 const allRequests = await getRequests(1, 10, "asc");
                 const allMeetings = await getMeeting(1, 10);
-
+                const mentorFeedback = await getFeedbackByMentorId(userInfo?.nameidentifier, 1, 10);
                 // Filter và ánh xạ requests sang CalendarEvents dựa trên các điều kiện của bạn
                 const filteredRequests = allRequests.responseRequestModel.items.filter(request =>
                     request.mentorId === userInfo?.nameidentifier && request.status === 0
@@ -134,6 +135,7 @@ const MentorMeetingTable: React.FC = () => {
                                 Update Meeting
                             </Button>
                         </>
+
                     )}
                     {record.status === "Done" && (
                         <>
@@ -141,11 +143,12 @@ const MentorMeetingTable: React.FC = () => {
                                 Give Feedback
                             </Button>
                         </>
+
                     )}
                 </div>
-
             ),
         },
+
     ];
 
     return (

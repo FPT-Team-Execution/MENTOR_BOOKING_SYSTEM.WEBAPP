@@ -26,7 +26,7 @@ const StudentMeetingTable: React.FC = () => {
     const [userInfo, setUserInfo] = useState<TokenData>();
     const accessToken = localStorage.getItem("accessToken");
     useEffect(() => {
-        // Giải mã `accessToken` và lưu vào `userInfo`
+        // Giải mã accessToken và lưu vào userInfo
         if (accessToken != null) {
             setUserInfo(decode(accessToken));
         }
@@ -130,7 +130,7 @@ const StudentMeetingTable: React.FC = () => {
         //     title: 'Actions',
         //     key: 'actions',
         //     render: (text: any, record: MeetingEvent) => (
-        //         <Button type="primary" onClick={() => navigate(`/update-meeting/${record.id}`)}>
+        //         <Button type="primary" onClick={() => navigate(/update-meeting/${record.id})}>
         //             Update Meeting
         //         </Button>
         //     ),
@@ -149,5 +149,6 @@ const StudentMeetingTable: React.FC = () => {
         </div>
     );
 };
+
 
 export default StudentMeetingTable;
