@@ -1,4 +1,5 @@
 import { PaginationModel, ResponseRequestModel } from "../types/common.types";
+import { CreateStudentType } from "../types/student.types";
 import { StudentType } from "../types/user.types";
 import { GET_ALL_STUDENTS, SEARCH_STUDENT } from "../utils/apiUrl/baseUrl";
 import axiosInstance from "../utils/axios/axiosInstance"
@@ -29,10 +30,17 @@ const updateStudent = async (student: StudentType) => {
     return result.data.responseRequestModel
 }
 
+const createStudent = async (student: CreateStudentType) => {
+    const url = '/students'
+    const result = await axiosInstance.post(url,student)
+    return result.data
+}
+
 export const studentService = {
     getAllStudent,
     searchStudent,
     updateStudentPoint,
-    updateStudent
+    updateStudent,
+    createStudent
 }
 
