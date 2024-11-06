@@ -9,7 +9,7 @@ import { TokenData } from "../types/common.types";
 interface AuthContextType {
   isAuthenticated: boolean;
   jwtToken: string | null;
-  userInfo: TokenData | undefined;
+  userInfo: TokenData;
   isLoading: boolean;
   handleLogin: (email: string, password: string) => Promise<void>;
   handleLogout: () => void;
