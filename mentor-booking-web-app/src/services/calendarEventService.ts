@@ -1,3 +1,4 @@
+import { Calendar } from 'react-big-calendar';
 import axiosInstance from "../utils/axios/axiosInstance";
 import {
     GET_EVENTS_BY_MENTOR_URL,
@@ -6,6 +7,7 @@ import {
     DELETE_EVENT_URL,
     UPDATE_EVENT_URL
 } from "../utils/apiUrl/baseUrl";
+import { CreateCalendarEventType } from '../types/common.types';
 
 // Interface cho dữ liệu Calendar Event
 export interface CalendarEvent {
@@ -82,10 +84,17 @@ const deleteEvent = async (calendarEventId: string): Promise<void> => {
     }
 };
 
+const createCalendar = async (calendar: CreateCalendarEventType) => {
+    const url = '/calendar-events'
+    const result = await axiosInstance.post(url,calendar)
+    return result.data
+}
+
 export {
     getEventsByMentorId,
     getEventById,
     updateEvent,
     deleteEvent,
     createEvent,
+    createCalendar
 };
