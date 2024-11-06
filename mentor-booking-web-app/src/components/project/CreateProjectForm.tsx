@@ -65,7 +65,6 @@ const CreateProjectForm: React.FC<CreateProjectProps> = ({
   const searchMentor = async (value: string) => {
     try {
       const response = await mentorService.searchMentor(value);
-      console.log("Fetched mentor data:", response);
       setMentorList(response);
     } catch (err) {
       console.log(err);
