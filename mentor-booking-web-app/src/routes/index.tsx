@@ -77,7 +77,7 @@ const AppRoutes: React.FC = () => {
         <Route
           path={paths.project}
           element={
-            <ProtectedRoute allowedRoles={['Admin', 'Student']}>
+            <ProtectedRoute allowedRoles={['Admin', 'Student', 'Mentor']}>
               <ProjectPage />
             </ProtectedRoute>
           }
