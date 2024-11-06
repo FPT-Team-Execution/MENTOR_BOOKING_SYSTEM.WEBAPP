@@ -18,3 +18,12 @@ export type GetStudentResModel = {
     updatedOn: Date,
     gender: string
 }
+
+export interface CreateStudentType {
+    email: string;
+    password: string;
+    fullName: string;
+    gender: string;
+    majorId: string;
+    university: string;
+  }
