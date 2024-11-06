@@ -3,16 +3,21 @@ import { Form, Input, Button, message } from 'antd';
 import { useParams } from 'react-router-dom';
 import { createMeeting } from '../../services/meetingService'; // Giả sử bạn đã tạo service này
 import { getRequestsById } from '../../services/requestService'; // Dịch vụ để lấy yêu cầu theo ID
+import { createCalendar } from '../../services/calendarEventService';
+import { RequestType } from '../../types/request.type';
+import { CreateCalendarEventType } from '../../types/common.types';
 
 const CreateMeeting: React.FC = () => {
     const [form] = Form.useForm();
     const { requestId } = useParams<{ requestId: string }>();
+    const [request, setRequest] = useState<RequestType>()
 
     useEffect(() => {
         const fetchRequestDetails = async () => {
             try {
                 if (requestId) {
-                    const request = await getRequestsById(requestId);
+                    const result = await getRequestsById(requestId);
+                    setRequest(result.responseRequestModel.request)
                 }
             } catch (error) {
                 console.error('Failed to fetch request details:', error);
@@ -23,17 +28,30 @@ const CreateMeeting: React.FC = () => {
     }, [requestId]); // Đảm bảo useEffect sẽ chạy lại nếu requestId thay đổi
 
     const handleFinish = async (values: any) => {
-        const accessToken = localStorage.getItem("accessToken");
+        const accessToken = localStorage.getItem("googleAccessToken");
         if (!accessToken) {
             message.error('Access token is missing.');
             return;
         }
 
         try {
-            await createMeeting(requestId ?? "", values.description, values.location, false);
-            message.success('Meeting created successfully!');
-            // Chuyển hướng hoặc reset form tùy theo nhu cầu
-            form.resetFields(); // Reset form sau khi tạo cuộc họp
+            const response = await createMeeting(requestId ?? "", values.description, values.location, false);
+            if (response.isSuccess) {
+                const calendarRes = await createCalendar({
+                    accessToken: accessToken,
+                    start: request?.start,
+                    end: request?.end ,
+                    mentorId: request?.mentorId,
+                    meetingId: response.responseModel.requestId
+                } as CreateCalendarEventType)
+
+                if (calendarRes.isSuccess) {
+                    message.success('Meeting created successfully!');
+                    // Chuyển hướng hoặc reset form tùy theo nhu cầu
+                    form.resetFields(); // Reset form sau khi tạo cuộc họp
+                }
+            }
+
         } catch (error) {
             console.error('Failed to create meeting:', error);
             message.error('Failed to create meeting');

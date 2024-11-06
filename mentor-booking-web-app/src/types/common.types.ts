@@ -80,3 +80,12 @@ export type UploadAvatarResModel = {
     avatarUrl: string
 
 }
+
+export type CreateCalendarEventType = {
+    accessToken: string;
+    start: string; // ISO date string
+    end: string;   // ISO date string
+    mentorId: string;
+    meetingId: string;
+  };
+  

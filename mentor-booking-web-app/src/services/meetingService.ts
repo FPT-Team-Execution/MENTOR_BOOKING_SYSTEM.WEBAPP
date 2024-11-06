@@ -1,12 +1,12 @@
 import axiosInstance from "../utils/axios/axiosInstance";
 import { MeetingType, MeetingResponeModel } from "../types/meeting.type";
-import { ResponseRequestModel, PaginationModel } from "../types/common.types";
+import { ResponseRequestModel, PaginationModel, ResponseModel } from "../types/common.types";
 export const createMeeting = async (
     requestId: string,
     description: string,
     location: string,
     isOnline: boolean
-): Promise<ResponseRequestModel<MeetingType>> => {
+): Promise<ResponseModel<MeetingType>> => {
     try {
         // const endpoint = `/requests?page=${page}&size=${size}&sortOrder=${sortOrder}`;
         const accessToken = localStorage.getItem("accessToken");
