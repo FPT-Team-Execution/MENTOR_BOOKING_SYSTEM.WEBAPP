@@ -92,7 +92,8 @@ export const ProjectDetailPage = () => {
                     <div className='flex w-full gap-5'>
                         <ProjectCard project={project} />
                         <div className='flex gap-2'>
-                            <Button type="primary" onClick={showModal}>Add Member</Button>
+                            {userInfo?.role !== "Mentor" && <Button type="primary" onClick={showModal}>Add Member</Button>}
+                            
                             {userInfo?.role === 'Student' && <Button type="primary" onClick={() => setIsBooking(true)}>Booking</Button>}
                         </div>
                     </div>
