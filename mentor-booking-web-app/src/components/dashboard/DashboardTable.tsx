@@ -7,6 +7,8 @@ const DashBoardTable = () => {
     address: string;
     tags: string[];
   }
+
+
   const columns: TableProps<DataType>["columns"] = [
     {
       title: "Project Name",
@@ -44,7 +46,7 @@ const DashBoardTable = () => {
       key: "action",
       render: (_, record) => (
         <Space size="middle">
-          <a>Invite {record.name}</a>
+          <a>Invite</a>
           <a>Delete</a>
         </Space>
       ),

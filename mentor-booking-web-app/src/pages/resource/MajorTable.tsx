@@ -32,8 +32,7 @@ export const MajorTable = () => {
     sort: "asc",
   });
   const [major, setMajor] = useState<Major>();
-  const [majorPagination, setMajorPagination] =
-    useState<PageResponseModel<Major>>();
+  const [majorPagination, setMajorPagination] = useState<PageResponseModel<Major>>();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm<Major>();
   const { loading, refresh } = useRequest(

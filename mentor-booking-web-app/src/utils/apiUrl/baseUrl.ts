@@ -92,4 +92,16 @@ export const SKILL_API_URL = (id: string | undefined, query: PageRequestModel | 
     //post + put
     return `/skills`;
 }
+export const STUDENT_API_URL = (id: string | undefined, query: PageRequestModel | undefined) => {
+    //get pagination
+    if (query) {
+        return `/students?page=${query.page}&size=${query.size}`
+    }
+    //get by Id + delete
+    if (id) {
+        return `/majors/${id}`
+    }
+    //post + put
+    return `/majors`;
+}
 

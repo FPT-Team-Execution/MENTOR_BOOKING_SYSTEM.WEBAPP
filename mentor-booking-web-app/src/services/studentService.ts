@@ -1,9 +1,13 @@
-import { PaginationModel, ResponseRequestModel } from "../types/common.types";
+import { PageRequestModel, PaginationModel, ResponseRequestModel } from "../types/common.types";
 import { StudentType } from "../types/user.types";
-import { GET_ALL_STUDENTS, SEARCH_STUDENT } from "../utils/apiUrl/baseUrl";
+import { GET_ALL_STUDENTS, SEARCH_STUDENT, STUDENT_API_URL } from "../utils/apiUrl/baseUrl";
 import axiosInstance from "../utils/axios/axiosInstance"
 
 
+const getStudents = async (page: PageRequestModel) : Promise<ResponseRequestModel<PaginationModel<StudentType>>> => {
+    const result = (await axiosInstance.get(`${STUDENT_API_URL(undefined, page)}&sortOrder=${page.sort}`))
+    return result.data;
+}
 
 const getAllStudent = async (page: string, size: string) => {
     const url = GET_ALL_STUDENTS
@@ -24,6 +28,7 @@ const updateStudentPoint = async (payload: unknown) => {
 }
 
 export const studentService = {
+    getStudents,
     getAllStudent,
     searchStudent,
     updateStudentPoint
