@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from 'react';
-import { Table, Menu, message, Popconfirm, Modal, Input, Button, Select } from 'antd';
+import { Table, message, Modal, Input, Button, Select, Popconfirm } from 'antd';
 import { studentService } from '../../../services/studentService';
 import { StudentType } from '../../../types/user.types';
+import CreateStudent from './CreateStudent';
 
 const { Option } = Select;
 
@@ -16,6 +17,16 @@ const StudentTable: React.FC = () => {
   const [amount, setAmount] = useState<number>(0);
   const [transactionType, setTransactionType] = useState<string>('Credit');
   const [kind, setKind] = useState<string>('Personal');
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+
+  const openCreateModal = () => {
+    setIsCreateModalOpen(true);
+  };
+
+  const closeCreateModal = () => {
+    setIsCreateModalOpen(false);
+    handleFetch();
+  };
 
   useEffect(() => {
     handleFetch();
@@ -38,9 +49,9 @@ const StudentTable: React.FC = () => {
 
   const openUpdatePointModal = (student: StudentType) => {
     setSelectedStudent(student);
-    setAmount(0); // Reset amount
-    setTransactionType('Credit'); // Default value for transaction type
-    setKind('Personal'); // Default value for kind
+    setAmount(0);
+    setTransactionType('Credit');
+    setKind('Personal');
     setIsModalOpen(true);
   };
 
@@ -49,11 +60,11 @@ const StudentTable: React.FC = () => {
       try {
         const updatePayload = {
           studentId: selectedStudent.id,
-          amount: amount, // adjust based on transaction type
+          amount: amount,
           transactionType: transactionType,
           kind: kind,
         };
-        await studentService.updateStudentPoint(updatePayload); // Assume this API call exists
+        await studentService.updateStudentPoint(updatePayload);
         message.success(`Updated points for ${selectedStudent.fullName}`);
         setIsModalOpen(false);
         handleFetch();
@@ -65,6 +76,26 @@ const StudentTable: React.FC = () => {
 
   const handleCancel = () => {
     setIsModalOpen(false);
+  };
+
+  const handleLockStudent = async (student: StudentType) => {
+    try {
+      await studentService.updateStudent({...student, lockoutEnabled: true});
+      message.success(`${student.fullName} has been locked`);
+      handleFetch();
+    } catch (err) {
+      message.error("Failed to lock student");
+    }
+  };
+
+  const handleUnlockStudent = async (student: StudentType) => {
+    try {
+      await studentService.updateStudent({...student, lockoutEnabled: false});
+      message.success(`${student.fullName} has been unlocked`);
+      handleFetch();
+    } catch (err) {
+      message.error("Failed to unlock student");
+    }
   };
 
   const handleChangePage = (page: number) => {
@@ -100,6 +131,29 @@ const StudentTable: React.FC = () => {
           <Button type="link" onClick={() => openUpdatePointModal(record)}>
             Update Point
           </Button>
+          {record.lockoutEnabled ? (
+            <Popconfirm
+              title="Are you sure you want to unlock this student?"
+              onConfirm={() => handleUnlockStudent(record)}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button type="link" style={{ color: 'green' }}>
+                Unlock
+              </Button>
+            </Popconfirm>
+          ) : (
+            <Popconfirm
+              title="Are you sure you want to lock this student?"
+              onConfirm={() => handleLockStudent(record)}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button type="link" danger>
+                Lock
+              </Button>
+            </Popconfirm>
+          )}
         </div>
       ),
     },
@@ -107,6 +161,9 @@ const StudentTable: React.FC = () => {
 
   return (
     <div className="p-4">
+      <Button type="primary" onClick={openCreateModal} style={{ marginBottom: '16px' }}>
+        Create Student
+      </Button>
       <Table
         dataSource={data}
         columns={columns}
@@ -123,7 +180,7 @@ const StudentTable: React.FC = () => {
 
       <Modal
         title="Update Wallet Point"
-        visible={isModalOpen}
+        open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
       >
@@ -162,6 +219,14 @@ const StudentTable: React.FC = () => {
             <Option value="Project">Project</Option>
           </Select>
         </div>
+      </Modal>
+      <Modal
+        title="Create Student"
+        open={isCreateModalOpen}
+        onCancel={closeCreateModal}
+        footer={null} // No footer to rely on form submission
+      >
+        <CreateStudent />
       </Modal>
     </div>
   );

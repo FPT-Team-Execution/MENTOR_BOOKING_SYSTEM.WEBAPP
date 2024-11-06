@@ -1,10 +1,14 @@
-import StudentTable from '../../../components/user/student/StudentTable'
+import React from 'react';
+import StudentTable from '../../../components/user/student/StudentTable';
 
-export const StudentPage = () => {
+export const StudentPage: React.FC = () => {
+
   return (
-    <div className='w-full'>
-        <h1 className='text-lg font-bold'>Student Management</h1>
-        <StudentTable/>
+    <div className="w-full">
+      <h1 className="text-lg font-bold">Student Management</h1>      
+      <StudentTable />
     </div>
-  )
-}
+  );
+};
+
+export default StudentPage;

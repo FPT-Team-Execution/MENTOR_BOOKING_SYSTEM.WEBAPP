@@ -16,6 +16,7 @@ const MentorProfileCard = () => {
     const { userInfo } = useAuth();
     const [form] = Form.useForm<GetMentorResModel>();
     const [avatarUrl, setAvatarUrl] = useState<string>();
+    const [profile, setProfile] = useState<GetMentorResModel>();
 
     const { loading: getLoading } = useRequest(async () => {
         try {
@@ -23,6 +24,7 @@ const MentorProfileCard = () => {
             setInitialFormValues(response.data.responseRequestModel);
             console.log(response.data.responseRequestModel);
             setAvatarUrl(response.data.responseRequestModel.avatarUrl);
+            setProfile(response.data.responseRequestModel)
         } catch (error) {
             console.log(error);
         }
@@ -63,6 +65,7 @@ const MentorProfileCard = () => {
 
     const handleSubmit = async (values: GetMentorResModel) => {
         values.id = userInfo?.nameidentifier ?? ""
+        values.email = profile?.email?? ""
         await putRunAsync(values)
     }
 
