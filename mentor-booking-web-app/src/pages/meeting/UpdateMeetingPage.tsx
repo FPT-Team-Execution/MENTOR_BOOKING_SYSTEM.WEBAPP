@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { Form, Input, Button, message } from 'antd';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { updateMeeting } from '../../services/meetingService'; // Service để cập nhật meeting
 import { getMeetingById } from '../../services/meetingService'; // Giả sử bạn có hàm lấy meeting theo ID
 
 const UpdateMeetingPage: React.FC = () => {
     const [form] = Form.useForm();
     const { meetingId } = useParams<{ meetingId: string }>();
-
+    const navigate = useNavigate();
     useEffect(() => {
         const fetchMeetingDetails = async () => {
             try {
                 if (meetingId) {
-                    const meeting = await getMeetingById(meetingId);
+                    const meeting = (await getMeetingById(meetingId));
                     form.setFieldsValue({
                         description: meeting.responseRequestModel.meeting.description,
                         location: meeting.responseRequestModel.meeting.location,
@@ -35,9 +35,10 @@ const UpdateMeetingPage: React.FC = () => {
         }
 
         try {
-            await updateMeeting(meetingId ?? "", values.description, values.location, "", "New");
+            await updateMeeting(meetingId ?? "", values.description, values.location, "", "New"); // Không gửi status
             message.success('Meeting updated successfully!');
             // Chuyển hướng hoặc xử lý sau khi cập nhật thành công nếu cần
+            navigate('/mentor/meetings');
         } catch (error) {
             console.error('Failed to update meeting:', error);
             message.error('Failed to update meeting');

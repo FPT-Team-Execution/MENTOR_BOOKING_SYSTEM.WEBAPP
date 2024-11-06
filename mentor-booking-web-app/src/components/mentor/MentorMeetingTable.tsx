@@ -95,6 +95,7 @@ const MentorMeetingTable: React.FC = () => {
             title: 'Meeting Event',
             dataIndex: 'title',
             key: 'title',
+            render: (title: string) => title
         },
         {
             title: 'Start',
