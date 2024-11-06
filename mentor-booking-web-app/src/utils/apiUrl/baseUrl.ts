@@ -80,6 +80,19 @@ export const MAJOR_API_URL = (id: string | undefined, query: PageRequestModel | 
     return `/majors`;
 }
 
+export const PROJECT_API_URL = (id: string | undefined, query: PageRequestModel | undefined) => {
+    //get pagination
+    if (query) {
+        return `/projects?page=${query.page}&size=${query.size}&sortOrder=${query.sort}`
+    }
+    //get by Id + delete
+    if (id) {
+        return `/projects/${id}`
+    }
+    //post + put
+    return `/projects`;
+}
+
 export const SKILL_API_URL = (id: string | undefined, query: PageRequestModel | undefined) => {
     //get pagination
     if (query) {
@@ -91,5 +104,17 @@ export const SKILL_API_URL = (id: string | undefined, query: PageRequestModel | 
     }
     //post + put
     return `/skills`;
+}
+export const STUDENT_API_URL = (id: string | undefined, query: PageRequestModel | undefined) => {
+    //get pagination
+    if (query) {
+        return `/students?page=${query.page}&size=${query.size}`
+    }
+    //get by Id + delete
+    if (id) {
+        return `/majors/${id}`
+    }
+    //post + put
+    return `/majors`;
 }
 

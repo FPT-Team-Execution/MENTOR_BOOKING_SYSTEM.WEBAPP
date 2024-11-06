@@ -1,7 +1,13 @@
-import { CREATE_PROJECT, GET_PROJECT_BY_ID, GROUP } from "../utils/apiUrl/baseUrl"
+import { CREATE_PROJECT, GET_PROJECT_BY_ID, GROUP, PROJECT_API_URL } from "../utils/apiUrl/baseUrl"
 import axiosInstance from "../utils/axios/axiosInstance"
-import { ResponseRequestModel, PaginationModel } from "../types/common.types";
+import { ResponseRequestModel, PaginationModel, PageRequestModel } from "../types/common.types";
 import { ProjectType } from "../types/project.type";
+
+
+const getProjects = async (page: PageRequestModel) : Promise<ResponseRequestModel<PaginationModel<ProjectType>>> => {
+    const result = await axiosInstance.get(PROJECT_API_URL(undefined,page))
+    return result.data 
+}
 
 const getProjectById = async (id: string) => {
     const url = GET_PROJECT_BY_ID.replace('{id}', id)
@@ -59,6 +65,7 @@ const createProject = async (data: unknown) => {
 
 
 export const projectService = {
+    getProjects,
     getProjectById,
     addStudentToProject,
     getProject,
