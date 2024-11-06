@@ -96,9 +96,9 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="py-2">
-      <Row justify="start" gutter={24} className="gap-1" >
-        <Col  xs={22} sm={10} md={6} lg={5} className="border rounded-lg">
+    <div className="flex flex-col py-2">
+      <Row justify="start" gutter={24} className="basis-full my-2">
+        <Col xs={22} sm={10} md={6} lg={5} className="border rounded-lg">
           <Statistic
             loading={studentLoading}
             title="Students"
@@ -119,7 +119,9 @@ const Dashboard = () => {
           <Statistic title="Feedback" value={1128} prefix={<LikeOutlined />} />
         </Col>
       </Row>
-      <DashboardTable />
+      <div className="basis-full">
+        <DashboardTable />
+      </div>
       {/* TODO: Add Calendar */}
     </div>
   );
