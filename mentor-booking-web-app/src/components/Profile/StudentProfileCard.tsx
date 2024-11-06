@@ -18,6 +18,7 @@ const StudentProfileCard = () => {
     const [form] = Form.useForm<GetStudentResModel>();
     const [majors, setMajors] = useState<Major[]>([]);
     const [avatarUrl, setAvatarUrl] = useState<string>();
+    const [profile, setProfile] = useState<GetStudentResModel>();
 
     const { loading: getLoading } = useRequest(async () => {
         try {
@@ -32,6 +33,7 @@ const StudentProfileCard = () => {
             setInitialFormValues(response.data.responseModel);
             console.log(response.data.responseModel);
             setAvatarUrl(response.data.responseModel.avatarUrl);
+            setProfile(response.data.responseModel);
         } catch (error) {
             console.log(error);
         }
@@ -72,6 +74,8 @@ const StudentProfileCard = () => {
 
     const handleSubmit = async (values: GetStudentResModel) => {
         values.id = userInfo?.nameidentifier ?? ""
+        values.walletPoint = profile?.walletPoint ?? 100;
+        values.email = profile?.email ?? ""
         await putRunAsync(values)
     }
 
@@ -102,13 +106,13 @@ const StudentProfileCard = () => {
                             name="email"
                             rules={[{ required: true, message: 'Please input the email!' }]}
                         >
-                            <Input />
+                            <Input readOnly/>
                         </Form.Item>
 
                         <Form.Item
                             label="University"
                             name="university"
-                            rules={[{ required: true, message: 'Please input the email!' }]}
+                            rules={[{ required: true, message: 'Please input the university!' }]}
                         >
                             <Input />
                         </Form.Item>
@@ -117,9 +121,9 @@ const StudentProfileCard = () => {
                             <Form.Item
                                 label="WalletPoint"
                                 name="walletPoint"
-                                rules={[{ required: true, message: 'Please input the email!' }]}
+                                rules={[{ required: true, message: 'Please input the walletPoint!' }]}
                             >
-                                <Input />
+                                <Input readOnly />
                             </Form.Item>
 
                             <Form.Item
