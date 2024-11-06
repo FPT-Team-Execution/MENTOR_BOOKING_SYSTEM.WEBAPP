@@ -1,4 +1,4 @@
-import { Button, message, Popconfirm, Table } from "antd";
+import {  message, Progress, Table } from "antd";
 import type { TableProps } from "antd";
 import { PageRequestModel, PageResponseModel } from "../../types/common.types";
 import { useState } from "react";
@@ -42,7 +42,7 @@ const DashBoardTable = () => {
       message.error("Failed to load data");
     }
   };
-  
+
   const columns: TableProps<ProjectType>["columns"] = [
     {
       title: "No",
@@ -62,30 +62,19 @@ const DashBoardTable = () => {
       key: "dueDate",
     },
     {
-      title: "Actions",
+      title: "Progress",
       key: "actions",
       width: 100,
       minWidth: 100,
-      render: (record: ProjectType) => (
-        <div className="inline">
-          <Button
-            type="link"
-            icon={<EditOutlined />}
-            // onClick={() => openDetailModal(record)}
-          />
-          <Popconfirm
-            title="Deactivated the major"
-            description="Are you sure to deactivated this major?"
-            icon={<QuestionCircleOutlined style={{ color: "red" }} />}
-            // onConfirm={() => handleDeleteConfirm(record.id)}
-          >
-            <Button
-              type="link"
-              icon={<DeleteOutlined className="text-red-600" />}
-            />
-          </Popconfirm>
-        </div>
-      ),
+      render: (record: ProjectType) => {
+        //TODO: call progress by project Id
+        
+        return (
+          <div className="inline">
+            <Progress percent={50} status="active" />
+          </div>
+        );
+      },
     },
   ];
 
