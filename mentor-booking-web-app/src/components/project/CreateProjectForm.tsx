@@ -1,8 +1,15 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Form, Input, Button, DatePicker, Select, message } from "antd";
 import axios from "axios";
 import dayjs from "dayjs";
 import { CREATE_PROJECT } from "../../utils/apiUrl/baseUrl";
+import { MentorType } from "../../types/user.types";
+import { mentorService } from "../../services/mentorService";
+import MentorCard from "../mentor/MentorCard";
+import { debounce } from "lodash";
+import { projectService } from "../../services/projectService";
+import { useNavigate } from "react-router-dom";
+import paths from "../../routes/path";
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -15,27 +22,56 @@ const CreateProjectForm: React.FC<CreateProjectProps> = ({
   onProjectCreated,
 }) => {
   const [loading, setLoading] = useState(false);
-
+  const [selectedMentor, setSelectedMentor] = useState<string>("");
+  const [mentorList, setMentorList] = useState<MentorType[]>([]);
+  const [form] = Form.useForm(); // Create form instance
+  const navigate = useNavigate();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onFinish = async (values: any) => {
     setLoading(true);
-    const { title, description, dueDate, semester, mentorId } = values;
+    const { title, description, dueDate, semester } = values;
 
     try {
-      await axios.post(CREATE_PROJECT, {
-        title,
-        description,
+      const projectData = {
+        title, 
+        description, 
         dueDate: dueDate.toISOString(),
         semester,
-        mentorId,
-      });
+        mentorId: selectedMentor
+      }
+      const result = await projectService.createProject(projectData)
       message.success("Project created successfully!");
+      form.resetFields(); // Clear form fields after success
+      setSelectedMentor(""); // Reset selected mentor
+      navigate(paths.projectDetail.replace(":id", result.responseModel.projectId)); 
       onProjectCreated();
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       message.error("Failed to create project.");
+      form.resetFields(); // Clear form fields after success
+      setSelectedMentor(""); // Reset selected mentor
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleSearch = useCallback(
+    debounce((value: string) => {
+      if (value) {
+        searchMentor(value);
+      } else {
+        setMentorList([]);
+      }
+    }, 500),
+    []
+  );
+
+  const searchMentor = async (value: string) => {
+    try {
+      const response = await mentorService.searchMentor(value);
+      setMentorList(response);
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -78,14 +114,34 @@ const CreateProjectForm: React.FC<CreateProjectProps> = ({
           <Option value="Spring 2025">Spring 2025</Option>
         </Select>
       </Form.Item>
-      {/* // TODO: Add mentor dropdown // By getMentors API or hardcode. */}
-      <Form.Item
-        label="Mentor ID"
-        name="mentorId"
-        rules={[{ required: true, message: "Please enter the mentor ID" }]}
-      >
-        <Input placeholder="Enter mentor ID" />
+      <Form.Item label="Mentor" name="mentorId" rules={[{ required: true, message: "The project must have a mentor" }]}>
+        <div>
+          <Select
+            showSearch
+            placeholder="Search for a mentor"
+            value={selectedMentor}
+            onSearch={handleSearch}
+            onChange={(value) => setSelectedMentor(value)}
+            className="w-3/4"
+            filterOption={false}
+          >
+            {mentorList.map((mentor) => (
+              <Select.Option key={mentor.mentorId} value={mentor.mentorId}>
+                {`${mentor.fullName} (${mentor.email})`}
+              </Select.Option>
+            ))}
+          </Select>
+
+          <div
+            className={`transition-all duration-300 ${
+              selectedMentor ? "opacity-100" : "opacity-0 h-0"
+            }`}
+          >
+            {selectedMentor && <MentorCard mentorId={selectedMentor} />}
+          </div>
+        </div>
       </Form.Item>
+
       <Form.Item>
         <Button type="primary" htmlType="submit" loading={loading}>
           Create Project
