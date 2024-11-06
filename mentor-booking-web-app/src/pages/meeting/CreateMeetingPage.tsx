@@ -28,7 +28,7 @@ const CreateMeeting: React.FC = () => {
     }, [requestId]); // Đảm bảo useEffect sẽ chạy lại nếu requestId thay đổi
 
     const handleFinish = async (values: any) => {
-        const accessToken = localStorage.getItem("accessToken");
+        const accessToken = localStorage.getItem("googleAccessToken");
         if (!accessToken) {
             message.error('Access token is missing.');
             return;
