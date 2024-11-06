@@ -16,9 +16,8 @@ const Dashboard = () => {
 
   const [studentPagination, setStudentPagination] =
     useState<PageResponseModel<StudentType>>();
-    const [pointStudents, setPointStudents] =
-    useState<number>(0);
-  
+  const [pointStudents, setPointStudents] = useState<number>(0);
+
   const [mentorPagination, setMentorPagination] =
     useState<PageResponseModel<MentorType>>();
 
@@ -50,7 +49,10 @@ const Dashboard = () => {
         }
         setStudentPagination(res.responseRequestModel);
         //TODO: set total point
-        const totalPoint= res.responseRequestModel.items.reduce((acc, s) => acc + s.walletPoint, 0);
+        const totalPoint = res.responseRequestModel.items.reduce(
+          (acc, s) => acc + s.walletPoint,
+          0
+        );
         setPointStudents(totalPoint);
       } else {
         // console.log("Failed to fetch API");
@@ -62,7 +64,7 @@ const Dashboard = () => {
     }
   };
   //TODO: load mentors request
-  const { loading : mentorLoading , refresh: mentorRefresh } = useRequest(
+  const { loading: mentorLoading, refresh: mentorRefresh } = useRequest(
     async () => {
       await handleMentorFetch();
     },
@@ -94,29 +96,26 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="p-2">
-      <Row gutter={24}>
-        <Col span={6}>
+    <div className="py-2">
+      <Row justify="start" gutter={24} className="gap-1" >
+        <Col  xs={22} sm={10} md={6} lg={5} className="border rounded-lg">
           <Statistic
             loading={studentLoading}
             title="Students"
             value={studentPagination?.items.length}
           />
         </Col>
-        <Col span={6}>
-          <Statistic
-            title="Total Point (FPoint)"
-            value={pointStudents}
-          />
+        <Col xs={22} sm={10} md={5} lg={5} className="border rounded-lg">
+          <Statistic title="Total Point (FPoint)" value={pointStudents} />
         </Col>
-        <Col span={6}>
+        <Col xs={22} sm={10} md={5} lg={5} className="border rounded-lg">
           <Statistic
             loading={mentorLoading}
             title="Mentors"
             value={mentorPagination?.items.length}
           />
         </Col>
-        <Col span={6}>
+        <Col xs={22} sm={10} md={5} lg={5} className="border rounded-lg">
           <Statistic title="Feedback" value={1128} prefix={<LikeOutlined />} />
         </Col>
       </Row>
