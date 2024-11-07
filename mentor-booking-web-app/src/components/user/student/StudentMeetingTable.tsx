@@ -9,7 +9,7 @@ import { getAllFeedback } from '../../../services/feedbackService';
 import { decode } from "../../../utils/utils";
 import { TokenData } from "../../../types/common.types";
 import { MeetingType } from '../../../types/meeting.type';
-import { FeedbackType } from '../../../types/feedback.type';
+import { FeedbacksModel, FeedbackType } from '../../../types/feedback.type';
 
 interface MeetingEvent {
     id: string;
@@ -18,7 +18,7 @@ interface MeetingEvent {
     start: Date;
     end: Date;
     location: string;
-    feedback: FeedbackType | null;
+    feedbacks: FeedbackType[];
 }
 
 const { Title } = Typography;
@@ -53,7 +53,7 @@ const StudentMeetingTable: React.FC = () => {
                     );
 
                     if (meeting) {
-                        const feedback = allFeedbacks.responseRequestModel.items.find(
+                        const feedbacks = allFeedbacks.responseRequestModel.items.filter(
                             (feedback: FeedbackType) => feedback.meetingId === meeting.id
                         );
 
@@ -83,7 +83,7 @@ const StudentMeetingTable: React.FC = () => {
                             start: new Date(request.start),
                             end: new Date(request.end),
                             location: meeting.location || "No location specified",
-                            feedback: feedback || null,
+                            feedbacks: feedbacks,
                         };
                     }
                     return []; // Loại bỏ mục này khỏi kết quả nếu không có meeting phù hợp
@@ -135,18 +135,27 @@ const StudentMeetingTable: React.FC = () => {
             },
         },
         {
-            title: 'Feedback from mentor',
-            dataIndex: 'feedback',
-            key: 'feedback',
-            render: (feedback: FeedbackType | null) => (
-                feedback ? (
-                    <Tooltip >
-                        <Tag color="purple"> {feedback.message}</Tag>
+            title: 'Feedback',
+            dataIndex: 'feedbacks',
+            key: 'feedbacks',
+            render: (feedbacks: FeedbackType[]) => {
+                const firstFeedback = feedbacks[0];
+                const otherFeedbacks = feedbacks.slice(1);
+
+                return feedbacks.length > 0 ? (
+                    <Tooltip title={otherFeedbacks.map((fb, index) => (
+                        <div key={index} style={{ marginBottom: '4px' }}>
+                            {fb.message}
+                        </div>
+                    ))}>
+                        <Tag color="purple">
+                            {firstFeedback.message}
+                        </Tag>
                     </Tooltip>
                 ) : (
                     <Tag color="gray">No Feedback</Tag>
-                )
-            ),
+                );
+            }
         }
     ];
 
