@@ -5,68 +5,69 @@ import { getRequests, updateRequestsById } from '../../services/requestService';
 import dayjs, { Dayjs } from 'dayjs';
 import { useNavigate } from 'react-router-dom';
 import { RequestType } from '../../types/request.type';
+
 const { Title } = Typography;
 const { RangePicker } = DatePicker;
-
-
 
 const MentorRequestTable: React.FC = () => {
     const [requests, setRequests] = useState<RequestType[]>([]);
     const [filteredRequests, setFilteredRequests] = useState<RequestType[]>([]);
     const [selectedDates, setSelectedDates] = useState<[Dayjs | null, Dayjs | null] | null>(null);
     const [currentPage, setCurrentPage] = useState(1);
-    const [pageSize, setPageSize] = useState<number>(10);
+    const [pageSize] = useState(10);  // Fixed pageSize
+    const [totalItems, setTotalItems] = useState<number>(0);
     const navigate = useNavigate();
 
+    useEffect(() => {
+        fetchRequests();
+    }, [currentPage, pageSize]);
 
+    // Fetch requests from the server
     const fetchRequests = async () => {
         try {
-
-
-            const allRequests = await getRequests(1, 10, "asc");
-            const filteredRequests = allRequests.responseRequestModel.items;
-            setRequests(filteredRequests);
-            setFilteredRequests(filteredRequests);
-            console.log('Fetched Requests:', filteredRequests);
+            const response = await getRequests(currentPage, pageSize, "des");
+            const fetchedRequests = response.responseRequestModel.items;
+            setRequests(fetchedRequests);
+            setFilteredRequests(fetchedRequests);
+            setTotalItems(response.responseRequestModel.totalItems);
         } catch (error) {
             console.error('Error fetching requests:', error);
+            message.error('Error fetching requests');
         }
     };
-    useEffect(() => {
 
-
-        fetchRequests();
-    }, []);
-
-    const handleAccept = async (requestId: string) => {
+    // Accept request and navigate to create meeting page
+    const handleAccept = async (requestId: string, requestTitle: string) => {
         try {
-            await updateRequestsById(requestId, "title", 0);
+            await updateRequestsById(requestId, requestTitle, 0);
             message.success('Request accepted successfully!');
             navigate(`/create-meeting/${requestId}`);
-            await fetchRequests();
+            fetchRequests();
         } catch (error) {
             console.error('Error accepting request:', error);
             message.error('Failed to accept request');
         }
     };
 
-    const handleDeny = async (id: string) => {
+    // Deny request
+    const handleDeny = async (requestId: string,requestTitle: string) => {
         try {
-            await updateRequestsById(id, "title", 1);
+            await updateRequestsById(requestId, requestTitle, 1);
             message.success('Request denied successfully!');
-            await fetchRequests();
+            fetchRequests();
         } catch (error) {
             console.error('Error denying request:', error);
             message.error('Failed to deny request');
         }
     };
 
-    const onDateChange = (dates: any) => {
+    // Filter requests by date range
+    const handleDateChange = (dates: [Dayjs | null, Dayjs | null]) => {
         setSelectedDates(dates);
-        if (dates && dates.length === 2) {
+        if (dates && dates[0] && dates[1]) {
             const [startDate, endDate] = dates;
-            const filtered = requests.filter((r) =>
-                moment(r.createdOn).isBetween(startDate, endDate, 'days', '[]')
+            const filtered = requests.filter((request) =>
+                moment(request.createdOn).isBetween(startDate, endDate, 'days', '[]')
             );
             setFilteredRequests(filtered);
         } else {
@@ -74,10 +75,7 @@ const MentorRequestTable: React.FC = () => {
         }
     };
 
-    const handleChangePage = (page: number) => {
-        setCurrentPage(page);
-    };
-
+    // Define table columns
     const columns = [
         {
             title: 'Title',
@@ -101,33 +99,35 @@ const MentorRequestTable: React.FC = () => {
             dataIndex: 'status',
             key: 'status',
             render: (status: string) => {
-                let color = status == '0' ? 'green' : status == '2' ? 'orange' : 'red';
-                let statusEnum = status == '0' ? 'Accepted' : status == '1' ? 'Rejected' : 'Pending';
-                return <Tag color={color}>{statusEnum}</Tag>;
+                const statusMap = {
+                    '0': { color: 'green', label: 'Accepted' },
+                    '1': { color: 'red', label: 'Rejected' },
+                    '2': { color: 'orange', label: 'Pending' }
+                };
+                const { color, label } = statusMap[status] || { color: 'default', label: 'Unknown' };
+                return <Tag color={color}>{label}</Tag>;
             },
         },
         {
             title: 'Actions',
             key: 'actions',
-            render: (text: any, record: RequestType) => (
-                <div>
-                    {record.status == 2 && (
-                        <>
-                            <Button type="primary" onClick={() => handleAccept(record.id)} style={{ marginRight: 8 }}>
-                                Accept
-                            </Button>
-                            <Button type="primary" danger onClick={() => handleDeny(record.id)}>
-                                Deny
-                            </Button>
-                        </>
-                    )}
-                </div>
+            render: (_: any, record: RequestType) => (
+                record.status === 2 && (
+                    <>
+                        <Button type="primary" onClick={() => handleAccept(record.id,record.title)} style={{ marginRight: 8 }}>
+                            Accept
+                        </Button>
+                        <Button type="primary" danger onClick={() => handleDeny(record.id,record.title)}>
+                            Deny
+                        </Button>
+                    </>
+                )
             ),
         },
         {
             title: 'View Project',
             key: 'viewProject',
-            render: (text: any, record: RequestType) => (
+            render: (_: any, record: RequestType) => (
                 <Button type="link" onClick={() => navigate(`/project/${record.projectId}`)}>
                     View Project
                 </Button>
@@ -139,17 +139,17 @@ const MentorRequestTable: React.FC = () => {
         <div style={{ padding: '24px' }}>
             <Title level={2}>Mentor Request Management</Title>
             <div style={{ marginBottom: '16px' }}>
-                <RangePicker onChange={onDateChange} value={selectedDates} />
+                <RangePicker onChange={handleDateChange} value={selectedDates} />
             </div>
             <Table
                 columns={columns}
-                dataSource={(filteredRequests || []).slice((currentPage - 1) * pageSize, currentPage * pageSize)}
+                dataSource={filteredRequests}
                 rowKey="id"
                 pagination={{
                     current: currentPage,
-                    pageSize: pageSize,
-                    total: filteredRequests.length,
-                    onChange: handleChangePage,
+                    pageSize,
+                    total: totalItems,
+                    onChange: setCurrentPage,
                     showSizeChanger: false,
                 }}
                 bordered

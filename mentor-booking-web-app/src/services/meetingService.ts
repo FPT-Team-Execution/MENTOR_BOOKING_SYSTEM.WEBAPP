@@ -9,19 +9,13 @@ export const createMeeting = async (
 ): Promise<ResponseModel<MeetingType>> => {
     try {
         // const endpoint = `/requests?page=${page}&size=${size}&sortOrder=${sortOrder}`;
-        const accessToken = localStorage.getItem("accessToken");
-        const response = await axiosInstance.post(`/meetings?accessToken=` + accessToken, {
+        const googleToken = localStorage.getItem("googleAccessToken");
+        const response = await axiosInstance.post(`/meetings?accessToken=` + googleToken, {
             requestId,
             description,
             location,
             isOnline
-        },
-            {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                }
-
-            });
+        });
 
         return response.data;
     } catch (error) {
