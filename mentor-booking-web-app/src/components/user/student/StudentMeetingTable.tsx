@@ -1,55 +1,62 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Tag, Typography, Button, message } from 'antd';
+import { Table, Tag, Typography, Button, message, Tooltip } from 'antd';
 import moment from 'moment';
 import { useNavigate } from 'react-router-dom';
 import { getRequests } from '../../../services/requestService';
 import { getMeeting } from '../../../services/meetingService';
 import { getProjectByUserId } from '../../../services/projectService';
+import { getAllFeedback } from '../../../services/feedbackService';
 import { decode } from "../../../utils/utils";
 import { TokenData } from "../../../types/common.types";
-import { ProjectType } from '../../../types/project.type';
 import { MeetingType } from '../../../types/meeting.type';
+import { FeedbackType } from '../../../types/feedback.type';
+
 interface MeetingEvent {
-    id: string,
+    id: string;
     title: string;
     status: string;
     start: Date;
     end: Date;
-    location: string
+    location: string;
+    feedback: FeedbackType | null;
 }
-const { Title } = Typography;
 
+const { Title } = Typography;
 
 const StudentMeetingTable: React.FC = () => {
     const [meetings, setMeetings] = useState<MeetingEvent[]>([]);
     const navigate = useNavigate();
     const [userInfo, setUserInfo] = useState<TokenData>();
     const accessToken = localStorage.getItem("accessToken");
+
     useEffect(() => {
-        // Giải mã accessToken và lưu vào userInfo
-        if (accessToken != null) {
+        if (accessToken) {
             setUserInfo(decode(accessToken));
         }
     }, [accessToken]);
+
     const fetchMeetings = async () => {
         try {
             if (userInfo?.nameidentifier) {
                 const allRequests = await getRequests(1, 10, "asc");
                 const allMeetings = await getMeeting(1, 10);
-                const studentProject = (await getProjectByUserId(userInfo.nameidentifier, userInfo.role, "Activated", 1, 10, "asc"));
+                const studentProject = await getProjectByUserId(userInfo.nameidentifier, userInfo.role, "Activated", 1, 10, "asc");
                 const projectId = studentProject.responseRequestModel.items[0]?.id;
-                // Filter và ánh xạ requests sang CalendarEvents dựa trên các điều kiện của bạn
+                const allFeedbacks = await getAllFeedback(1, 10);
                 const filteredRequests = allRequests.responseRequestModel.items.filter(request =>
                     request.projectId === projectId && request.status === 0
                 );
 
-                // Tạo mảng calendarEvents từ filteredRequests
                 const meetingEvents: MeetingEvent[] = filteredRequests.flatMap((request) => {
                     const meeting = allMeetings.responseRequestModel.items.find(
                         (meet: MeetingType) => meet.requestId === request.id
                     );
 
                     if (meeting) {
+                        const feedback = allFeedbacks.responseRequestModel.items.find(
+                            (feedback: FeedbackType) => feedback.meetingId === meeting.id
+                        );
+
                         const getMeetingStatusText = (status: string | number) => {
                             switch (status) {
                                 case "0":
@@ -76,9 +83,10 @@ const StudentMeetingTable: React.FC = () => {
                             start: new Date(request.start),
                             end: new Date(request.end),
                             location: meeting.location || "No location specified",
+                            feedback: feedback || null,
                         };
                     }
-                    return [];
+                    return []; // Loại bỏ mục này khỏi kết quả nếu không có meeting phù hợp
                 });
 
                 setMeetings(meetingEvents);
@@ -126,15 +134,20 @@ const StudentMeetingTable: React.FC = () => {
                 return <Tag color={color}>{status}</Tag>;
             },
         },
-        // {
-        //     title: 'Actions',
-        //     key: 'actions',
-        //     render: (text: any, record: MeetingEvent) => (
-        //         <Button type="primary" onClick={() => navigate(/update-meeting/${record.id})}>
-        //             Update Meeting
-        //         </Button>
-        //     ),
-        // },
+        {
+            title: 'Feedback from mentor',
+            dataIndex: 'feedback',
+            key: 'feedback',
+            render: (feedback: FeedbackType | null) => (
+                feedback ? (
+                    <Tooltip >
+                        <Tag color="purple"> {feedback.message}</Tag>
+                    </Tooltip>
+                ) : (
+                    <Tag color="gray">No Feedback</Tag>
+                )
+            ),
+        }
     ];
 
     return (
@@ -143,12 +156,11 @@ const StudentMeetingTable: React.FC = () => {
             <Table
                 columns={columns}
                 dataSource={meetings}
-                rowKey="title"
+                rowKey="id"
                 bordered
             />
         </div>
     );
 };
-
 
 export default StudentMeetingTable;

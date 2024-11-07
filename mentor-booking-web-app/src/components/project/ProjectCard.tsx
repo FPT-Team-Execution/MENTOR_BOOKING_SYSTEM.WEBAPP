@@ -8,6 +8,7 @@ import { ProjectType } from "../../types/project.type";
 import { Link } from "react-router-dom";
 import { mentorService } from "../../services/mentorService";
 import { MentorType } from "../../types/user.types";
+import { keyBy } from "lodash";
 
 type ChildComponentProps = {
   className?: string;
@@ -61,16 +62,27 @@ const ProjectCard: React.FC<ChildComponentProps> = ({ project, className }) => {
 
           {/* Project Description */}
           <p className="text-gray-700 my-3 text-sm text-wrap max-w-96">
-          Description: {project.description ? project.description : "No description provided."}
+            Description: {project.description ? project.description : "No description provided."}
           </p>
 
           {/* Mentor Info */}
-          {mentor && (
+          {/* {mentor && (
             <div className="flex items-center mt-2 mb-4">
               <span className="mr-2">Mentor: </span> 
               <img
                 src={mentor.avatarUrl}
                 className="w-5 h-5 rounded-full mr-3 border border-gray-200"
+              />
+              <span className="text-gray-800 text-sm font-medium">{mentor.fullName}</span>
+            </div>
+          )} */}
+          {mentor && (
+            <div className="flex items-center mt-2 mb-4">
+              <span className="mr-2">Mentor: </span>
+              <img
+                src={mentor.avatarUrl || "/path/to/default-avatar.png"}  // Provide a fallback image if avatarUrl is null
+                className="w-5 h-5 rounded-full mr-3 border border-gray-200"
+                alt="mentor-avatar"
               />
               <span className="text-gray-800 text-sm font-medium">{mentor.fullName}</span>
             </div>

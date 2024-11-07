@@ -28,24 +28,25 @@ export const createFeedback = async (
 };
 
 export const getAllFeedback = async (
-    page: Number,
+    page: number,
     size: number
 ): Promise<ResponseRequestModel<PaginationModel<FeedbacksModel>>> => {
     try {
-        const accessToken = localStorage.getItem("accessToken");
-        const response = await axiosInstance.get(`/feedbacks/Feedbacks`, {
+        const response = await axiosInstance.get('https://localhost:7554/Feedbacks', {
             params: {
                 page,
                 size,
-            }
+            },
+            baseURL: '' // Override the base URL for this specific request
         });
 
         return response.data;
     } catch (error) {
-        console.error("Error fetching requests:", error);
+        console.error("Error fetching feedbacks:", error);
         throw error;
     }
 };
+
 
 export const getFeedbackByMentorId = async (
     mentorId: string,
