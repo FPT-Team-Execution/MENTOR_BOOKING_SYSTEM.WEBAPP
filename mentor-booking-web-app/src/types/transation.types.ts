@@ -4,9 +4,9 @@ export type TransactionType = {
     amount: number;
     remainBalance: number;
     currency: number;
-    transactionType: number;
-    status: number;
-    kind: number;
+    transactionType: string;
+    status: string;
+    kind: string;
     createdOn: string;
 };
 

@@ -3,6 +3,7 @@ import { Table, Pagination } from 'antd';
 import { useAuth } from '../../../auth/AuthContext';
 import { transactionService } from '../../../services/transactionService';
 import { TransactionType } from '../../../types/transation.types';
+import { ArrowUpOutlined } from '@ant-design/icons';
 
 const StudentTransactionPage: React.FC = () => {
   const [data, setData] = useState<TransactionType[]>([]);
@@ -17,6 +18,7 @@ const StudentTransactionPage: React.FC = () => {
   }, [currentPage, pageSize]);
 
   const fetchTransactions = async (page: number, pageSize: number) => {
+    setData([])
     // Replace with actual API call
     const response = await transactionService.getTransactionByStudentId(userInfo?.nameidentifier,page,pageSize)
     setData(response.responseRequestModel.items);
@@ -31,11 +33,6 @@ const StudentTransactionPage: React.FC = () => {
 
   const columns = [
     {
-      title: 'User ID',
-      dataIndex: 'userId',
-      key: 'userId',
-    },
-    {
       title: 'Username',
       dataIndex: 'username',
       key: 'username',
@@ -44,6 +41,21 @@ const StudentTransactionPage: React.FC = () => {
       title: 'Amount',
       dataIndex: 'amount',
       key: 'amount',
+      render: (amount: number, record: TransactionType) => (
+        <>
+          {record.transactionType === 'Credit' ? (
+            <span style={{ color: 'green', display: 'flex', alignItems: 'center' }}>
+              <ArrowUpOutlined style={{ marginRight: 4 }} />
+              {amount}
+            </span>
+          ) : (
+            <span style={{ color: 'red', display: 'flex', alignItems: 'center' }}>
+              <ArrowUpOutlined rotate={180} style={{ marginRight: 4 }} />
+              {amount}
+            </span>
+          )}
+        </>
+      ),
     },
     {
       title: 'Remain Balance',
@@ -51,19 +63,14 @@ const StudentTransactionPage: React.FC = () => {
       key: 'remainBalance',
     },
     {
-      title: 'Currency',
-      dataIndex: 'currency',
-      key: 'currency',
-    },
-    {
-      title: 'Transaction Type',
-      dataIndex: 'transactionType',
-      key: 'transactionType',
-    },
-    {
       title: 'Status',
       dataIndex: 'status',
       key: 'status',
+      render: (status: string) => (
+        <span style={{ color: status === 'Success' ? 'green' : 'red' }}>
+          {status}
+        </span>
+      ),
     },
     {
       title: 'Kind',
