@@ -41,8 +41,10 @@ export const BookingPage: React.FC<{ project?: ProjectType }> = ({ project }) =>
 
     const handleGetBusyTimes = async () => {
         try {
-            const res = await mentorService.getBusyTimes(selectedMentor, date?.format('YYYY-MM-DD'));
-            setBusyTimes(res.responseModel.events || []);
+            if (date) {
+                const res = await mentorService.getBusyTimes(selectedMentor, date?.format('YYYY-MM-DD'));
+                setBusyTimes(res.responseModel.events || []);
+            }
         } catch (err) {
             console.log(err);
         }
@@ -69,14 +71,18 @@ export const BookingPage: React.FC<{ project?: ProjectType }> = ({ project }) =>
     };
 
     const isTimeConflict = (start: Dayjs, end: Dayjs) => {
+
+        const fullStart = dayjs(`${date?.format('YYYY-MM-DD')} ${start.format('HH:mm')}`, 'YYYY-MM-DD HH:mm');
+        const fullEnd = dayjs(`${date?.format('YYYY-MM-DD')} ${end.format('HH:mm')}`, 'YYYY-MM-DD HH:mm');
         return busyTimes.some(busy => {
-            const busyStart = dayjs(`${date?.format('YYYY-MM-DD')} ${busy.start}`, 'YYYY-MM-DD HH:mm');
-            const busyEnd = dayjs(`${date?.format('YYYY-MM-DD')} ${busy.end}`, 'YYYY-MM-DD HH:mm');
-            return start.isBefore(busyEnd) && end.isAfter(busyStart);
+            const busyStart = dayjs(busy.start, 'YYYY-MM-DD HH:mm');
+            const busyEnd = dayjs(busy.end, 'YYYY-MM-DD HH:mm');
+            return fullStart.isBefore(busyEnd) && fullEnd.isAfter(busyStart);
         });
     };
 
     const handleBooking = async () => {
+        console.log(start, end)
         if (!date || !start || !end || isTimeConflict(start, end)) {
             message.error('Time conflict or missing fields');
             return;
@@ -167,7 +173,7 @@ export const BookingPage: React.FC<{ project?: ProjectType }> = ({ project }) =>
                                 renderItem={(busy) => (
                                     <List.Item>
                                         <Card className="w-full text-center bg-gray-50">
-                                            {`${busy.start} - ${busy.end}`}
+                                            {`${dayjs(busy.start, 'YYYY-MM-DD HH:mm').format('HH:mm')} - ${dayjs(busy.end, 'YYYY-MM-DD HH:mm').format('HH:mm')}`}
                                         </Card>
                                     </List.Item>
                                 )}
