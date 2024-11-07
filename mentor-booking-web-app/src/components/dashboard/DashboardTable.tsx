@@ -6,11 +6,11 @@ import { ProjectType } from "../../types/project.type";
 import { projectService } from "../../services/projectService";
 import { useRequest } from "ahooks";
 import moment from "moment";
-import { progressService } from "../../services/progressService";
-import { GetCompleteProgressResponse, ProgressType } from "../../types/progress.type";
+import { GetCompleteProgressResponse } from "../../types/progress.type";
 import axiosInstance from "../../utils/axios/axiosInstance";
 import { GET_PROGRESS_COMPLETE } from "../../utils/apiUrl/baseUrl";
 const DashBoardTable = () => {
+
   const [query, setQuery] = useState<PageRequestModel>({
     page: 1,
     size: 10,
@@ -19,56 +19,17 @@ const DashBoardTable = () => {
 
   const [progressData, setProgressData] = useState<{ [key: string]: number }>({});
 
-  const [queryProgress, setQueryProgress] = useState<PageRequestModel>({
-    page: 1,
-    size: 10,
-    sort: "asc",
-  });
-  const [projectPagination, setProjectPagination] =
-    useState<PageResponseModel<ProjectType>>();
-  const [progressPagination, setProgressPagination] =
-    useState<PageResponseModel<ProgressType>>();
+  const [projectPagination, setProjectPagination] = useState<PageResponseModel<ProjectType>>();
+
   const { loading } = useRequest(
     async () => {
       await handleFetch();
+
     },
     {
       refreshDeps: [query],
     }
   );
-  const { loading: loadingProgress, run: runProgress } = useRequest(
-    async (project: ProjectType) => {
-      try {
-        const res = await progressService.getProgressByProjectId(
-          project.id,
-          queryProgress
-        );
-        if (res.isSuccess) {
-          if (res.responseRequestModel.totalPages > 1) {
-            const index = queryProgress.page;
-            setQueryProgress({
-              ...queryProgress,
-              size: queryProgress.size * (index + 1),
-            });
-            return;
-          }
-          setProgressPagination(res.responseRequestModel);
-        } else {
-          // console.log("Failed to fetch API");
-          message.error(res.message);
-        }
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      } catch (ex) {
-        message.error("Failed to load students");
-      }
-
-    },
-    {
-      manual: false,
-      refreshDeps: [queryProgress],
-    }
-  );
-
 
   const handleFetch = async () => {
     try {
@@ -94,7 +55,7 @@ const DashBoardTable = () => {
         [projectId]: response.data.percent,
       }));
     } catch (error) {
-      console.error("Lỗi khi lấy tiến độ:", error);
+      console.error(error);
     }
   };
 
@@ -156,11 +117,11 @@ const DashBoardTable = () => {
   return (
     <>
       <Table
-        loading={loading && loadingProgress}
+        loading={loading}
         dataSource={projectPagination?.items}
         columns={columns}
         rowKey="id"
-        className="border"
+        className="m-1"
         pagination={{
           current: query.page,
           pageSize: query.size,
