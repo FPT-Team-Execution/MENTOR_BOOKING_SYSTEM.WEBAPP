@@ -1,4 +1,5 @@
-export type Progress = {
+export type ProgressType = {
+    id: string,
     name: string; 
     projectId: string; 
     createdBy?: string; 
