@@ -7,13 +7,17 @@ import { projectService } from "../../services/projectService";
 import { useRequest } from "ahooks";
 import moment from "moment";
 import { progressService } from "../../services/progressService";
-import { ProgressType } from "../../types/progress.type";
+import { GetCompleteProgressResponse, ProgressType } from "../../types/progress.type";
+import axiosInstance from "../../utils/axios/axiosInstance";
+import { GET_PROGRESS_COMPLETE } from "../../utils/apiUrl/baseUrl";
 const DashBoardTable = () => {
   const [query, setQuery] = useState<PageRequestModel>({
     page: 1,
     size: 10,
     sort: "asc",
   });
+
+  const [progressData, setProgressData] = useState<{ [key: string]: number }>({});
 
   const [queryProgress, setQueryProgress] = useState<PageRequestModel>({
     page: 1,
@@ -53,11 +57,11 @@ const DashBoardTable = () => {
           // console.log("Failed to fetch API");
           message.error(res.message);
         }
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (ex) {
         message.error("Failed to load students");
       }
-      
+
     },
     {
       manual: false,
@@ -65,7 +69,7 @@ const DashBoardTable = () => {
     }
   );
 
- 
+
   const handleFetch = async () => {
     try {
       const res = await projectService.getProjects(query);
@@ -79,6 +83,18 @@ const DashBoardTable = () => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
       message.error("Failed to load data");
+    }
+  };
+
+  const fetchProgress = async (projectId: string) => {
+    try {
+      const response = await axiosInstance.get<GetCompleteProgressResponse>(GET_PROGRESS_COMPLETE(projectId));
+      setProgressData(prev => ({
+        ...prev,
+        [projectId]: response.data.percent,
+      }));
+    } catch (error) {
+      console.error("Lỗi khi lấy tiến độ:", error);
     }
   };
 
@@ -114,16 +130,15 @@ const DashBoardTable = () => {
       key: "actions",
       render: (record: ProjectType) => {
         //TODO: call progress by project Id
-        const completeProgress = progressPagination?.items.filter(
-          (x) => x.isComplete == true
-        );
+        if (!(record.id in progressData)) {
+          fetchProgress(record.id); // Nếu chưa có, gọi API
+          return <Progress percent={0} status="active" />; // Hiển thị tiến độ 0 tạm thời
+        }
+
         return (
           <div className="inline">
             <Progress
-              percent={
-                completeProgress?.length ||
-                (0 / (progressPagination?.items.length || 0)) * 100
-              }
+              percent={progressData[record.id]}
               status="active"
             />
           </div>

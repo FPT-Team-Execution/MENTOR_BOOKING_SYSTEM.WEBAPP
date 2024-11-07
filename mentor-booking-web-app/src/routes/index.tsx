@@ -8,7 +8,7 @@ import LoginPage from "../components/Auth/Login";
 import Register from "../components/Auth/Register";
 import { FeedbackPage } from "../pages/meeting/FeedbackPage";
 import { StudentPage } from "../pages/user/student/StudentPage";
-import Dashboard from "../pages/admin/DashBoard";
+import Dashboard from "../pages/admin/DashBoardPage";
 import CalendarEventPage from "../pages/calendar/CalendarEventPage";
 // import GoogleAuthCallback from "../components/Auth/GoogleAuthCallback";
 import ProjectPage from "../pages/user/student/ProjectPage";

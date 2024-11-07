@@ -144,3 +144,7 @@ export const getProgressesByProjectIdUrl = (
   projectId: string | undefined,
   query: PageRequestModel
 ) => `/progresses/project/${projectId}?page=${query.page}&size=${query.size}`;
+
+export const GET_PROGRESS_COMPLETE = (id: string) => {
+  return `/progresses/get-complete/${id}`
+}
