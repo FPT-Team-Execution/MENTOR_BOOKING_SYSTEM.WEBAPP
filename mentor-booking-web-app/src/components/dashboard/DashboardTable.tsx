@@ -93,7 +93,8 @@ const DashBoardTable = () => {
         //TODO: call progress by project Id
         if (!(record.id in progressData)) {
           fetchProgress(record.id); // Nếu chưa có, gọi API
-          return <Progress percent={0} status="active" />; // Hiển thị tiến độ 0 tạm thời
+          console.log(progressData[record.id]);
+          return <Progress percent={progressData[record.id]} status="active" />; // Hiển thị tiến độ 0 tạm thời
         }
 
         return (
