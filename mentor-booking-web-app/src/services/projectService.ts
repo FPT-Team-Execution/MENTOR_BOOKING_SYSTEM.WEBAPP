@@ -29,6 +29,15 @@ const getProject = async (params: unknown, id: string) => {
 
 }
 
+const getAllProject = async (params: unknown) => {
+    const url = '/projects'
+    const result = await axiosInstance.get(url, {
+        params: params
+    })
+    return result.data
+
+}
+
 export const getProjectByUserId = async (
     userId: string,
     userRole: string,
@@ -63,11 +72,21 @@ const createProject = async (data: unknown) => {
     return result.data
 }
 
+const deleteStudentFromProject = async(studentId: string, projectId: string) => {
+    const url = '/groups'
+    const result = await axiosInstance.delete(url, {
+        params: {projectId,studentId }
+    })
+    return result.data
+}
+
 
 export const projectService = {
     getProjects,
     getProjectById,
     addStudentToProject,
     getProject,
-    createProject
+    createProject,
+    getAllProject,
+    deleteStudentFromProject
 }
