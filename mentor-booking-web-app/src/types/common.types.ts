@@ -88,4 +88,16 @@ export type CreateCalendarEventType = {
     mentorId: string;
     meetingId: string;
   };
+
+
+ export type AcceptRequestType = {
+    accessToken: string;
+    start: string;
+    end: string;
+    mentorId: string;
+    requestId: string;
+    description: string;
+    location: string;
+    isOnline: boolean;
+  };
   

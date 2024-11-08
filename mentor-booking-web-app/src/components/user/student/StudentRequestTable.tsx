@@ -8,6 +8,7 @@ import { StudentType } from '../../../types/user.types';
 import { RequestType } from '../../../types/request.type';
 import { isNull } from 'lodash';
 import { TokenData } from "../../../types/common.types";
+import { Link } from 'react-router-dom';
 
 const { Title } = Typography;
 const { RangePicker } = DatePicker;
@@ -115,7 +116,13 @@ const RequestTable: React.FC = () => {
             title: 'Actions',
             key: 'actions',
             render: (_, request: RequestType) => {
-                if (request.status === 2) {  // Assuming '3' indicates "Pending"
+                if (request.status === 0) {  // Accepted status
+                    return (
+                        <Link to={`/meeting/${request.id}`}>
+                            <Button type="link">Meeting Info</Button>
+                        </Link>
+                    );
+                } else if (request.status === 2) {  // Pending status
                     return (
                         <div className="flex gap-2">
                             <Button type="primary" onClick={() => handleEdit(request)}>Edit</Button>

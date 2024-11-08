@@ -39,8 +39,6 @@ const MentorRequestTable: React.FC = () => {
     // Accept request and navigate to create meeting page
     const handleAccept = async (requestId: string, requestTitle: string) => {
         try {
-            await updateRequestsById(requestId, requestTitle, 0);
-            message.success('Request accepted successfully!');
             navigate(`/create-meeting/${requestId}`);
             fetchRequests();
         } catch (error) {

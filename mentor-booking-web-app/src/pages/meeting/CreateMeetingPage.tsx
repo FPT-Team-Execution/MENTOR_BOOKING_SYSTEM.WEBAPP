@@ -3,9 +3,9 @@ import { Form, Input, Button, message, Spin, Typography, Checkbox } from 'antd';
 import { useParams } from 'react-router-dom';
 import { createMeeting } from '../../services/meetingService';
 import { getRequestsById } from '../../services/requestService';
-import { createCalendar } from '../../services/calendarEventService';
+import { accpetRequest, createCalendar } from '../../services/calendarEventService';
 import { RequestType } from '../../types/request.type';
-import { CreateCalendarEventType } from '../../types/common.types';
+import { AcceptRequestType, CreateCalendarEventType } from '../../types/common.types';
 import moment from 'moment';
 
 const { Title, Text } = Typography;
@@ -45,19 +45,22 @@ const CreateMeeting: React.FC = () => {
 
         setCreatingMeeting(true);
         try {
-            const response = await createMeeting(requestId ?? "", values.description, values.location, values.isOnline);
-            if (response.isSuccess) {
-                const calendarRes = await createCalendar({
+            if (request) {
+                const body: AcceptRequestType = {
                     accessToken,
                     start: request?.start,
                     end: request?.end,
                     mentorId: request?.mentorId,
-                    meetingId: response.responseModel.requestId
-                } as CreateCalendarEventType);
-
-                if (calendarRes.isSuccess) {
-                    message.success('Meeting created successfully!');
-                    form.resetFields();
+                    requestId: request.id,
+                    isOnline: values.isOnline,
+                    location: values.location,
+                    description: values.description
+                }
+                const response = await accpetRequest(body)
+                if (response.isSuccess) {
+                    message.success("Create meeting successfully")
+                } else {
+                    message.error("Fail to create meeting")
                 }
             }
         } catch (error) {
@@ -72,7 +75,7 @@ const CreateMeeting: React.FC = () => {
         <Spin spinning={loading || creatingMeeting}>
             <div style={{ padding: '24px' }}>
                 <Title level={2}>Create Meeting</Title>
-                
+
                 {request && (
                     <div style={{ marginBottom: '24px' }}>
                         <Text strong>Title:</Text> <Text>{request.title}</Text><br />

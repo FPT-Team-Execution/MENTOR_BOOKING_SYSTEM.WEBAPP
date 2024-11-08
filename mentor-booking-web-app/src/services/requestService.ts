@@ -33,7 +33,7 @@ export const getRequests = async (
 };
 export const getRequestsById = async (
     requestId: string
-): Promise<ResponseRequestModel<RequestType>> => {
+)=> {
     try {
         // const endpoint = `/requests?page=${page}&size=${size}&sortOrder=${sortOrder}`;
 

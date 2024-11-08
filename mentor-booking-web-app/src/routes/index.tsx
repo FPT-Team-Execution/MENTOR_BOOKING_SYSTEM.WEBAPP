@@ -34,6 +34,7 @@ import StudentMeetingPage from "../pages/user/student/StudentMeetingPage";
 import CreateFeedbackPage from "../pages/mentor-page/CreateFeedbackPage";
 import TransactionPage from "../pages/admin/TransactionPage";
 import StudentTransactionPage from "../pages/user/student/StudentTransactionPage";
+import MeetingDetails from "../components/user/student/MeetingDetails";
 
 
 
@@ -89,6 +90,14 @@ const AppRoutes: React.FC = () => {
           element={
             <ProtectedRoute allowedRoles={['Admin', 'Student', 'Mentor']}>
               <ProjectPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={paths.meetingDetails}
+          element={
+            <ProtectedRoute allowedRoles={['Admin', 'Student', 'Mentor']}>
+              <MeetingDetails />
             </ProtectedRoute>
           }
         />

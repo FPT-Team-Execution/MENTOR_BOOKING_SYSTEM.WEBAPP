@@ -88,3 +88,9 @@ export const getMeetingById = async (
         throw error;
     }
 };
+
+export const getMeetingByRqId = async (id: string) => {
+    const url = "/meetings/request/"+id
+    const res = await axiosInstance.get(url)
+    return res.data
+}
