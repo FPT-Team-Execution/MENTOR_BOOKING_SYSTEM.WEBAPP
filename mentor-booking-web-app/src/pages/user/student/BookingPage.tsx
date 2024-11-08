@@ -111,9 +111,9 @@ export const BookingPage: React.FC<{ project?: ProjectType }> = ({ project }) =>
     };
 
     return (
-        <div className="flex justify-center w-full mt-8 shadow-lg rounded-lg py-10">
+        <div className="flex justify-center w-full mt-8 shadow-lg rounded-lg py-5">
             {!isSuccess ? (
-                <div className="w-full p-4 space-y-4">
+                <div className="w-full p-4 space-y-2">
                     <p className="text-xl font-semibold text-gray-700">Request a Meeting</p>
                     
                     {/* Title Input */}
@@ -172,9 +172,9 @@ export const BookingPage: React.FC<{ project?: ProjectType }> = ({ project }) =>
                                 dataSource={busyTimes}
                                 renderItem={(busy) => (
                                     <List.Item>
-                                        <Card className="w-full text-center bg-gray-50">
+                                        <div className="text-center border-2 p-1 rounded-xl  bg-gray-50">
                                             {`${dayjs(busy.start, 'YYYY-MM-DD HH:mm').format('HH:mm')} - ${dayjs(busy.end, 'YYYY-MM-DD HH:mm').format('HH:mm')}`}
-                                        </Card>
+                                        </div>
                                     </List.Item>
                                 )}
                             />
