@@ -1,21 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import { Form, Input, Button, message } from 'antd';
+import { Form, Input, Button, Select, message } from 'antd';
 import { useParams, useNavigate } from 'react-router-dom';
-import { updateMeeting } from '../../services/meetingService'; // Service để cập nhật meeting
-import { getMeetingById } from '../../services/meetingService'; // Giả sử bạn có hàm lấy meeting theo ID
+import { updateMeeting } from '../../services/meetingService';
+import { getMeetingById } from '../../services/meetingService';
 
 const UpdateMeetingPage: React.FC = () => {
     const [form] = Form.useForm();
     const { meetingId } = useParams<{ meetingId: string }>();
     const navigate = useNavigate();
+    const { Option } = Select;
+
     useEffect(() => {
         const fetchMeetingDetails = async () => {
             try {
                 if (meetingId) {
-                    const meeting = (await getMeetingById(meetingId));
+                    const meeting = await getMeetingById(meetingId);
                     form.setFieldsValue({
                         description: meeting.responseRequestModel.meeting.description,
                         location: meeting.responseRequestModel.meeting.location,
+                        status: meeting.responseRequestModel.meeting.status || "New", // Thêm status nếu có
                     });
                 }
             } catch (error) {
@@ -35,9 +38,8 @@ const UpdateMeetingPage: React.FC = () => {
         }
 
         try {
-            await updateMeeting(meetingId ?? "", values.description, values.location, "", "New"); // Không gửi status
+            await updateMeeting(meetingId ?? "", values.description, values.location, "", values.status);
             message.success('Meeting updated successfully!');
-            // Chuyển hướng hoặc xử lý sau khi cập nhật thành công nếu cần
             navigate('/mentor/meetings');
         } catch (error) {
             console.error('Failed to update meeting:', error);
@@ -62,6 +64,17 @@ const UpdateMeetingPage: React.FC = () => {
                     rules={[{ required: false }]}
                 >
                     <Input />
+                </Form.Item>
+                <Form.Item
+                    name="status"
+                    label="Meeting Status"
+                    rules={[{ required: true, message: 'Please select a status!' }]}
+                >
+                    <Select placeholder="Select status">
+                        <Option value="Canceled">Cancel</Option>
+                        <Option value="Done">Done</Option>
+                        <Option value="Done">New</Option>
+                    </Select>
                 </Form.Item>
                 <Form.Item>
                     <Button type="primary" htmlType="submit">
