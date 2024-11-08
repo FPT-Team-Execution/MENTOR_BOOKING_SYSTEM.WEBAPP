@@ -13,7 +13,8 @@ const redirectUri = "http://localhost:5173/auth/callback";
 const calendarScope = "https://www.googleapis.com/auth/calendar";
 const profileScope = "https://www.googleapis.com/auth/userinfo.profile";
 const emailScope = "https://www.googleapis.com/auth/userinfo.email";
-const scope = `${calendarScope} ${profileScope} ${emailScope}`;
+const meetingScope = "https://www.googleapis.com/auth/meetings.space.created"
+const scope = `${calendarScope} ${profileScope} ${emailScope} ${meetingScope}` 
 // end scope
 const responseType = "code";
 const accessType = "offline";
