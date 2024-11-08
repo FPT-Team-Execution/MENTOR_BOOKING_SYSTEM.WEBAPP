@@ -97,7 +97,7 @@ export const ProjectDetailPage = () => {
                             {userInfo?.role === 'Student' && <Button type="primary" onClick={() => setIsBooking(true)}>Booking</Button>}
                         </div>
                     </div>
-                    <StudentProjectList students={students} />
+                    <StudentProjectList handleGetProject={handleGetProject} students={students} />
                 </>
             ) : (
                 <>Project not found</>
