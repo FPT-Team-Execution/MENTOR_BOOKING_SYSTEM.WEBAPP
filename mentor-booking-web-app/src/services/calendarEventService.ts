@@ -7,7 +7,7 @@ import {
     DELETE_EVENT_URL,
     UPDATE_EVENT_URL
 } from "../utils/apiUrl/baseUrl";
-import { CreateCalendarEventType } from '../types/common.types';
+import { AcceptRequestType, CreateCalendarEventType } from '../types/common.types';
 
 // Interface cho dữ liệu Calendar Event
 export interface CalendarEvent {
@@ -90,11 +90,18 @@ const createCalendar = async (calendar: CreateCalendarEventType) => {
     return result.data
 }
 
+const accpetRequest = async (calendar: AcceptRequestType) => {
+    const url = '/calendar-events/create'
+    const result = await axiosInstance.post(url,calendar)
+    return result.data
+}
+
 export {
     getEventsByMentorId,
     getEventById,
     updateEvent,
     deleteEvent,
     createEvent,
-    createCalendar
+    createCalendar,
+    accpetRequest
 };
