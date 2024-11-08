@@ -4,6 +4,7 @@ export type Major = {
   id: string;
   name: string;
   createdOn: Date;
+  parentId: string | undefined;
   parentName: string | undefined;
   updatedOn: Date;
   status: string;
