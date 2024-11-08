@@ -1,22 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Tag, Typography, DatePicker, Modal, Popconfirm, Button } from 'antd';
+import { Table, Tag, Typography, Modal, Popconfirm, Button } from 'antd';
 import moment from 'moment';
 import { getProjectsByStudentId, getRequests } from '../../../services/requestService';
-import dayjs, { Dayjs } from 'dayjs';
 import { decode } from "../../../utils/utils";
-import { StudentType } from '../../../types/user.types';
 import { RequestType } from '../../../types/request.type';
-import { isNull } from 'lodash';
 import { TokenData } from "../../../types/common.types";
 import { Link } from 'react-router-dom';
 
 const { Title } = Typography;
-const { RangePicker } = DatePicker;
 
 const RequestTable: React.FC = () => {
     const [requests, setRequests] = useState<RequestType[]>([]);
-    const [filteredRequests, setFilteredRequests] = useState<RequestType[]>([]);
-    const [selectedDates, setSelectedDates] = useState<[Dayjs | null, Dayjs | null] | null>(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState<number>(10);
     const [userInfo, setUserInfo] = useState<TokenData>();
@@ -30,43 +24,31 @@ const RequestTable: React.FC = () => {
         }
     }, [accessToken]);
 
-    useEffect(() => {
-        const fetchRequests = async () => {
-            try {
-                if (userInfo?.nameidentifier) {
-                    const projects = await getProjectsByStudentId(userInfo.nameidentifier, "", 1, 10, 'asc');
-                    const allRequests = await getRequests(1, 10, "asc");
+    const fetchRequests = async (page: number, size: number) => {
+        try {
+            if (userInfo?.nameidentifier) {
+                const projects = await getProjectsByStudentId(userInfo.nameidentifier, "", page, size, 'des');
+                const allRequests = await getRequests(page, size, "des");
 
-                    const filteredRequests = allRequests.responseRequestModel.items.filter(request =>
-                        projects.responseRequestModel.items.some(project => project.id === request.projectId)
-                    );
+                const filteredRequests = allRequests.responseRequestModel.items.filter(request =>
+                    projects.responseRequestModel.items.some(project => project.id === request.projectId)
+                );
 
-                    setRequests(filteredRequests);
-                    setFilteredRequests(filteredRequests);
-                }
-            } catch (error) {
-                console.error('Error fetching requests:', error);
+                setRequests(filteredRequests);
             }
-        };
-
-        fetchRequests();
-    }, [userInfo]);
-
-    const onDateChange = (dates: any) => {
-        setSelectedDates(dates);
-        if (dates && dates.length === 2) {
-            const [startDate, endDate] = dates;
-            const filtered = requests.filter((r) =>
-                moment(r.start).isBetween(startDate, endDate, 'days', '[]')
-            );
-            setFilteredRequests(filtered);
-        } else {
-            setFilteredRequests(requests);
+        } catch (error) {
+            console.error('Error fetching requests:', error);
         }
     };
 
-    const handleChangePage = (page: number) => {
+    useEffect(() => {
+        fetchRequests(currentPage, pageSize);
+    }, [userInfo, currentPage, pageSize]);
+
+    const handleChangePage = (page: number, pageSize: number) => {
         setCurrentPage(page);
+        setPageSize(pageSize);
+        fetchRequests(page, pageSize); // Fetch data for new page
     };
 
     const handleEdit = (request: RequestType) => {
@@ -76,7 +58,6 @@ const RequestTable: React.FC = () => {
 
     const handleDelete = (requestId: string) => {
         setRequests(requests.filter(request => request.id !== requestId));
-        setFilteredRequests(filteredRequests.filter(request => request.id !== requestId));
     };
 
     const handleEditModalClose = () => {
@@ -144,19 +125,17 @@ const RequestTable: React.FC = () => {
 
     return (
         <div className="p-6">
-            <div className="mb-4">
-                <RangePicker onChange={onDateChange} value={selectedDates} />
-            </div>
             <Table
                 columns={columns}
-                dataSource={(requests || []).slice((currentPage - 1) * pageSize, currentPage * pageSize)}
+                dataSource={requests}
                 rowKey="id"
                 pagination={{
                     current: currentPage,
                     pageSize: pageSize,
                     total: requests.length,
                     onChange: handleChangePage,
-                    showSizeChanger: false,
+                    showSizeChanger: true,
+                    pageSizeOptions: ['5', '10', '20', '50'],
                 }}
                 bordered
                 className="w-full"
