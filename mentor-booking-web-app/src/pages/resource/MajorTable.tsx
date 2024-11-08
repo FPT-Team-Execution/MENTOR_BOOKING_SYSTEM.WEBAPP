@@ -46,13 +46,17 @@ export const MajorTable = () => {
   const handleSubmit = async (major: Major) => {
     if (!major) return;
 
+    if(major){
+      major.parentId = major.parentId?.toString() || undefined;
+    }
+
     try {
       setActionLoading(true);
-
+      // console.log('major: ' + JSON.stringify(major));
       const result = isUpdate
         ? await majorServices.updateMajor(major)
         : await majorServices.createMajor(major);
-
+      // console.log('result: ' + JSON.stringify(result));
       if (result.isSuccess) {
         message.success(isUpdate ? "Update Successful" : "Create Successful");
         setIsModalOpen(false);
@@ -130,16 +134,20 @@ export const MajorTable = () => {
     setIsUpdate(true);
     const majorResponse = await majorServices.getMajorById(major.id);
     const majorGetById = majorResponse.responseRequestModel;
+    // console.log('majorGetById: ' + JSON.stringify(majorGetById));
+    // console.log('majorGetById, parent name ' + majorGetById.majorResponse.parentName);
     setMajor(majorGetById);
+    // Find the default value for the root major based on parentId
     const defaultValue =
     majorPagination?.items.find((item) => {
-      return item.parentName == major?.parentName;
+      return item.name == majorGetById.majorResponse.parentName;
     }) || undefined;
+  //  console.log('default value:' + defaultValue)
     // Initial form value
     form.setFieldsValue({
       id: major.id,
       name: major.name || "",
-      parentName: defaultValue?.parentName || "",
+      parentId: defaultValue?.id || undefined,
       createdOn: majorGetById?.createdOn
         ? moment(majorGetById.createdOn)
         : undefined,
@@ -156,7 +164,7 @@ export const MajorTable = () => {
     form.setFieldsValue({
       id: major?.id,
       name: major?.name || "",
-      parentName: major?.parentName || "",
+      parentId: major?.parentId || "",
       createdOn: major?.createdOn ? moment(major.createdOn) : undefined,
       updatedOn: major?.updatedOn ? moment(major.updatedOn) : undefined,
     });
@@ -198,8 +206,10 @@ export const MajorTable = () => {
     majorPagination?.items.map((item) => ({
       label: item.name,
       key: item.id.toString(),
+      value: item.id.toString(),
       icon: <CaretRightOutlined />,
     })) || [];
+    // console.log('menu Items:', menuItems);
     const handleScroll = (event: any) => {
       const { target } = event;
       if (target.scrollTop + target.clientHeight >= target.scrollHeight) {
@@ -237,7 +247,7 @@ export const MajorTable = () => {
           pagination={{
             current: query.page,
             pageSize: query.size,
-            total: majorPagination?.totalPages || 0,
+            total: (majorPagination?.totalPages || 1) * query.size,
             onChange(page, pageSize) {
               handleChangePagination(page, pageSize);
             },
@@ -272,8 +282,9 @@ export const MajorTable = () => {
               >
                 <Input />
               </Form.Item>
-              <Form.Item name="parentName" label="Major Root">
+              <Form.Item name="parentId" label="Major Root">
                 <Select
+                  allowClear
                   showSearch
                   optionFilterProp="label"
                   loading={loading}
@@ -284,7 +295,7 @@ export const MajorTable = () => {
                 />
               </Form.Item>
 
-              <div className="flex justify-between gap-2">
+              {/* <div className="flex justify-between gap-2">
                 <Form.Item
                   className="flex-1"
                   name="createdOn"
@@ -312,7 +323,7 @@ export const MajorTable = () => {
                     placeholder="Updated date"
                   />
                 </Form.Item>
-              </div>
+              </div> */}
 
               <div className="flex justify-end">
                 <Form.Item>
