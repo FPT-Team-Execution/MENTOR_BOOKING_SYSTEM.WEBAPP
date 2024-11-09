@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Form, Input, Button, message, Spin, Typography, Checkbox } from 'antd';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { createMeeting } from '../../services/meetingService';
 import { getRequestsById } from '../../services/requestService';
 import { accpetRequest, createCalendar } from '../../services/calendarEventService';
 import { RequestType } from '../../types/request.type';
 import { AcceptRequestType, CreateCalendarEventType } from '../../types/common.types';
 import moment from 'moment';
+import paths from '../../routes/path';
 
 const { Title, Text } = Typography;
 
@@ -16,6 +17,7 @@ const CreateMeeting: React.FC = () => {
     const [request, setRequest] = useState<RequestType | null>(null);
     const [loading, setLoading] = useState(false);
     const [creatingMeeting, setCreatingMeeting] = useState(false);
+    const navigate = useNavigate()
 
     useEffect(() => {
         const fetchRequestDetails = async () => {
@@ -59,8 +61,9 @@ const CreateMeeting: React.FC = () => {
                 const response = await accpetRequest(body)
                 if (response.isSuccess) {
                     message.success("Create meeting successfully")
+                    navigate("/meeting/"+requestId)
                 } else {
-                    message.error("Fail to create meeting")
+                    message.error("Fail to create meeting. Please try again!")
                 }
             }
         } catch (error) {
