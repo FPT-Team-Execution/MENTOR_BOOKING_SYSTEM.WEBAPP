@@ -121,7 +121,7 @@ const StudentProfileCard = () => {
                             <Form.Item
                                 label="WalletPoint"
                                 name="walletPoint"
-                    
+                                rules={[{ required: true, message: 'Please input the walletPoint!' }]}
                             >
                                 <Input readOnly />
                             </Form.Item>
