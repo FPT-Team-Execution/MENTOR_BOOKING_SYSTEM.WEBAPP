@@ -53,7 +53,7 @@ const MentorProfileCard = () => {
             fullName: mentorProfile?.fullName,
             avatarUrl: mentorProfile?.avatarUrl,
             birthday: mentorProfile.birthday ? moment(mentorProfile.birthday) : null,
-            consumePoint: mentorProfile?.consumePoint > 0 ? mentorProfile.consumePoint : profile?.consumePoint,
+            consumePoint: profile?.consumePoint,
             email: mentorProfile?.email,
             industry: mentorProfile?.industry,
             major: mentorProfile?.major,
@@ -121,7 +121,7 @@ const MentorProfileCard = () => {
                                     }
                                 ]}
                             >
-                                <InputNumber />
+                                <InputNumber readOnly />
                             </Form.Item>
 
 
