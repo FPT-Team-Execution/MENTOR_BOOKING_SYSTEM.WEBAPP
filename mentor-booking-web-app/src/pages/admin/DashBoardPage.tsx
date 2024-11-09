@@ -105,9 +105,9 @@ const Dashboard = () => {
             value={studentPagination?.items.length}
           />
         </Col>
-        <Col xs={22} sm={10} md={5} lg={5} className="border rounded-lg">
+        {/* <Col xs={22} sm={10} md={5} lg={5} className="border rounded-lg">
           <Statistic title="Total Point (FPoint)" value={pointStudents} />
-        </Col>
+        </Col> */}
         <Col xs={22} sm={10} md={5} lg={5} className="border rounded-lg">
           <Statistic
             loading={mentorLoading}
@@ -115,9 +115,9 @@ const Dashboard = () => {
             value={mentorPagination?.items.length}
           />
         </Col>
-        <Col xs={22} sm={10} md={5} lg={5} className="border rounded-lg">
+        {/* <Col xs={22} sm={10} md={5} lg={5} className="border rounded-lg">
           <Statistic title="Feedback" value={1128} prefix={<LikeOutlined />} />
-        </Col>
+        </Col> */}
       </Row>
       <div className="basis-full">
         <DashboardTable />
