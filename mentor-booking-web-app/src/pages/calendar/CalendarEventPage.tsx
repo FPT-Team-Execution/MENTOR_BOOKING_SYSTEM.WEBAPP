@@ -14,10 +14,6 @@ const CalendarEventPage: React.FC = () => {
 
   return (
     <div>
-      <h1>Calendar Events</h1>
-      {/* {<MyCalendar />} Truyền mentorId vào MyCalendar */}
-      <Button onClick={handleOnBackClick}>Back</Button>
-
       <GoogleCalendar />
 
     </div>
