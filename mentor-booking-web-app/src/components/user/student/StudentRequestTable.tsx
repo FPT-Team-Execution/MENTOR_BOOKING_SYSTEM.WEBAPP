@@ -103,21 +103,7 @@ const RequestTable: React.FC = () => {
                             <Button type="link">Meeting Info</Button>
                         </Link>
                     );
-                } else if (request.status === 2) {  // Pending status
-                    return (
-                        <div className="flex gap-2">
-                            <Button type="primary" onClick={() => handleEdit(request)}>Edit</Button>
-                            <Popconfirm
-                                title="Are you sure you want to delete this request?"
-                                onConfirm={() => handleDelete(request.id)}
-                                okText="Yes"
-                                cancelText="No"
-                            >
-                                <Button type="primary" danger>Delete</Button>
-                            </Popconfirm>
-                        </div>
-                    );
-                }
+                } 
                 return <span className="text-gray-500">Not Editable</span>;
             },
         },
