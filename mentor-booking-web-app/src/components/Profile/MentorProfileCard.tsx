@@ -114,7 +114,7 @@ const MentorProfileCard = () => {
                                 name="consumePoint"
                                 rules={[
                                     {
-                                        required: true, message: 'Please input the consume point!'
+                                    
                                     }
                                 ]}
                             >
