@@ -1,48 +1,77 @@
-import { Button, message, Popconfirm, Table } from "antd";
+import { message, Progress, Table } from "antd";
 import type { TableProps } from "antd";
-import { PageRequestModel, PageResponseModel } from "../../types/common.types";
+import { PageRequestModel, PageResponseModel, ResponseRequestModel } from "../../types/common.types";
 import { useState } from "react";
 import { ProjectType } from "../../types/project.type";
 import { projectService } from "../../services/projectService";
 import { useRequest } from "ahooks";
-import {
-  DeleteOutlined,
-  EditOutlined,
-  QuestionCircleOutlined,
-} from "@ant-design/icons";
+import moment from "moment";
+import { GetCompleteProgressResponse } from "../../types/progress.type";
+import axiosInstance from "../../utils/axios/axiosInstance";
+import { GET_PROGRESS_COMPLETE } from "../../utils/apiUrl/baseUrl";
 const DashBoardTable = () => {
+
   const [query, setQuery] = useState<PageRequestModel>({
     page: 1,
     size: 10,
     sort: "asc",
   });
-  const [projectPagination, setProjectPagination] =
-    useState<PageResponseModel<ProjectType>>();
-  const { loading, refresh } = useRequest(
+
+  const [progressData, setProgressData] = useState<{ [key: string]: number }>({});
+
+  const [projectPagination, setProjectPagination] = useState<PageResponseModel<ProjectType>>();
+
+  const { loading } = useRequest(
     async () => {
       await handleFetch();
+
     },
     {
       refreshDeps: [query],
     }
   );
+
   const handleFetch = async () => {
     try {
       const res = await projectService.getProjects(query);
       if (res.isSuccess) {
-        //TODO: load projects
+        //* Sử dụng Promise.all để đợi tất cả các yêu cầu hoàn thành
+        const updatedItems = await Promise.all(
+          res.responseRequestModel.items.map(async (item) => {
+            const response = await axiosInstance.get<ResponseRequestModel<GetCompleteProgressResponse>>(GET_PROGRESS_COMPLETE(item.id));
+            return {
+              ...item,
+              percent: response.data.responseRequestModel.percent,
+            };
+          })
+        );
 
-        setProjectPagination(res.responseRequestModel);
+        // Cập nhật projectPagination với các items đã cập nhật
+        setProjectPagination({
+          ...res.responseRequestModel,
+          items: updatedItems,
+        });
       } else {
-        // console.log("Failed to fetch API");
         message.error(res.message);
       }
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
       message.error("Failed to load data");
+      console.log(err);
     }
   };
-  
+
+  const fetchProgress = async (projectId: string) => {
+    try {
+      const response = await axiosInstance.get<GetCompleteProgressResponse>(GET_PROGRESS_COMPLETE(projectId));
+      setProgressData(prev => ({
+        ...prev,
+        [projectId]: response.data.percent,
+      }));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const columns: TableProps<ProjectType>["columns"] = [
     {
       title: "No",
@@ -51,44 +80,54 @@ const DashBoardTable = () => {
       render: (_, __, index: number) => index + 1,
     },
     {
-      minWidth: 100,
       title: "Title",
       dataIndex: "title",
       key: "tilte",
     },
     {
+      width: 150,
       title: "Due Date",
       dataIndex: "dueDate",
       key: "dueDate",
+      render: (dueDate: string | null) => {
+        // Format the date to 'YYYY-MM-DD' if it's not null
+        return (
+          <div>
+            {dueDate ? moment(dueDate).format("YYYY-MM-DD") : "No due date"}
+          </div>
+        );
+      },
     },
     {
-      title: "Actions",
+      width: 300,
+      title: "Progress",
       key: "actions",
-      width: 100,
-      minWidth: 100,
-      render: (record: ProjectType) => (
-        <div className="inline">
-          <Button
-            type="link"
-            icon={<EditOutlined />}
-            // onClick={() => openDetailModal(record)}
-          />
-          <Popconfirm
-            title="Deactivated the major"
-            description="Are you sure to deactivated this major?"
-            icon={<QuestionCircleOutlined style={{ color: "red" }} />}
-            // onConfirm={() => handleDeleteConfirm(record.id)}
-          >
-            <Button
-              type="link"
-              icon={<DeleteOutlined className="text-red-600" />}
+      render: (record: ProjectType) => {
+        //TODO: call progress by project Id
+        if (!(record.id in progressData)) {
+          fetchProgress(record.id); // Nếu chưa có, gọi API
+          console.log(progressData[record.id]);
+          return <Progress percent={progressData[record.id]} status="active" />; // Hiển thị tiến độ 0 tạm thời
+        }
+
+        return (
+          <div className="inline">
+            <Progress
+              percent={record.percent}
+              status="active"
             />
-          </Popconfirm>
-        </div>
-      ),
+          </div>
+        );
+      },
     },
   ];
-
+  const handleChangePagination = (pageIndex: number, pageSize: number) => {
+    setQuery((prevQuery) => ({
+      ...prevQuery,
+      size: pageSize,
+      page: pageIndex,
+    }));
+  };
   return (
     <>
       <Table
@@ -96,13 +135,13 @@ const DashBoardTable = () => {
         dataSource={projectPagination?.items}
         columns={columns}
         rowKey="id"
-        className="border"
+        className="m-1"
         pagination={{
           current: query.page,
           pageSize: query.size,
           total: projectPagination?.totalPages || 0,
           onChange(page, pageSize) {
-            // handleChangePagination(page, pageSize);
+            handleChangePagination(page, pageSize);
           },
           showSizeChanger: true,
         }}
