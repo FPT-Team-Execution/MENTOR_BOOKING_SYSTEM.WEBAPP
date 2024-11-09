@@ -3,7 +3,7 @@ import { Table, Tag, Typography, DatePicker, Button, message } from 'antd';
 import moment from 'moment';
 import { getRequests, updateRequestsById } from '../../services/requestService';
 import dayjs, { Dayjs } from 'dayjs';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { RequestType } from '../../types/request.type';
 
 const { Title } = Typography;
@@ -110,16 +110,27 @@ const MentorRequestTable: React.FC = () => {
             title: 'Actions',
             key: 'actions',
             render: (_: any, record: RequestType) => (
-                record.status === 2 && (
-                    <>
-                        <Button type="primary" onClick={() => handleAccept(record.id,record.title)} style={{ marginRight: 8 }}>
-                            Accept
-                        </Button>
-                        <Button type="primary" danger onClick={() => handleDeny(record.id,record.title)}>
-                            Deny
-                        </Button>
-                    </>
-                )
+                <>
+                    {record.status === 2 && (
+                        <>
+                            <Button type="primary" onClick={() => handleAccept(record.id, record.title)} style={{ marginRight: 8 }}>
+                                Accept
+                            </Button>
+                            <Button type="primary" danger onClick={() => handleDeny(record.id, record.title)}>
+                                Deny
+                            </Button>
+                        </>
+                    )}
+                    {record.status === 0 && (
+                        
+                        <Link to={"/meeting/" + record.id} > 
+                            <Button>
+                                Go to Meeting
+                            </Button>
+                        </Link>
+                        
+                    )}
+                </>
             ),
         },
         {
