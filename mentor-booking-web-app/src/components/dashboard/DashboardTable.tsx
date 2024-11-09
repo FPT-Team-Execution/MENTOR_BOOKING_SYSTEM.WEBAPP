@@ -1,6 +1,6 @@
 import { message, Progress, Table } from "antd";
 import type { TableProps } from "antd";
-import { PageRequestModel, PageResponseModel } from "../../types/common.types";
+import { PageRequestModel, PageResponseModel, ResponseRequestModel } from "../../types/common.types";
 import { useState } from "react";
 import { ProjectType } from "../../types/project.type";
 import { projectService } from "../../services/projectService";
@@ -35,15 +35,28 @@ const DashBoardTable = () => {
     try {
       const res = await projectService.getProjects(query);
       if (res.isSuccess) {
-        //* load projects
-        setProjectPagination(res.responseRequestModel);
+        //* Sử dụng Promise.all để đợi tất cả các yêu cầu hoàn thành
+        const updatedItems = await Promise.all(
+          res.responseRequestModel.items.map(async (item) => {
+            const response = await axiosInstance.get<ResponseRequestModel<GetCompleteProgressResponse>>(GET_PROGRESS_COMPLETE(item.id));
+            return {
+              ...item,
+              percent: response.data.responseRequestModel.percent,
+            };
+          })
+        );
+
+        // Cập nhật projectPagination với các items đã cập nhật
+        setProjectPagination({
+          ...res.responseRequestModel,
+          items: updatedItems,
+        });
       } else {
-        // console.log("Failed to fetch API");
         message.error(res.message);
       }
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
       message.error("Failed to load data");
+      console.log(err);
     }
   };
 
@@ -100,7 +113,7 @@ const DashBoardTable = () => {
         return (
           <div className="inline">
             <Progress
-              percent={progressData[record.id]}
+              percent={record.percent}
               status="active"
             />
           </div>
