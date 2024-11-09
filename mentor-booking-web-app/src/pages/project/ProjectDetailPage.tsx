@@ -128,7 +128,7 @@ export const ProjectDetailPage = () => {
                 </div>
             </Modal>
             <Modal title="Booking" open={isBooking} footer={[]} onCancel={() => setIsBooking(false)} onOk={() => setIsBooking(false)}>
-                {isBooking && <BookingPage project={project}/>}
+                {isBooking && <BookingPage handleGetProject={handleGetProject} project={project}/>}
             </Modal>
         </div>
     );

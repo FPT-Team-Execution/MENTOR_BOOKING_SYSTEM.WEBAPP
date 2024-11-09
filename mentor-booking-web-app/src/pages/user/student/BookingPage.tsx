@@ -15,7 +15,7 @@ import { BusyTimeData } from '../../../types/common.types';
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-export const BookingPage: React.FC<{ project?: ProjectType }> = ({ project }) => {
+export const BookingPage: React.FC<{ project?: ProjectType,handleGetProject: () => void }> = ({ project, handleGetProject }) => {
     const { userInfo } = useAuth();
     const [selectedMentor, setSelectedMentor] = useState<string>('');
     const [mentorList, setMentorList] = useState<MentorType[]>([]);
@@ -102,6 +102,7 @@ export const BookingPage: React.FC<{ project?: ProjectType }> = ({ project }) =>
             if (response.isSuccess) {
                 message.success('Booking successful');
                 setIsSuccess(true);
+                handleGetProject();
             } else {
                 message.error(response.message);
             }
