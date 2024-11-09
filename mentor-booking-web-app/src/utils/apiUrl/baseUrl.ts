@@ -160,3 +160,28 @@ export const getProgressesByProjectIdUrl = (
 export const GET_PROGRESS_COMPLETE = (id: string) => {
   return `/progresses/get-complete?projectId=${id}`
 }
+export const STUDENT_API_URL = (id: string | undefined, query: PageRequestModel | undefined) => {
+    //get pagination
+    if (query) {
+        return `/students?page=${query.page}&size=${query.size}`
+    }
+    //get by Id + delete
+    if (id) {
+        return `/majors/${id}`
+    }
+    //post + put
+    return `/majors`;
+}
+
+export const POSITION_API_URL = (id: string | undefined, query: PageRequestModel | undefined) => {
+    //get pagination
+    if (query) {
+        return `/positions?page=${query.page}&size=${query.size}`
+    }
+    //get by Id + delete
+    if (id) {
+        return `/positions/${id}`
+    }
+    //post + put
+    return `/positions`;
+}
