@@ -87,7 +87,7 @@ export const BookingPage: React.FC<{ project?: ProjectType }> = ({ project }) =>
             message.error('Time conflict or missing fields');
             return;
         }
-        
+
         const request = {
             ...booking,
             createrId: userInfo?.nameidentifier,
@@ -96,7 +96,7 @@ export const BookingPage: React.FC<{ project?: ProjectType }> = ({ project }) =>
             projectId: project?.id || '',
             mentorId: selectedMentor,
         };
-        
+
         try {
             const response = await bookingService.sendRequest(request);
             if (response.isSuccess) {
@@ -115,7 +115,7 @@ export const BookingPage: React.FC<{ project?: ProjectType }> = ({ project }) =>
             {!isSuccess ? (
                 <div className="w-full p-4 space-y-2">
                     <p className="text-xl font-semibold text-gray-700">Request a Meeting</p>
-                    
+
                     {/* Title Input */}
                     <div>
                         <label htmlFor="title" className="block text-sm font-medium text-gray-700">
@@ -167,17 +167,13 @@ export const BookingPage: React.FC<{ project?: ProjectType }> = ({ project }) =>
                     {/* Busy Times List */}
                     {busyTimes.length > 0 && (
                         <div className="mt-4">
-                            <p className="text-gray-700 font-medium">Mentor's Busy Times:</p>
-                            <List
-                                dataSource={busyTimes}
-                                renderItem={(busy) => (
-                                    <List.Item>
-                                        <div className="text-center border-2 p-1 rounded-xl  bg-gray-50">
-                                            {`${dayjs(busy.start, 'YYYY-MM-DD HH:mm').format('HH:mm')} - ${dayjs(busy.end, 'YYYY-MM-DD HH:mm').format('HH:mm')}`}
-                                        </div>
-                                    </List.Item>
-                                )}
-                            />
+                            <p className="text-gray-700 font-medium flex flex-wrap">Mentor's Busy Times:</p>
+                            {busyTimes.map((busy) => (
+                                <div className="text-center border-2 p-1 mr-2 rounded-xl inline-block bg-gray-50">
+                                    {`${dayjs(busy.start, 'YYYY-MM-DD HH:mm').format('HH:mm')} - ${dayjs(busy.end, 'YYYY-MM-DD HH:mm').format('HH:mm')}`}
+                                </div>
+                            ))}
+
                         </div>
                     )}
 
