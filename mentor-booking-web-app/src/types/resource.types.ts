@@ -31,3 +31,10 @@ export type Skill = {
   mentorId: string;
   mentor: MentorInSkill;
 };
+
+export type Position = {
+  id: string;
+  name: string;
+  description: string;
+  status: string;
+};

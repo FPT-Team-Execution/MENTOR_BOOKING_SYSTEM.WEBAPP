@@ -63,7 +63,7 @@ export const SkillTable = () => {
 
     try {
       setActionLoading(true);
-
+      skill.mentorId = skill.mentorName;
       const result = await skillService.createSkill(skill);
 
       if (result.isSuccess) {
@@ -138,7 +138,7 @@ export const SkillTable = () => {
               setIsPressEnter((pre) => !pre);
               return;
             }
-            return alert(e.target.value);
+            return //alert(e.target.value);
           }} //lost focus
         />
       ),
@@ -275,7 +275,8 @@ export const SkillTable = () => {
   const mentorsItems =
     mentorPagination?.items.map((item) => ({
       label: item.fullName,
-      key: item.id.toString(),
+      //key: item.id.toString(),
+      value: item.id.toString(),
       icon: <UserOutlined />,
     })) || [];
 
@@ -315,7 +316,7 @@ export const SkillTable = () => {
           pagination={{
             current: query.page,
             pageSize: query.size,
-            total: skillPagination?.totalPages || 0,
+            total: (skillPagination?.totalItems || 0),
             onChange(page, pageSize) {
               handleChangePagination(page, pageSize);
             },
@@ -354,7 +355,7 @@ export const SkillTable = () => {
                 name="mentorName"
                 label="Mentor"
                 rules={[
-                  { required: true, message: "Please enter major name." },
+                  { required: true, message: "Please choose mentor." },
                 ]}
               >
                 <Select
