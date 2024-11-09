@@ -3,7 +3,7 @@ import axiosInstance from "../../utils/axios/axiosInstance";
 import { ResponseModel, ResponseRequestModel } from "../../types/common.types";
 import { GetMentorResModel } from "../../types/mentor.types";
 import { MENTOR_OWN_PROFILE_URL, UPLOAD_AVATAR_URL } from "../../utils/apiUrl/baseUrl";
-import { Button, Card, DatePicker, Form, Image, Input, message, Select } from "antd";
+import { Button, Card, DatePicker, Form, Image, Input, InputNumber, message, Select } from "antd";
 import { useState } from "react";
 import moment from "moment";
 import ImageUploadButton from "../ui/ImageUploadButton";
@@ -53,7 +53,7 @@ const MentorProfileCard = () => {
             fullName: mentorProfile?.fullName,
             avatarUrl: mentorProfile?.avatarUrl,
             birthday: mentorProfile.birthday ? moment(mentorProfile.birthday) : null,
-            consumePoint: mentorProfile?.consumePoint,
+            consumePoint: mentorProfile?.consumePoint > 0 ? mentorProfile.consumePoint : profile?.consumePoint,
             email: mentorProfile?.email,
             industry: mentorProfile?.industry,
             major: mentorProfile?.major,
@@ -65,7 +65,7 @@ const MentorProfileCard = () => {
 
     const handleSubmit = async (values: GetMentorResModel) => {
         values.id = userInfo?.nameidentifier ?? ""
-        values.email = profile?.email?? ""
+        values.email = profile?.email ?? ""
         await putRunAsync(values)
     }
 
@@ -102,7 +102,7 @@ const MentorProfileCard = () => {
                         <Form.Item
                             label="Industry"
                             name="industry"
-                            rules={[{ required: true, message: 'Please input the email!' }]}
+                            rules={[{ required: true, message: 'Please input the industry!' }]}
                         >
                             <Input />
                         </Form.Item>
@@ -111,9 +111,17 @@ const MentorProfileCard = () => {
                             <Form.Item
                                 label="ConsumePoint"
                                 name="consumePoint"
-                                rules={[{ required: true, message: 'Please input the email!' }]}
+                                rules={[
+                                    {
+                                        required: true, message: 'Please input the consume point!'
+                                    }
+                                    ,
+                                    {
+                                        type: 'number', min: 1, message: 'Point must be a positive number!'
+                                    }
+                                ]}
                             >
-                                <Input />
+                                <InputNumber />
                             </Form.Item>
 
 
