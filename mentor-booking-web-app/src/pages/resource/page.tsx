@@ -4,15 +4,15 @@ import { PositionTable } from "./PositionTable";
 export const ResourcePage = () => {
   return (
     <div className="flex justify-evenly">
-      <div className="w-5/12">
+      <div className="w-4/12">
         <MajorTable />
       </div>
-      <div className="w-7/12">
+      <div className="w-4/12">
         <SkillTable />
       </div>
-      {/* <div className="w-7/12">
+      <div className="w-4/12">
         <PositionTable />
-      </div> */}
+      </div>
     </div>
   );
 };
