@@ -53,7 +53,7 @@ const MentorProfileCard = () => {
             fullName: mentorProfile?.fullName,
             avatarUrl: mentorProfile?.avatarUrl,
             birthday: mentorProfile.birthday ? moment(mentorProfile.birthday) : null,
-            consumePoint: profile?.consumePoint,
+            consumePoint: mentorProfile.consumePoint,
             email: mentorProfile?.email,
             industry: mentorProfile?.industry,
             major: mentorProfile?.major,
@@ -66,6 +66,7 @@ const MentorProfileCard = () => {
     const handleSubmit = async (values: GetMentorResModel) => {
         values.id = userInfo?.nameidentifier ?? ""
         values.email = profile?.email ?? ""
+        values.consumePoint = profile?.consumePoint ?? 100
         await putRunAsync(values)
     }
 
@@ -114,10 +115,6 @@ const MentorProfileCard = () => {
                                 rules={[
                                     {
                                         required: true, message: 'Please input the consume point!'
-                                    }
-                                    ,
-                                    {
-                                        type: 'number', min: 1, message: 'Point must be a positive number!'
                                     }
                                 ]}
                             >
