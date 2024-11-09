@@ -140,6 +140,18 @@ export const STUDENT_API_URL = (
   return `/majors`;
 };
 
+export const POSITION_API_URL = (id: string | undefined, query: PageRequestModel | undefined) => {
+    //get pagination
+    if (query) {
+        return `/positions?page=${query.page}&size=${query.size}`
+    }
+    //get by Id + delete
+    if (id) {
+        return `/positions/${id}`
+    }
+    //post + put
+    return `/positions`;
+}
 export const getProgressesByProjectIdUrl = (
   projectId: string | undefined,
   query: PageRequestModel
