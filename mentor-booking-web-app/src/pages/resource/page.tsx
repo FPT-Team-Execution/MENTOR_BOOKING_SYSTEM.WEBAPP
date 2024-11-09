@@ -1,6 +1,6 @@
 import { MajorTable } from "./MajorTable";
 import { SkillTable } from "./SkillTable";
-
+import { PositionTable } from "./PositionTable";
 export const ResourcePage = () => {
   return (
     <div className="flex justify-evenly">
@@ -10,6 +10,9 @@ export const ResourcePage = () => {
       <div className="w-7/12">
         <SkillTable />
       </div>
+      {/* <div className="w-7/12">
+        <PositionTable />
+      </div> */}
     </div>
   );
 };
